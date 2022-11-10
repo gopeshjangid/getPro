@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt= require('jsonwebtoken')
 
 userRouter.get('/', (req, res) => {
-    res.send("i am node page")
+    res.send("i am node pagessss")
 })
 const register = async (req, res) => {
 
