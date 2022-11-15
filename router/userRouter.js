@@ -1,11 +1,12 @@
 const userRouter = require('express').Router()
 const User = require('../model/user')
+const Query = require('../model/query')
 const bcrypt = require('bcrypt');
 const jwt= require('jsonwebtoken')
+var cookie = require('cookie-parser')
+const nodemailer = require('nodemailer');
 
-userRouter.get('/', (req, res) => {
-    res.send("i am node pagessss")
-})
+
 const register = async (req, res) => {
 
     let username = req.body.username;
@@ -72,6 +73,7 @@ const login = async (req, res) => {
                 res.status(200).json({
                     message: "successfully login"
                 })
+                
             } else {
                 res.status(404).json({
                     message: "your password is incorrect"
@@ -87,12 +89,87 @@ const login = async (req, res) => {
     }
 }
 
+
+const forgetPassword = async (req, res) => {
+
+  //  let password = await bcrypt.hash(req.body.password, 10)
+    try {
+        let existEmail = await User.findOne({ email: req.body.email })
+        if (existEmail !== null) {
+            const mailTransporter = nodemailer.createTransport({
+                host: `smtp.gmail.com`,
+                port: 465,
+                secure: true,
+                auth: {
+                    "user": "bablusaini90310@gmail.com",
+                    "pass": "zeczopkmiqbvbffc"
+                }
+            })
+             
+            let mailDetails = {
+                from: 'bablusaini90310@gmail.com',
+                to: 'sk8448390@gmail.com',
+                subject: 'Test mail',
+                text: 'hello i am bablu saini'
+            };
+             
+            mailTransporter.sendMail(mailDetails, function(err, data) {
+                if(err) {
+                    console.log(err)
+                } else {
+                    res.status(200).json({
+                        message: "mail have sent successfully"
+                    })
+                }
+            });
+        } else {
+            res.status(404).json({
+                message: 'your email is not exist'
+            })
+        }
+
+    } catch (error) {
+        res.json({
+            error: error.message
+        })
+    }
+};
+
+
+const query = async (req, res) => {
+
+    let fullname = req.body.fullName;
+    let email = req.body.email;
+    let subject = req.body.subject;
+    let message = req.body.message;
+
+    try {
+        const userData = new Query({ fullName: fullname, email: email, subject: subject, message:message})
+        await userData.save()
+        res.status(201).json({
+            data: userData
+        })
+
+    } catch (error) {
+        res.json({
+            error: error.message
+        })
+    }
+};
+
+
 userRouter
     .route('/register')
-    .post(register)
+    .post(register);
 userRouter
     .route('/login')
-    .post(login)
+    .post(login);
+userRouter
+    .route('/password-reset')
+    .post(forgetPassword);
+userRouter
+    .route('/contact-us')
+    .post(query);
 
 
 module.exports = userRouter;
