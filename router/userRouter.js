@@ -1,6 +1,7 @@
 const userRouter = require('express').Router()
 const User = require('../model/user')
 const Query = require('../model/query')
+const Worksample = require('../model/worksample')
 const bcrypt = require('bcrypt');
 const jwt= require('jsonwebtoken')
 var cookie = require('cookie-parser')
@@ -17,7 +18,7 @@ const register = async (req, res) => {
         let existEmail = await User.findOne({ email: req.body.email })
         if (existUsername === null) {
             if (existEmail === null) {
-                const userData = new User({ username: username, email: email, password: password })
+                const userData = new User({ username: username, email: email, password: password ,status:"active"})
                 await userData.save()
                 res.status(201).json({
                     data: userData
@@ -136,26 +137,20 @@ const forgetPassword = async (req, res) => {
 };
 
 
-const query = async (req, res) => {
-
-    let fullname = req.body.fullName;
-    let email = req.body.email;
-    let subject = req.body.subject;
-    let message = req.body.message;
-
+const workSample = async (req, res) => {
     try {
-        const userData = new Query({ fullName: fullname, email: email, subject: subject, message:message})
-        await userData.save()
-        res.status(201).json({
-            data: userData
+        const userData = await Worksample.find()
+        res.status(200).json({
+            data:userData
         })
-
     } catch (error) {
-        res.json({
-            error: error.message
+        res.status(500).json({
+            error:error.message
         })
     }
-};
+}
+
+
 
 
 userRouter
@@ -168,8 +163,9 @@ userRouter
     .route('/password-reset')
     .post(forgetPassword);
 userRouter
-    .route('/contact-us')
-    .post(query);
+    .route('/workSamples')
+    .get(workSample);
+
 
 
 module.exports = userRouter;
