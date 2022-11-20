@@ -24,7 +24,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="btn btn-primary" aria-current="page" href="#">Logout</a>
+                            <a class="btn btn-primary" aria-current="page" href="/getproadmin">Login</a>
                         </li>
                     </ul>
                 </div>
@@ -37,22 +37,13 @@
         <form action="/adminLogin" method="post" id="form">
             <h4 class="mb-3">Admin Login</h4>
             <div class="mb-4">
-                <% if (message =='your account does not exist') { %>
-                    <label for="" id="emailLabel" class="text-danger mb-1"><%=message%></label>
-                    <%} else { %>
-                        <label for="" id="emailLabel" class="text-danger mb-1" style="display: none;"></label>
-                    <% } %>
-               
-                <input type="email" class="form-control" id="InputEmail" placeholder="enter your email" name="email">
+              <label for="" id="emailLabel" class="text-danger mb-1" style="display: none;"></label>
+               <input type="email" class="form-control" id="InputEmail" placeholder="enter your email" name="email">
             </div>
             <div class="mb-4">
-                <% if (message =='your password is incorrect') { %>
-                    <label for="" id="passwordLabel" class="text-danger mb-1"><%=message%></label>
-                    <%} else { %>
-                         <label for="" id="passwordLabel" class="text-danger mb-1" style="display: none;"></label>
-                    <% } %>
                
-                <input type="password" class="form-control" id="InputPassword" placeholder="enter your password" name="password"
+                     <label for="" id="passwordLabel" class="text-danger mb-1" style="display: none;"></label>
+                    <input type="password" class="form-control" id="InputPassword" placeholder="enter your password" name="password"
                     >
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>
@@ -65,8 +56,8 @@
         let InputPassword = document.getElementById('InputPassword')
         let Labelemail = document.getElementById('emailLabel')
         let labelpassword = document.getElementById('passwordLabel')
-
-
+        let form= document.getElementById('form')
+        
 
         //  let form = document.getElementById('form');
         form.addEventListener("submit", (e) => {
@@ -76,35 +67,54 @@
                 Labelemail.innerHTML = 'please enter you email'
                 labelpassword.innerHTML = 'please enter you password'
                 e.preventDefault();
-            } else if (Inputemail.value === '') {
+            } else{
+                if (Inputemail.value === '') {
+                    console.log("email blanck")
                 Labelemail.style.display = 'block'
                 labelpassword.style.display = 'none'
                 Labelemail.innerHTML = 'please enter you email'
                 e.preventDefault()
-            } else if (InputPassword.value === '') {
+            } else{
+                if (InputPassword.value === '') {
+                    Labelemail.style.display = 'none'
+                    labelpassword.style.display = 'block'
+                    labelpassword.innerHTML = 'please enter you password'
+                    e.preventDefault()
+            }else{
                 Labelemail.style.display = 'none'
-                labelpassword.style.display = 'block'
-                labelpassword.innerHTML = 'please enter you password'
-                e.preventDefault()
-            } 
-            // else if (InputPassword.value !== '' && Inputemail.value !== '') {
-            //     $.ajax({
-            //         url: 'http://localhost:5000/adminLogin',
-            //         dataType: 'json',
-            //         type: 'post',
-            //         contentType: 'application/json',
-            //         data: JSON.stringify({ "first-name": "bablu", "last-name": "saini" }),
-            //         processData: false,
-            //         success: function (data, textStatus, jQxhr) {
-                       
-            //         },
-            //         error: function (jqXhr, textStatus, errorThrown) {
-            //             console.log(errorThrown);
-            //         }
-            //     });
-            // }
-
-        });
+                labelpassword.style.display = 'none'
+                e.preventDefault();
+              let email=  $('#InputEmail').val();
+              let password=  $('#InputPassword').val();
+               $.ajax({
+                        url: "http://localhost:5000/adminLogin",
+                        method: "post",
+                        contentType: "application/x-www-form-urlencoded",
+                        data: {
+                            email, password 
+                        },
+                        success: function (res) {
+                            window.location = "http://localhost:5000/dashboard"
+                        },
+                        error: function (error) {
+                            console.log(error)
+                            if (error.responseJSON.data === "Internal error occured: your account dose not exist") {
+                                Labelemail.style.display='block'
+                                Labelemail.innerHTML = "your account dose not exist";
+                              
+                            }else if(error.responseJSON.data === "Internal error occured: your password is inccorect"){
+                                labelpassword.style.display='block'
+                                labelpassword.innerHTML = "your password is inccorect";
+                            }
+                        }
+                    })
+            }
+            
+           } 
+            }
+            
+             });
+              
 
     </script>
 </body>

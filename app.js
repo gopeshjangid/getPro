@@ -4,6 +4,8 @@ const app= express();
 const userRouter= require('./router/userRouter')
 const adminRouter= require('./router/adminRouter')
 const jwt= require('jsonwebtoken')
+const cookieParser= require('cookie-parser')
+app.use(cookieParser());
 app.use(express.urlencoded({extended:false}))
 app.set('view engine','ejs')
 app.use(express.static('public'))

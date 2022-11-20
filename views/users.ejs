@@ -83,6 +83,8 @@
                     class="form-control border-0 shadow-none"
                     placeholder="Search..."
                     aria-label="Search..."
+                    id="myInput"
+                    onkeyup="myFunction()"
                   />
                 </div>
               </div>
@@ -162,16 +164,16 @@
           <!-- / Navbar -->
 
 
-          <!-- / FAQ Start -->
+         
 
           <div class="container-xxl flex-grow-1 container-p-y">
             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span>Users</h4>
 
             <!-- Basic Bootstrap Table -->
             <div class="card">
-              <div class="">
+              <div>
 
-                <table class="table">
+                <table class="table" id="myTable">
                   <thead>
                      <tr> 
                       <!-- <th>Sr. No.</th> -->
@@ -258,10 +260,28 @@
   </div>
   <!-- / Layout wrapper -->
 
+<script>
+  function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
 
 
-  <!-- Core JS -->
-  <!-- build:js assets/vendor/js/core.js -->
   <script src="../js/jquery.js"></script>
   <script src="../js/popper.js"></script>
   <script src="../js/bootstrap.js"></script>

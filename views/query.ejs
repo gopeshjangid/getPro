@@ -79,7 +79,7 @@
               <div class="nav-item d-flex align-items-center">
                 <i class="bx bx-search fs-4 lh-0"></i>
                 <input type="text" class="form-control border-0 shadow-none" placeholder="Search..."
-                  aria-label="Search..." />
+                  aria-label="Search..."  id="myInput" onkeyup="myFunction()" />
               </div>
             </div>
             <!-- /Search -->
@@ -168,7 +168,7 @@
             <h5 class="card-header">Contact</h5>
 
             <div class="table-responsive text-nowrap">
-              <table class="table">
+              <table class="table" id="myTable">
                 <thead>
                   <tr>
                     <!-- <th>No.</th>
@@ -251,7 +251,26 @@
   <!-- / Layout wrapper -->
 
 
-
+  <script>
+    function myFunction() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
   <!-- Core JS -->
   <!-- build:js assets/vendor/js/core.js -->
   <script src="../js/jquery.js"></script>

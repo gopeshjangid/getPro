@@ -37,7 +37,7 @@
     <!-- Core CSS -->
     <link rel="stylesheet" href="../css/core.css" class="template-customizer-core-css" />
     <link rel="stylesheet" href="../css/theme-default.css" class="template-customizer-theme-css" />
-    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/admin.css"/>
 
     <!-- Vendors CSS -->
     <link rel="stylesheet" href="../css/perfect-scrollbar.css" />
@@ -47,11 +47,11 @@
     <!-- Page CSS -->
 
     <!-- Helpers -->
-    <script src="../assets/vendor/js/helpers.js"></script>
+    <script src="../js/helpers.js"></script>
 
     <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-    <script src="../assets/js/config.js"></script>
+    <script src="../js/config.js"></script>
 	
 	
 	
@@ -64,7 +64,6 @@
     <div class="layout-wrapper layout-content-navbar">
       <div class="layout-container">
         <!-- Menu -->
-
         <%- include("../partials/dashboard.ejs")%>
         <!-- / Menu -->
 
@@ -180,11 +179,11 @@
 		   <!-- / FAQ Start -->
 		  
 		  <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Word Sample Edit</h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> <span class="text-muted fw-light"></span>Blog Add</h4>
 
               <!-- Basic Bootstrap Table -->
               <div class="card">
-                <h5 class="card-header">Work Sample Edit</h5>
+                <h5 class="card-header">Blog</h5>
               
 			       <div class="col-xxl">
                   <div class="card mb-4">
@@ -192,21 +191,20 @@
                       
                     </div>
                     <div class="card-body">
-                      <form  action="/updateworksample/<%=idData._id%>" method="post" enctype="multipart/form-data">
+                      <form action="/addblog" method="post" enctype="multipart/form-data">
                         <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-default-company">Title</label>
+                          <label class="col-sm-2 col-form-label" for="basic-default-name">Title</label>
                           <div class="col-sm-10">
-                            <input
-                              type="text"
-                              class="form-control"
-                              id="basic-default-company"
-                              placeholder="Enter Work Sample Title"
-                              name="title"
-                              value="<%=idData.title%>"
-                            />
+                            <input type="text" class="form-control" id="basic-default-name" placeholder="Enter Your Title" name="title"/>
                           </div>
                         </div>
-                       
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">Name</label>
+                            <div class="col-sm-10">
+                              <input type="text" class="form-control" id="basic-default-name" placeholder="Enter Your Name" name="name"/>
+                            </div>
+                        </div>
                        
                         <div class="row mb-3">
                           <label class="col-sm-2 col-form-label" for="basic-default-message">Description</label>
@@ -214,24 +212,22 @@
                             <textarea
                               id="basic-default-message"
                               class="form-control"
-                              placeholder="Enter Work Sample Description"
+                              placeholder="Enter Your Description"
                               aria-label="Hi, Do you have a moment to talk Joe?"
                               aria-describedby="basic-icon-default-message2"
                               name="dec"
-                             ><%=idData.dec%></textarea>
+                            ></textarea>
                           </div>
                         </div>
-						
-							<div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-default-message">File</label>
-                          <div class="col-sm-10">
-                            <input type="file" name="img" id="fileToUpload" value="<%=idData.image%>">
-                          </div>
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="basic-default-name">image</label>
+                            <div class="col-sm-10">
+                              <input type="file" class="form-control" id="basic-default-name" name="img"/>
+                            </div>
                         </div>
-						
                         <div class="row justify-content-end">
                           <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Update</button>
+                            <button type="submit" class="btn btn-primary">Add</button>
                           </div>
                         </div>
                       </form>
@@ -301,7 +297,6 @@
 
     <!-- Page JS -->
     <script src="../js/dashboards-analytics.js"></script>
-    <script src="https://code.iconify.design/iconify-icon/1.0.1/iconify-icon.min.js"></script>
 
     <!-- Place this tag in your head or just before your close body tag. -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>

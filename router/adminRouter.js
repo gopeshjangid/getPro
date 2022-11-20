@@ -4,9 +4,21 @@ const Query = require('../model/query')
 const Worksample = require('../model/worksample')
 const Authors = require('../model/authors')
 const Faqs = require('../model/faqs')
+const Blog= require("../model/blog")
+const Admin= require("../model/admin")
 const multer = require("multer")
 const bcrypt = require('bcrypt');
+const httpMsgs = require("http-msgs")
+const jwt= require('jsonwebtoken')
 
+
+const checkLogin=(req,res,next)=>{
+     if(req.cookies.adminToken===undefined){
+        res.redirect("/getproadmin")
+     }else{
+        next()
+     }
+}
 
 
 
@@ -27,25 +39,27 @@ var upload = multer({
 
 
 
-const adminLogin = (req, res) => {
-    res.render('adminLogin.ejs', { message: "" })
+const adminLogin = async(req, res) => {
+    
+    res.render('adminLogin.ejs')
 }
 
-const adminLoginSubmit = (req, res) => {
+const adminLoginSubmit = async(req, res) => {
     const reqEmail = req.body.email
     const reqPass = req.body.password
-    const email = "getproadmin000@gmail.com"
-    const password = "getproadmin@000"
-    
     try {
-        if (reqEmail === email) {
-            if (reqPass === password) {
+      const adminData=await  Admin.findOne({email:reqEmail})
+        if (adminData !== null) {
+            if (adminData.password === reqPass) {
+                let Id= adminData._id
+                var token = jwt.sign({ Id }, 'shhhhh');
+                res.cookie('adminToken', token)
                 res.redirect("/dashboard")
             } else {
-                res.render('adminLogin.ejs', { message: "your password is incorrect" })
+                httpMsgs.send500(req, res, "your password is inccorect")
             }
         } else {
-            res.render('adminLogin.ejs', { message: "your account does not exist" })
+            httpMsgs.send500(req, res, "your account dose not exist")
         }
 
     } catch (error) {
@@ -56,6 +70,7 @@ const adminLoginSubmit = (req, res) => {
 
 
 const dashboard = (req, res) => {
+    
     res.render('dashboard.ejs')
 }
 
@@ -355,6 +370,72 @@ const updateFaqsSubmit = async (req, res) => {
 
 }
 
+const blog = async (req, res) => {
+
+    try {
+ 
+     const BlogData =await Blog.find()
+      res.render("blog.ejs",{BlogData})
+      
+    } catch (error) {
+        res.status(500).json({
+            error:error.message
+        })
+    }
+}
+
+const addblog = async (req, res) => {
+
+    try {
+      res.render("blog-add.ejs")
+      
+    } catch (error) {
+        res.status(500).json({
+            error:error.message
+        })
+    }
+}
+
+const addblogSubmit = async (req, res) => {
+    try {
+       const Title= req.body.title
+       const Dec= req.body.dec
+       const Image= req.file.filename
+       const Name=req.body.name
+       const blogData=  new Blog({title:Title,name:Name,dec:Dec,image:Image})
+       await blogData.save()
+       res.redirect("/blog")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+
+}
+
+const updateBLog = async(req, res) => {
+    const id= req.params.id
+    const idData=await Blog.findById(id)
+    res.render('blog-edit.ejs',{idData})
+ }
+ 
+ const updateBLogSubmit = async (req, res) => {
+     try {
+        const NewTitle= req.body.title
+        const NewDec= req.body.dec
+        const NewImage= req.file.filename
+        const NewName=req.body.name
+        const id=req.params.id
+        await Blog.findByIdAndUpdate(id,{title:NewTitle,name:NewName,dec:NewDec,image:NewImage})
+        res.redirect("/blog")
+      
+     } catch (error) {
+         res.status(500).json({
+             error: error.message
+         })
+     }
+ 
+ }
 
 
 
@@ -369,60 +450,71 @@ adminRouter
     .post(adminLoginSubmit);
 adminRouter
     .route('/dashboard')
-    .get(dashboard);
+    .get(checkLogin, dashboard);
 adminRouter
     .route('/users')
-    .get(users);
+    .get(checkLogin,users);
 adminRouter
     .route('/updateUser/:id')
-    .get(updateUser)
+    .get(checkLogin,updateUser)
     .post(updateUserSubmit)
 adminRouter
     .route('/delete/:id')
-    .get(deleteteUser)
-    
+    .get(checkLogin,deleteteUser)
+
 adminRouter
     .route('/query')
-    .get(query);
+    .get(checkLogin,query);
 adminRouter
     .route('/contact-us')
     .post(queryAdd);
 adminRouter
     .route('/workSample')
-    .get(worksample);
+    .get(checkLogin,worksample);
 adminRouter
     .route('/addworksample')
-    .get(addworksample)
+    .get(checkLogin,addworksample)
     .post(upload.single('img'), addworksampleSubmit)
 adminRouter
     .route('/updateworksample/:id')
-    .get(updateworksample)
+    .get(checkLogin,updateworksample)
     .post(upload.single('img'), updateworksampleSubmit)
 adminRouter
     .route('/deleteworksample/:id')
-    .get(deleteworksampleSubmit)
+    .get(checkLogin,deleteworksampleSubmit)
 adminRouter
     .route('/authors')
-    .get(authors)
+    .get(checkLogin,authors)
 adminRouter
     .route('/addAuthors')
-    .get(addAuthors)
+    .get(checkLogin,addAuthors)
     .post(upload.single('img'),addAuthorsSubmit)
 adminRouter
     .route('/updateAuthors/:id')
-    .get(updateAuthors)
+    .get(checkLogin,updateAuthors)
     .post(upload.single('img'),updateAuthorsSubmit)
 adminRouter
     .route('/faqs')
-    .get(faqs)
+    .get(checkLogin,faqs)
 adminRouter
     .route('/addFaqs')
-    .get(addFaqs)
+    .get(checkLogin,addFaqs)
     .post(addFaqsSubmit)
 adminRouter
     .route('/updateFaqs/:id')
-    .get(updateFaqs)
+    .get(checkLogin,updateFaqs)
     .post(updateFaqsSubmit)
+adminRouter
+    .route('/blog')
+    .get(checkLogin,blog)
+adminRouter
+    .route('/addblog')
+    .get(checkLogin,addblog)
+    .post(upload.single('img'),addblogSubmit)
+adminRouter
+    .route('/updateblog/:id')
+    .get(checkLogin,updateBLog)
+    .post(upload.single('img'),updateBLogSubmit)
     
     
 
