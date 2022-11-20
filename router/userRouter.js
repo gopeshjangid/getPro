@@ -2,6 +2,9 @@ const userRouter = require('express').Router()
 const User = require('../model/user')
 const Query = require('../model/query')
 const Worksample = require('../model/worksample')
+const Authors = require('../model/authors')
+const Faqs = require('../model/faqs')
+const Blog= require("../model/blog")
 const bcrypt = require('bcrypt');
 const jwt= require('jsonwebtoken')
 var cookie = require('cookie-parser')
@@ -137,11 +140,50 @@ const forgetPassword = async (req, res) => {
 };
 
 
-const workSample = async (req, res) => {
+const getworkSample = async (req, res) => {
     try {
-        const userData = await Worksample.find()
+        const workSampleData = await Worksample.find()
         res.status(200).json({
-            data:userData
+            data:workSampleData
+        })
+    } catch (error) {
+        res.status(500).json({
+            error:error.message
+        })
+    }
+}
+
+const getAuthors = async (req, res) => {
+    try {
+        const authorsData = await Authors.find()
+        res.status(200).json({
+            data:authorsData
+        })
+    } catch (error) {
+        res.status(500).json({
+            error:error.message
+        })
+    }
+}
+
+const getFaqs = async (req, res) => {
+    try {
+        const faqsData = await Faqs.find()
+        res.status(200).json({
+            data:faqsData
+        })
+    } catch (error) {
+        res.status(500).json({
+            error:error.message
+        })
+    }
+}
+
+const getBlog = async (req, res) => {
+    try {
+        const blogData = await Blog.find()
+        res.status(200).json({
+            data:blogData
         })
     } catch (error) {
         res.status(500).json({
@@ -163,8 +205,17 @@ userRouter
     .route('/password-reset')
     .post(forgetPassword);
 userRouter
-    .route('/workSamples')
-    .get(workSample);
+    .route('/getworkSamples')
+    .get(getworkSample);
+userRouter
+    .route('/getAuthors')
+    .get(getAuthors);
+userRouter
+    .route('/getFaqs')
+    .get(getFaqs);
+userRouter
+    .route('/getBlog')
+    .get(getBlog);
 
 
 
