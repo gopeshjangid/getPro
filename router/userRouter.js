@@ -94,6 +94,7 @@ const login = async (req, res) => {
 }
 
 
+
 const forgetPassword = async (req, res) => {
 
   //  let password = await bcrypt.hash(req.body.password, 10)
