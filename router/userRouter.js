@@ -7,7 +7,6 @@ const Faqs = require('../model/faqs')
 const Blog= require("../model/blog")
 const bcrypt = require('bcrypt');
 const jwt= require('jsonwebtoken')
-var cookie = require('cookie-parser')
 const nodemailer = require('nodemailer');
 
 
@@ -60,11 +59,10 @@ const login = async (req, res) => {
             if (bcryptMatchPassword === true) {
                 let userId=usernameData._id
                 var token = jwt.sign({userId} , 'zxcvbnm');
-                console.log(token)
+                res.cookie('userLoginToken', token)
                 res.status(200).json({
                     message: "successfully login"
                 })
-                
             } else {
                 res.status(404).json({
                     message: "your password is incorrect"
@@ -140,7 +138,6 @@ const forgetPassword = async (req, res) => {
     }
 };
 
-
 const getworkSample = async (req, res) => {
     try {
         const workSampleData = await Worksample.find()
@@ -193,6 +190,13 @@ const getBlog = async (req, res) => {
     }
 }
 
+const userLogout = async(req, res) => {
+   res.clearCookie('userLoginToken');
+    res.status(200).json({
+        message:"successfully logout"
+    })
+ }
+
 
 
 
@@ -217,6 +221,9 @@ userRouter
 userRouter
     .route('/getBlog')
     .get(getBlog);
+userRouter
+    .route('/userLogout')
+    .get(userLogout);
 
 
 

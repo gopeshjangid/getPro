@@ -437,6 +437,12 @@ const updateBLog = async(req, res) => {
  
  }
 
+const logout = async(req, res) => {
+   
+    res.clearCookie('adminToken');
+    res.redirect('/getproadmin')
+ }
+
 
 
 
@@ -515,8 +521,10 @@ adminRouter
     .route('/updateblog/:id')
     .get(checkLogin,updateBLog)
     .post(upload.single('img'),updateBLogSubmit)
-    
-    
+adminRouter
+    .route('/logout')
+    .get(checkLogin,logout)
+   
 
 
 module.exports = adminRouter;
