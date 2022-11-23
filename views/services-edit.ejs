@@ -79,11 +79,11 @@
 		   <!-- / FAQ Start -->
 		  
 		  <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Faq Edit</h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Services-Edit</h4>
 
               <!-- Basic Bootstrap Table -->
               <div class="card">
-                <h5 class="card-header">FAQ(Frequently Asked Questions)</h5>
+                <h5 class="card-header">Services</h5>
               
 			       <div class="col-xxl">
                   <div class="card mb-4">
@@ -91,7 +91,7 @@
                       
                     </div>
                     <div class="card-body">
-                      <form action="/updateFaqs/<%=FaqsData._id%>" method="post">
+                      <form action="/updateServices/<%=servicesData._id%>" method="post">
                         <div class="row mb-3">
                           <label class="col-sm-2 col-form-label" for="basic-default-company">Title</label>
                           <div class="col-sm-10">
@@ -101,12 +101,30 @@
                               id="basic-default-company"
                               placeholder="Enter Your Title"
                               name="title"
-                              value="<%=FaqsData.title%>"
+                              value="<%=servicesData.title%>"
+                             
                              
 
                             />
                           </div>
                         </div>
+
+                        <div class="row mb-3">
+                            <label class="col-sm-2 col-form-label" for="basic-default-company">Short Title</label>
+                            <div class="col-sm-10">
+                              <input
+                                type="text"
+                                class="form-control"
+                                id="basic-default-company"
+                                placeholder="Enter Your Title"
+                                name="shortTitle"
+                                value="<%=servicesData.shortTitle%>"
+                               
+                               
+  
+                              />
+                            </div>
+                          </div>
                        
                        
                         <div class="row mb-3">
@@ -119,7 +137,7 @@
                               aria-label="Hi, Do you have a moment to talk Joe?"
                               aria-describedby="basic-icon-default-message2"
                               name="dec"
-                            ><%=FaqsData.dec%></textarea>
+                            ><%=servicesData.dec%></textarea>
                           </div>
                         </div>
                         <div class="row justify-content-end">

@@ -4,20 +4,21 @@ const Query = require('../model/query')
 const Worksample = require('../model/worksample')
 const Authors = require('../model/authors')
 const Faqs = require('../model/faqs')
-const Blog= require("../model/blog")
-const Admin= require("../model/admin")
+const Blog = require("../model/blog")
+const Services = require("../model/services")
+const Admin = require("../model/admin")
 const multer = require("multer")
 const bcrypt = require('bcrypt');
 const httpMsgs = require("http-msgs")
-const jwt= require('jsonwebtoken')
+const jwt = require('jsonwebtoken')
 
 
-const checkLogin=(req,res,next)=>{
-     if(req.cookies.adminToken===undefined){
+const checkLogin = (req, res, next) => {
+    if (req.cookies.adminToken === undefined) {
         res.redirect("/getproadmin")
-     }else{
+    } else {
         next()
-     }
+    }
 }
 
 
@@ -39,19 +40,19 @@ var upload = multer({
 
 
 
-const adminLogin = async(req, res) => {
-    
+const adminLogin = async (req, res) => {
+
     res.render('adminLogin.ejs')
 }
 
-const adminLoginSubmit = async(req, res) => {
+const adminLoginSubmit = async (req, res) => {
     const reqEmail = req.body.email
     const reqPass = req.body.password
     try {
-      const adminData=await  Admin.findOne({email:reqEmail})
+        const adminData = await Admin.findOne({ email: reqEmail })
         if (adminData !== null) {
             if (adminData.password === reqPass) {
-                let Id= adminData._id
+                let Id = adminData._id
                 var token = jwt.sign({ Id }, 'shhhhh');
                 res.cookie('adminToken', token)
                 res.redirect("/dashboard")
@@ -70,7 +71,7 @@ const adminLoginSubmit = async(req, res) => {
 
 
 const dashboard = (req, res) => {
-    
+
     res.render('dashboard.ejs')
 }
 
@@ -80,18 +81,18 @@ const users = async (req, res) => {
         res.render('users.ejs', { userData })
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
-    
+
 }
 
 const updateUser = async (req, res) => {
     try {
-       const id=req.params.id
-      idUserData=await User.findById(id)
-      res.render("userupdate.ejs",{idUserData})
-      } catch (error) {
+        const id = req.params.id
+        idUserData = await User.findById(id)
+        res.render("userupdate.ejs", { idUserData })
+    } catch (error) {
         res.status(500).json({
             error: error.message
         })
@@ -102,21 +103,21 @@ const updateUser = async (req, res) => {
 
 const updateUserSubmit = async (req, res) => {
     try {
-        const newUser= req.body.username
-        const newEmail= req.body.email
-        const newPassword= req.body.password
+        const newUser = req.body.username
+        const newEmail = req.body.email
+        const newPassword = req.body.password
         let password = await bcrypt.hash(req.body.password, 10)
-        const id=req.params.id
+        const id = req.params.id
         let existUsername = await User.findOne({ username: newUser })
-        if (existUsername === null){
-            await User.findByIdAndUpdate(id,{username:newUser,email:newEmail,password:password})
+        if (existUsername === null) {
+            await User.findByIdAndUpdate(id, { username: newUser, email: newEmail, password: password })
             res.redirect("/users")
-        }else{
+        } else {
             res.status(404).json({
                 message: "username is already taken"
-            }) 
+            })
         }
-       
+
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -127,9 +128,9 @@ const updateUserSubmit = async (req, res) => {
 
 const deleteteUser = async (req, res) => {
     try {
-       const id=req.params.id
-       await User.findByIdAndDelete(id)
-       res.redirect("/users")
+        const id = req.params.id
+        await User.findByIdAndDelete(id)
+        res.redirect("/users")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -138,9 +139,9 @@ const deleteteUser = async (req, res) => {
 
 }
 
-const query = async(req, res) => {
+const query = async (req, res) => {
     const queryData = await Query.find()
-    res.render('query.ejs',{queryData})
+    res.render('query.ejs', { queryData })
 }
 const queryAdd = async (req, res) => {
 
@@ -150,7 +151,7 @@ const queryAdd = async (req, res) => {
     let message = req.body.message;
 
     try {
-        const userData = new Query({ fullName: fullname, email: email, subject: subject, message:message})
+        const userData = new Query({ fullName: fullname, email: email, subject: subject, message: message })
         await userData.save()
         res.status(201).json({
             data: userData
@@ -191,26 +192,26 @@ const addworksampleSubmit = async (req, res) => {
         res.redirect("/workSample")
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
 
-const updateworksample = async(req, res) => {
-   const id= req.params.id
-   const idData=await Worksample.findById(id)
-   // const workSampleData = await Worksample.find()
-    res.render('worksample-edit.ejs',{idData})
+const updateworksample = async (req, res) => {
+    const id = req.params.id
+    const idData = await Worksample.findById(id)
+    // const workSampleData = await Worksample.find()
+    res.render('worksample-edit.ejs', { idData })
 }
 
 const updateworksampleSubmit = async (req, res) => {
     try {
-       const newTitle= req.body.title
-       const newDec= req.body.dec
-       const newImage= req.file.filename
-       const id=req.params.id
-       await Worksample.findByIdAndUpdate(id,{title:newTitle,dec:newDec,image:newImage})
-       res.redirect("/workSample")
+        const newTitle = req.body.title
+        const newDec = req.body.dec
+        const newImage = req.file.filename
+        const id = req.params.id
+        await Worksample.findByIdAndUpdate(id, { title: newTitle, dec: newDec, image: newImage })
+        res.redirect("/workSample")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -222,9 +223,9 @@ const updateworksampleSubmit = async (req, res) => {
 
 const deleteworksampleSubmit = async (req, res) => {
     try {
-       const id=req.params.id
-       await Worksample.findByIdAndDelete(id)
-       res.redirect("/workSample")
+        const id = req.params.id
+        await Worksample.findByIdAndDelete(id)
+        res.redirect("/workSample")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -234,8 +235,8 @@ const deleteworksampleSubmit = async (req, res) => {
 
 const authors = async (req, res) => {
     try {
-       const AuthorData = await Authors.find()
-       res.render("authors.ejs",{AuthorData})
+        const AuthorData = await Authors.find()
+        res.render("authors.ejs", { AuthorData })
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -246,11 +247,11 @@ const authors = async (req, res) => {
 const addAuthors = async (req, res) => {
 
     try {
-       res.render("authors-add.ejs")
-      
+        res.render("authors-add.ejs")
+
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
@@ -266,17 +267,17 @@ const addAuthorsSubmit = async (req, res) => {
         res.redirect("/authors")
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
 
 const updateAuthors = async (req, res) => {
     try {
-        const id= req.params.id
-        const AuthorData=await Authors.findById(id)
-        res.render("authors-edit.ejs",{AuthorData})
-   
+        const id = req.params.id
+        const AuthorData = await Authors.findById(id)
+        res.render("authors-edit.ejs", { AuthorData })
+
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -286,13 +287,13 @@ const updateAuthors = async (req, res) => {
 
 const updateAuthorsSubmit = async (req, res) => {
     try {
-       const newTitle= req.body.title
-       const newDec= req.body.dec
-       const newImage= req.file.filename
-       const id=req.params.id
-       console.log(req.body,req.file.filename)
-       await Authors.findByIdAndUpdate(id,{title:newTitle,dec:newDec,image:newImage})
-       res.redirect("/authors")
+        const newTitle = req.body.title
+        const newDec = req.body.dec
+        const newImage = req.file.filename
+        const id = req.params.id
+        console.log(req.body, req.file.filename)
+        await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec, image: newImage })
+        res.redirect("/authors")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -305,24 +306,24 @@ const updateAuthorsSubmit = async (req, res) => {
 const faqs = async (req, res) => {
 
     try {
-    const FaqsData =await Faqs.find()
-    res.render("faq.ejs",{FaqsData})
-      
+        const FaqsData = await Faqs.find()
+        res.render("faq.ejs", { FaqsData })
+
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
 const addFaqs = async (req, res) => {
 
     try {
-        
+
         res.render("faq-add.ejs")
-      
+
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
@@ -332,24 +333,24 @@ const addFaqsSubmit = async (req, res) => {
     try {
         const title = req.body.title
         const dec = req.body.dec
-        const image = new Faqs({ title: title, dec: dec})
-        await image.save()
+        const FaqData = new Faqs({ title: title, dec: dec })
+        await FaqData.save()
         res.redirect("/faqs")
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
 const updateFaqs = async (req, res) => {
 
     try {
-        const id= req.params.id
-        const FaqsData=await Faqs.findById(id)
-        res.render("faq-edit.ejs",{FaqsData})
+        const id = req.params.id
+        const FaqsData = await Faqs.findById(id)
+        res.render("faq-edit.ejs", { FaqsData })
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
@@ -357,11 +358,11 @@ const updateFaqs = async (req, res) => {
 
 const updateFaqsSubmit = async (req, res) => {
     try {
-       const newTitle= req.body.title
-       const newDec= req.body.dec
-       const id=req.params.id
-       await Faqs.findByIdAndUpdate(id,{title:newTitle,dec:newDec})
-       res.redirect("/faqs")
+        const newTitle = req.body.title
+        const newDec = req.body.dec
+        const id = req.params.id
+        await Faqs.findByIdAndUpdate(id, { title: newTitle, dec: newDec })
+        res.redirect("/faqs")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -373,13 +374,13 @@ const updateFaqsSubmit = async (req, res) => {
 const blog = async (req, res) => {
 
     try {
- 
-     const BlogData =await Blog.find()
-      res.render("blog.ejs",{BlogData})
-      
+
+        const BlogData = await Blog.find()
+        res.render("blog.ejs", { BlogData })
+
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
@@ -387,24 +388,24 @@ const blog = async (req, res) => {
 const addblog = async (req, res) => {
 
     try {
-      res.render("blog-add.ejs")
-      
+        res.render("blog-add.ejs")
+
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
 
 const addblogSubmit = async (req, res) => {
     try {
-       const Title= req.body.title
-       const Dec= req.body.dec
-       const Image= req.file.filename
-       const Name=req.body.name
-       const blogData=  new Blog({title:Title,name:Name,dec:Dec,image:Image})
-       await blogData.save()
-       res.redirect("/blog")
+        const Title = req.body.title
+        const Dec = req.body.dec
+        const Image = req.file.filename
+        const Name = req.body.name
+        const blogData = new Blog({ title: Title, name: Name, dec: Dec, image: Image })
+        await blogData.save()
+        res.redirect("/blog")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -413,35 +414,115 @@ const addblogSubmit = async (req, res) => {
 
 }
 
-const updateBLog = async(req, res) => {
-    const id= req.params.id
-    const idData=await Blog.findById(id)
-    res.render('blog-edit.ejs',{idData})
- }
- 
- const updateBLogSubmit = async (req, res) => {
-     try {
-        const NewTitle= req.body.title
-        const NewDec= req.body.dec
-        const NewImage= req.file.filename
-        const NewName=req.body.name
-        const id=req.params.id
-        await Blog.findByIdAndUpdate(id,{title:NewTitle,name:NewName,dec:NewDec,image:NewImage})
-        res.redirect("/blog")
-      
-     } catch (error) {
-         res.status(500).json({
-             error: error.message
-         })
-     }
- 
- }
+const updateBLog = async (req, res) => {
+    try {
+        const id = req.params.id
+        const idData = await Blog.findById(id)
+        res.render('blog-edit.ejs', { idData })
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
 
-const logout = async(req, res) => {
+const updateBLogSubmit = async (req, res) => {
+    try {
+        const NewTitle = req.body.title
+        const NewDec = req.body.dec
+        const NewImage = req.file.filename
+        const NewName = req.body.name
+        const id = req.params.id
+        await Blog.findByIdAndUpdate(id, { title: NewTitle, name: NewName, dec: NewDec, image: NewImage })
+        res.redirect("/blog")
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+
+}
+
+
+const services = async (req, res) => {
    
+    try {
+        const servicesData = await Services.find()
+         res.render('services.ejs',{servicesData})
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+    
+}
+
+const addServices = async (req, res) => {
+
+    try {
+
+        res.render("services-add.ejs")
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+const addServicesSubmit = async (req, res) => {
+
+    try {
+        const title = req.body.title
+        const shortTitle = req.body.shortTitle
+        const dec = req.body.dec
+        const servicesData = new Services({ title: title,shortTitle:shortTitle, dec: dec})
+        await servicesData.save()
+        res.redirect("/services")
+    } catch (error) {
+        res.status(500).json({
+            error:error.message
+        })
+    }
+}
+const updateServices = async (req, res) => {
+
+    try {
+        const id= req.params.id
+        const servicesData = await Services.findById(id)
+        console.log(servicesData)
+       res.render("services-edit.ejs",{servicesData})
+    } catch (error) {
+        res.status(500).json({
+            error:error.message
+        })
+    }
+}
+
+
+const updateServicesSubmit = async (req, res) => {
+    try {
+       const newTitle= req.body.title
+       const newShortTitle= req.body.shortTitle
+       const newDec= req.body.dec
+       const id=req.params.id
+       await Services.findByIdAndUpdate(id,{title:newTitle,shortTitle:newShortTitle,dec:newDec})
+       res.redirect("/services")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+
+}
+
+const logout = async (req, res) => {
+
     res.clearCookie('adminToken');
     res.redirect('/getproadmin')
- }
+}
 
 
 
@@ -459,72 +540,83 @@ adminRouter
     .get(checkLogin, dashboard);
 adminRouter
     .route('/users')
-    .get(checkLogin,users);
+    .get(checkLogin, users);
 adminRouter
     .route('/updateUser/:id')
-    .get(checkLogin,updateUser)
+    .get(checkLogin, updateUser)
     .post(updateUserSubmit)
 adminRouter
     .route('/delete/:id')
-    .get(checkLogin,deleteteUser)
+    .get(checkLogin, deleteteUser)
 
 adminRouter
     .route('/query')
-    .get(checkLogin,query);
+    .get(checkLogin, query);
 adminRouter
     .route('/contact-us')
     .post(queryAdd);
 adminRouter
     .route('/workSample')
-    .get(checkLogin,worksample);
+    .get(checkLogin, worksample);
 adminRouter
     .route('/addworksample')
-    .get(checkLogin,addworksample)
+    .get(checkLogin, addworksample)
     .post(upload.single('img'), addworksampleSubmit)
 adminRouter
     .route('/updateworksample/:id')
-    .get(checkLogin,updateworksample)
+    .get(checkLogin, updateworksample)
     .post(upload.single('img'), updateworksampleSubmit)
 adminRouter
     .route('/deleteworksample/:id')
-    .get(checkLogin,deleteworksampleSubmit)
+    .get(checkLogin, deleteworksampleSubmit)
 adminRouter
     .route('/authors')
-    .get(checkLogin,authors)
+    .get(checkLogin, authors)
 adminRouter
     .route('/addAuthors')
-    .get(checkLogin,addAuthors)
-    .post(upload.single('img'),addAuthorsSubmit)
+    .get(checkLogin, addAuthors)
+    .post(upload.single('img'), addAuthorsSubmit)
 adminRouter
     .route('/updateAuthors/:id')
-    .get(checkLogin,updateAuthors)
-    .post(upload.single('img'),updateAuthorsSubmit)
+    .get(checkLogin, updateAuthors)
+    .post(upload.single('img'), updateAuthorsSubmit)
 adminRouter
     .route('/faqs')
-    .get(checkLogin,faqs)
+    .get(checkLogin, faqs)
 adminRouter
     .route('/addFaqs')
-    .get(checkLogin,addFaqs)
+    .get(checkLogin, addFaqs)
     .post(addFaqsSubmit)
 adminRouter
     .route('/updateFaqs/:id')
-    .get(checkLogin,updateFaqs)
+    .get(checkLogin, updateFaqs)
     .post(updateFaqsSubmit)
 adminRouter
     .route('/blog')
-    .get(checkLogin,blog)
+    .get(checkLogin, blog)
 adminRouter
     .route('/addblog')
-    .get(checkLogin,addblog)
-    .post(upload.single('img'),addblogSubmit)
+    .get(checkLogin, addblog)
+    .post(upload.single('img'), addblogSubmit)
 adminRouter
     .route('/updateblog/:id')
-    .get(checkLogin,updateBLog)
-    .post(upload.single('img'),updateBLogSubmit)
+    .get(checkLogin, updateBLog)
+    .post(upload.single('img'), updateBLogSubmit)
 adminRouter
     .route('/logout')
-    .get(checkLogin,logout)
-   
+    .get(checkLogin, logout)
+adminRouter
+    .route('/services')
+    .get(checkLogin, services)
+adminRouter
+    .route('/addservices')
+    .get(checkLogin,addServices)
+    .post(addServicesSubmit)
+adminRouter
+    .route('/updateservices/:id')
+    .get(checkLogin, updateServices)
+    .post(updateServicesSubmit)
+
 
 
 module.exports = adminRouter;

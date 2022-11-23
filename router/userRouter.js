@@ -5,6 +5,7 @@ const Worksample = require('../model/worksample')
 const Authors = require('../model/authors')
 const Faqs = require('../model/faqs')
 const Blog= require("../model/blog")
+const Services= require("../model/services")
 const bcrypt = require('bcrypt');
 const jwt= require('jsonwebtoken')
 const nodemailer = require('nodemailer');
@@ -190,6 +191,19 @@ const getBlog = async (req, res) => {
     }
 }
 
+const getServices = async (req, res) => {
+    try {
+        const ServicesData = await Services.find()
+        res.status(200).json({
+            data:ServicesData
+        })
+    } catch (error) {
+        res.status(500).json({
+            error:error.message
+        })
+    }
+}
+
 const userLogout = async(req, res) => {
    res.clearCookie('userLoginToken');
     res.status(200).json({
@@ -221,6 +235,9 @@ userRouter
 userRouter
     .route('/getBlog')
     .get(getBlog);
+userRouter
+    .route('/getServices')
+    .get(getServices);
 userRouter
     .route('/userLogout')
     .get(userLogout);
