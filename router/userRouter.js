@@ -24,7 +24,7 @@ const register = async (req, res) => {
                 const userData = new User({ username: username, email: email, password: password ,status:"active"})
                 await userData.save()
                 res.status(201).json({
-                    data: userData
+                    message: "successfully register"
                 })
             } else {
                 res.status(404).json({
