@@ -7,6 +7,7 @@ const Faqs = require('../model/faqs')
 const Blog = require("../model/blog")
 const Services = require("../model/services")
 const Admin = require("../model/admin")
+const Coupon = require("../model/coupon")
 const multer = require("multer")
 const bcrypt = require('bcrypt');
 const httpMsgs = require("http-msgs")
@@ -478,7 +479,9 @@ const addServicesSubmit = async (req, res) => {
         const title = req.body.title
         const shortTitle = req.body.shortTitle
         const dec = req.body.dec
-        const servicesData = new Services({ title: title,shortTitle:shortTitle, dec: dec})
+        const price= req.body.price
+
+        const servicesData = new Services({ title: title,shortTitle:shortTitle, dec: dec,price:price})
         await servicesData.save()
         res.redirect("/services")
     } catch (error) {
@@ -507,8 +510,9 @@ const updateServicesSubmit = async (req, res) => {
        const newTitle= req.body.title
        const newShortTitle= req.body.shortTitle
        const newDec= req.body.dec
+       const newPrice= req.body.price
        const id=req.params.id
-       await Services.findByIdAndUpdate(id,{title:newTitle,shortTitle:newShortTitle,dec:newDec})
+       await Services.findByIdAndUpdate(id,{title:newTitle,shortTitle:newShortTitle,dec:newDec,price:newPrice})
        res.redirect("/services")
     } catch (error) {
         res.status(500).json({
@@ -519,9 +523,80 @@ const updateServicesSubmit = async (req, res) => {
 }
 
 const logout = async (req, res) => {
-
     res.clearCookie('adminToken');
     res.redirect('/getproadmin')
+}
+
+const coupon = async (req, res) => {
+
+    try {
+        const CouponData = await Coupon.find()
+        res.render("coupon.ejs",{CouponData})
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+const addcoupon = async (req, res) => {
+
+    try {
+
+        res.render("coupon-add.ejs")
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+const addCouponSubmit = async (req, res) => {
+
+    try {
+        const couponName = req.body.couponName
+        const couponType = req.body.coupontype
+        const couponAmount = req.body.couponAmount
+        const couponData = new Coupon({ couponName: couponName, couponType: couponType,offAmount:couponAmount })
+        await couponData.save()
+       res.redirect("/coupon")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+const updateCoupon = async (req, res) => {
+
+    try {
+        const id = req.params.id
+        const CouponData = await Coupon.findById(id)
+        res.render("Coupon-edit.ejs",{CouponData})
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+const updateCouponSubmit = async (req, res) => {
+    try {
+       const newcouponNamee= req.body.couponName
+       const newcouponType= req.body.coupontype
+       const newoffAmount= req.body.couponAmount
+       const id=req.params.id
+       console.log(newoffAmount)
+       await Coupon.findByIdAndUpdate(id,{couponName:newcouponNamee,couponType:newcouponType,offAmount:newoffAmount})
+       res.redirect("/coupon")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+
 }
 
 
@@ -616,6 +691,17 @@ adminRouter
     .route('/updateservices/:id')
     .get(checkLogin, updateServices)
     .post(updateServicesSubmit)
+adminRouter
+    .route('/coupon')
+    .get(checkLogin, coupon)
+adminRouter
+    .route('/addcoupon')
+    .get(checkLogin, addcoupon)
+    .post(addCouponSubmit)
+adminRouter
+    .route('/updateCoupon/:id')
+    .get(checkLogin, updateCoupon)
+    .post(updateCouponSubmit)
 
 
 

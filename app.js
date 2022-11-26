@@ -11,6 +11,8 @@ const userRouter= require('./router/userRouter')
 const adminRouter= require('./router/adminRouter')
 const jwt= require('jsonwebtoken')
 const cookieParser= require('cookie-parser')
+var bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser());
 app.use(express.urlencoded({extended:false}))
 app.set('view engine','ejs')
