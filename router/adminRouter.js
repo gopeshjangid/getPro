@@ -111,7 +111,7 @@ const updateUserSubmit = async (req, res) => {
         const id = req.params.id
         let existUsername = await User.findOne({ username: newUser })
         if (existUsername === null) {
-            await User.findByIdAndUpdate(id, { username: newUser, email: newEmail, password: password })
+           await User.findByIdAndUpdate(id, { username: newUser, password: password })
             res.redirect("/users")
         } else {
             res.status(404).json({
@@ -263,7 +263,9 @@ const addAuthorsSubmit = async (req, res) => {
         const img = req.file.filename
         const title = req.body.title
         const dec = req.body.dec
-        const image = new Authors({ title: title, dec: dec, image: img })
+        const lognDec = req.body.longDec
+        console.log(req.body)
+        const image = new Authors({ title: title, dec: dec,longDec:lognDec, image: img })
         await image.save()
         res.redirect("/authors")
     } catch (error) {
@@ -290,10 +292,11 @@ const updateAuthorsSubmit = async (req, res) => {
     try {
         const newTitle = req.body.title
         const newDec = req.body.dec
+        const newlongDec = req.body.longDec
         const newImage = req.file.filename
         const id = req.params.id
         console.log(req.body, req.file.filename)
-        await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec, image: newImage })
+        await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec,longDec:newlongDec, image: newImage })
         res.redirect("/authors")
     } catch (error) {
         res.status(500).json({

@@ -109,8 +109,9 @@ const forgetPassword = async (req, res) => {
         let existEmail = await User.findOne({ email: req.body.email })
         let otp = otpGenerator.generate(10, { upperCaseAlphabets: false, specialChars: false });
         let password = await bcrypt.hash(otp, 10)
-        await User.findByIdAndUpdate(existEmail._id, { password: password })
+        console.log(req.body)
         if (existEmail !== null) {
+            await User.findByIdAndUpdate(existEmail._id, { password: password })
             const mailTransporter = nodemailer.createTransport({
                 host: `smtp.gmail.com`,
                 port: 465,
@@ -232,13 +233,12 @@ const addCart = async (req, res) => {
         const token = req.cookies.userLoginToken
         console.log(token)
         const verifyTokenId = jwt.verify(token, "zxcvbnm")
-        console.log(verifyTokenId)
-        console.log("UserId======", verifyTokenId.userId)
-        console.log("ProductId======",productId)
-        let addCart = new AddCart({ custemerId: verifyTokenId.userId, productid: productId })
-        await addCart.save()
+        const UserDetails=await User.findById(verifyTokenId.userId)
+        console.log(UserDetails)
+       let addCart = new AddCart({ custemerId: UserDetails.email, productId: productId })
+       await addCart.save()
         res.status(200).json({
-            message: "card added"
+            message: "cart added"
         })
 
     } catch (error) {
@@ -249,20 +249,20 @@ const addCart = async (req, res) => {
 
 const viewCart = async (req, res) => {
 
-    // try {
-    //     const token = req.cookies.userLoginToken
-    //     const verifyTokenId = jwt.verify(token, "zxcvbnm")
-    //    let CartData = await AddCart.find( {custemerId:verifyTokenId.userId} ).populate("user").populate("services")
-    //    console.log(verifyTokenId.userId)
-    //     console.log(CartData)
-    //     res.status(200).json({
-    //         message: "card added"
-    //     })
-    // } 
-    // catch (error) {
-    //     res.status(500).json({ error: error.message })
-    // }
-
+    try {
+        const token = req.cookies.userLoginToken
+        const verifyTokenId = jwt.verify(token, "zxcvbnm")
+        const UserDetails=await User.findById(verifyTokenId.userId)
+        let CartData = await AddCart.find({custemerId:UserDetails.email}).populate("productId")
+        console.log(verifyTokenId.userId)
+        console.log(CartData)
+        res.status(200).json({
+            message: CartData
+        })
+    } 
+    catch (error) {
+        res.status(500).json({ error: error.message })
+    }
 }
 
 
