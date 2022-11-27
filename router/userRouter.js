@@ -167,6 +167,21 @@ const getworkSample = async (req, res) => {
     }
 }
 
+const getAuthor = async (req, res) => {
+    try {
+        const id= req.params.id
+        const authorsData = await Authors.findById(id)
+        res.status(200).json({
+            data: authorsData
+        })
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+
 const getAuthors = async (req, res) => {
     try {
         const authorsData = await Authors.find()
@@ -278,6 +293,9 @@ userRouter
 userRouter
     .route('/getworkSamples')
     .get(getworkSample);
+userRouter
+    .route('/getAuthor/:id')
+    .get(getAuthor);
 userRouter
     .route('/getAuthors')
     .get(getAuthors);

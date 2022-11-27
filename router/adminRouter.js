@@ -602,6 +602,20 @@ const updateCouponSubmit = async (req, res) => {
 
 }
 
+const deleteCoupon = async (req, res) => {
+    try {
+      const id=req.params.id
+      await Coupon.findByIdAndDelete(id)
+       res.redirect("/coupon")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+
+}
+
+
 
 
 
@@ -705,6 +719,9 @@ adminRouter
     .route('/updateCoupon/:id')
     .get(checkLogin, updateCoupon)
     .post(updateCouponSubmit)
+adminRouter
+    .route('/deleteCoupon/:id')
+    .get(deleteCoupon)
 
 
 
