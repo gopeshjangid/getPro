@@ -8,10 +8,12 @@ const Blog = require("../model/blog")
 const Services = require("../model/services")
 const Admin = require("../model/admin")
 const Coupon = require("../model/coupon")
+const Career = require("../model/career")
 const multer = require("multer")
 const bcrypt = require('bcrypt');
 const httpMsgs = require("http-msgs")
 const jwt = require('jsonwebtoken')
+const path=require('path')
 
 
 const checkLogin = (req, res, next) => {
@@ -29,16 +31,27 @@ const Storage = multer.diskStorage({
         callback(null, './public/image')
     },
     filename: function (req, file, callback) {
-        callback(null, Date.now() + file.originalname)
+        callback(null, file.fieldname+ Date.now() + file.originalname)
     }
 })
 
 var upload = multer({
-    storage: Storage,
-    limits: { fileSize: 1024 * 1024 * 10 }
+    storage: Storage,  
 })
 
+// const PdfStorage = multer.diskStorage({
+//     destination: function (req, file, callback) {
+//         callback(null, './public/upload-pdf')
+//     },
+//     filename: function (req, file, callback) {
+//         callback(null, Date.now() + file.originalname)
+//     }
+// })
 
+// var Pdfupload = multer({
+//     storage: PdfStorage,
+//     limits: { fileSize: 1024 * 1024 * 1024 }
+// })
 
 
 const adminLogin = async (req, res) => {
@@ -111,7 +124,7 @@ const updateUserSubmit = async (req, res) => {
         const id = req.params.id
         let existUsername = await User.findOne({ username: newUser })
         if (existUsername === null) {
-           await User.findByIdAndUpdate(id, { username: newUser, password: password })
+            await User.findByIdAndUpdate(id, { username: newUser, password: password })
             res.redirect("/users")
         } else {
             res.status(404).json({
@@ -185,11 +198,21 @@ const addworksample = (req, res) => {
 const addworksampleSubmit = async (req, res) => {
 
     try {
-        const img = req.file.filename
+       // const img = req.file.filename
         const title = req.body.title
         const dec = req.body.dec
-        const image = new Worksample({ title: title, dec: dec, image: img })
-        await image.save()
+        var img;
+        var pdf;
+       await req.files.img.forEach(element => {
+            img= element.filename
+        })
+        await req.files.pdf.forEach(element => {
+            pdf= element.filename
+        })
+        
+     
+       const workSample = new Worksample({ title: title, dec: dec, image: img ,pdf:pdf})
+       await workSample.save()
         res.redirect("/workSample")
     } catch (error) {
         res.status(500).json({
@@ -264,8 +287,7 @@ const addAuthorsSubmit = async (req, res) => {
         const title = req.body.title
         const dec = req.body.dec
         const lognDec = req.body.longDec
-        console.log(req.body)
-        const image = new Authors({ title: title, dec: dec,longDec:lognDec, image: img })
+        const image = new Authors({ title: title, dec: dec, longDec: lognDec, image: img })
         await image.save()
         res.redirect("/authors")
     } catch (error) {
@@ -296,7 +318,7 @@ const updateAuthorsSubmit = async (req, res) => {
         const newImage = req.file.filename
         const id = req.params.id
         console.log(req.body, req.file.filename)
-        await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec,longDec:newlongDec, image: newImage })
+        await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec, longDec: newlongDec, image: newImage })
         res.redirect("/authors")
     } catch (error) {
         res.status(500).json({
@@ -450,17 +472,17 @@ const updateBLogSubmit = async (req, res) => {
 
 
 const services = async (req, res) => {
-   
+
     try {
         const servicesData = await Services.find()
-         res.render('services.ejs',{servicesData})
+        res.render('services.ejs', { servicesData })
 
     } catch (error) {
         res.status(500).json({
             error: error.message
         })
     }
-    
+
 }
 
 const addServices = async (req, res) => {
@@ -482,27 +504,27 @@ const addServicesSubmit = async (req, res) => {
         const title = req.body.title
         const shortTitle = req.body.shortTitle
         const dec = req.body.dec
-        const price= req.body.price
+        const price = req.body.price
 
-        const servicesData = new Services({ title: title,shortTitle:shortTitle, dec: dec,price:price})
+        const servicesData = new Services({ title: title, shortTitle: shortTitle, dec: dec, price: price })
         await servicesData.save()
         res.redirect("/services")
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
 const updateServices = async (req, res) => {
 
     try {
-        const id= req.params.id
+        const id = req.params.id
         const servicesData = await Services.findById(id)
         console.log(servicesData)
-       res.render("services-edit.ejs",{servicesData})
+        res.render("services-edit.ejs", { servicesData })
     } catch (error) {
         res.status(500).json({
-            error:error.message
+            error: error.message
         })
     }
 }
@@ -510,13 +532,13 @@ const updateServices = async (req, res) => {
 
 const updateServicesSubmit = async (req, res) => {
     try {
-       const newTitle= req.body.title
-       const newShortTitle= req.body.shortTitle
-       const newDec= req.body.dec
-       const newPrice= req.body.price
-       const id=req.params.id
-       await Services.findByIdAndUpdate(id,{title:newTitle,shortTitle:newShortTitle,dec:newDec,price:newPrice})
-       res.redirect("/services")
+        const newTitle = req.body.title
+        const newShortTitle = req.body.shortTitle
+        const newDec = req.body.dec
+        const newPrice = req.body.price
+        const id = req.params.id
+        await Services.findByIdAndUpdate(id, { title: newTitle, shortTitle: newShortTitle, dec: newDec, price: newPrice })
+        res.redirect("/services")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -534,7 +556,7 @@ const coupon = async (req, res) => {
 
     try {
         const CouponData = await Coupon.find()
-        res.render("coupon.ejs",{CouponData})
+        res.render("coupon.ejs", { CouponData })
 
     } catch (error) {
         res.status(500).json({
@@ -562,9 +584,10 @@ const addCouponSubmit = async (req, res) => {
         const couponName = req.body.couponName
         const couponType = req.body.coupontype
         const couponAmount = req.body.couponAmount
-        const couponData = new Coupon({ couponName: couponName, couponType: couponType,offAmount:couponAmount })
+        const couponStatus = req.body.couponStatus
+        const couponData = new Coupon({ couponName: couponName, couponType: couponType, offAmount: couponAmount ,status:couponStatus})
         await couponData.save()
-       res.redirect("/coupon")
+        res.redirect("/coupon")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -577,7 +600,7 @@ const updateCoupon = async (req, res) => {
     try {
         const id = req.params.id
         const CouponData = await Coupon.findById(id)
-        res.render("Coupon-edit.ejs",{CouponData})
+        res.render("Coupon-edit.ejs", { CouponData })
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -587,13 +610,13 @@ const updateCoupon = async (req, res) => {
 
 const updateCouponSubmit = async (req, res) => {
     try {
-       const newcouponNamee= req.body.couponName
-       const newcouponType= req.body.coupontype
-       const newoffAmount= req.body.couponAmount
-       const id=req.params.id
-       console.log(newoffAmount)
-       await Coupon.findByIdAndUpdate(id,{couponName:newcouponNamee,couponType:newcouponType,offAmount:newoffAmount})
-       res.redirect("/coupon")
+        const newcouponNamee = req.body.couponName
+        const newcouponType = req.body.coupontype
+        const newoffAmount = req.body.couponAmount
+        const couponStatus = req.body.couponStatus
+        const id = req.params.id
+        await Coupon.findByIdAndUpdate(id, { couponName: newcouponNamee, couponType: newcouponType, offAmount: newoffAmount ,status:couponStatus})
+        res.redirect("/coupon")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -604,9 +627,9 @@ const updateCouponSubmit = async (req, res) => {
 
 const deleteCoupon = async (req, res) => {
     try {
-      const id=req.params.id
-      await Coupon.findByIdAndDelete(id)
-       res.redirect("/coupon")
+        const id = req.params.id
+        await Coupon.findByIdAndDelete(id)
+        res.redirect("/coupon")
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -615,6 +638,93 @@ const deleteCoupon = async (req, res) => {
 
 }
 
+const career = async (req, res) => {
+
+    try {
+        const CareerData = await Career.find()
+        res.render("career.ejs", { CareerData })
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+const addCareer = async (req, res) => {
+
+    try {
+        res.render("career-add.ejs")
+
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+const addCareerSubmit = async (req, res) => {
+
+    try {
+        const careerName = req.body.careerName
+        const careerData = new Career({ careerName: careerName })
+        await careerData.save()
+        res.redirect("/career")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+const updateCareer = async (req, res) => {
+
+    try {
+        const id = req.params.id
+        const CareerData = await Career.findById(id)
+        res.render("career-edit.ejs", { CareerData })
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+const updateCareerSubmit = async (req, res) => {
+    try {
+        const newcareerName = req.body.careerName
+        const id = req.params.id
+        await Career.findByIdAndUpdate(id, { careerName: newcareerName })
+        res.redirect("/career")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+
+}
+
+const deleteCareer = async (req, res) => {
+    try {
+        const id = req.params.id
+        await Career.findByIdAndDelete(id)
+        res.redirect("/career")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+
+}
+
+// adminRouter.get('/pdf/:id', function(request, response){
+//     const id= req.params.id
+//     console.log(__dirname)
+//     fs.readFile(tempFile, function (err,data){
+//        response.contentType("application/pdf");
+//        response.send(data);
+//     });
+//   });
 
 
 
@@ -640,7 +750,6 @@ adminRouter
 adminRouter
     .route('/delete/:id')
     .get(checkLogin, deleteteUser)
-
 adminRouter
     .route('/query')
     .get(checkLogin, query);
@@ -653,7 +762,7 @@ adminRouter
 adminRouter
     .route('/addworksample')
     .get(checkLogin, addworksample)
-    .post(upload.single('img'), addworksampleSubmit)
+    .post(upload.fields([{name:'img'},{name:'pdf'}]), addworksampleSubmit)
 adminRouter
     .route('/updateworksample/:id')
     .get(checkLogin, updateworksample)
@@ -702,7 +811,7 @@ adminRouter
     .get(checkLogin, services)
 adminRouter
     .route('/addservices')
-    .get(checkLogin,addServices)
+    .get(checkLogin, addServices)
     .post(addServicesSubmit)
 adminRouter
     .route('/updateservices/:id')
@@ -722,6 +831,21 @@ adminRouter
 adminRouter
     .route('/deleteCoupon/:id')
     .get(deleteCoupon)
+adminRouter
+    .route('/career')
+    .get(career)
+adminRouter
+    .route('/addcareer')
+    .get(addCareer)
+    .post(addCareerSubmit)
+adminRouter
+    .route('/updateCareer/:id')
+    .get(updateCareer)
+    .post(updateCareerSubmit)
+adminRouter
+    .route('/deleteCareer/:id')
+    .get(deleteCareer)
+    
 
 
 

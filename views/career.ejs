@@ -81,54 +81,46 @@
 		   <!-- / FAQ Start -->
 		  
 		  <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Coupon</h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Career</h4>
 
               <!-- Basic Bootstrap Table -->
               <div class="card">
-                <h5 class="card-header">Coupon</h5>
+                <h5 class="card-header">Career</h5>
 				<h5 class="card-header">
-				   <a href="/addcoupon"><button type="button" class="btn btn-dark">Add Coupon</button>
+				   <a href="/addcareer"><button type="button" class="btn btn-dark">Add Career</button>
 				</a></h5>
                 <div class="table-responsive text-nowrap">
                   <table class="table" id="myTable">
                     <thead>
-                      
+                       
                       <tr>
                         <!-- <th>Sr. No.</th> -->
-                        <th>Coupon Name</th>
-                        <th>Coupon Type</th>
-                        <th>Off Amount</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <th>Career Name</th>
+                       
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                      <% CouponData.forEach((result)=>{ %>
+                        <% CareerData.forEach((result)=>{ %>
                       <tr>
-					               <!-- <td>1</td> -->
-                        
-                        <td><%=result.couponName%></td>
-                        <td><%=result.couponType%></td>
-                        <td><%=result.offAmount%></td>
-                        <td><%=result.status%></td>
+                        <td><%=result.careerName%></td>      <!-- <td>1</td> -->
                         <td>
                           <div class="dropdown">
                             <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
                               <i class="bi bi-three-dots-vertical"></i>
                             </button>
                             <div class="dropdown-menu">
-                              <a class="dropdown-item" href="/updateCoupon/<%=result._id%>"
+                              <a class="dropdown-item" href="/updateCareer/<%=result._id%>"
                                 ><i class="bx bx-edit-alt me-1"></i> Edit</a
                               >
-                              <a class="dropdown-item" href="/deleteCoupon/<%=result._id%>"
-                                onclick="return confirmDelete()"><i class="bx bx-trash me-1"></i>Delete</a
+                              <a class="dropdown-item" href="/deleteCareer/<%=result._id%>"
+                                onclick="return confirmDelete()" ><i class="bx bx-trash me-1"></i>Delete</a
                               >
                             </div>
                           </div>
                         </td>
                       </tr>
-                      <% })%>
-
+                    
+                      <% })%> 
                    
                     </tbody>
                   </table>
@@ -196,15 +188,15 @@
       }
   </script>
 
-<script>
-  function confirmDelete() {
-    if(confirm("are you sure you delete this document")){
+  <script>
+    function confirmDelete() {
+      if(confirm("are you sure you delete this document")){
 
-    }else{
-      return false;
+      }else{
+        return false;
+      }
     }
-  }
-  </script>
+    </script>
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="../js/jquery.js"></script>

@@ -73,11 +73,11 @@
 
                         <div class="container-xxl flex-grow-1 container-p-y">
                             <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> <span
-                                    class="text-muted fw-light">Coupon /</span>Coupon Add</h4>
+                                    class="text-muted fw-light">Career /</span>Career Add</h4>
 
                             <!-- Basic Bootstrap Table -->
                             <div class="card">
-                                <h5 class="card-header">Coupon</h5>
+                                <h5 class="card-header">Career</h5>
 
                                 <div class="col-xxl">
                                     <div class="card mb-4">
@@ -85,53 +85,18 @@
 
                                         </div>
                                         <div class="card-body">
-                                            <form action="/addcoupon" method="post">
+                                            <form action="/addcareer" method="post">
                                                 <div class="row mb-3">
                                                     <label class="col-sm-2 col-form-label"
-                                                        for="basic-default-name">Coupon Name</label>
+                                                        for="basic-default-name">Career Name</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="basic-default-name"
-                                                            placeholder="Enter Your Coupon Name" name="couponName" />
+                                                            placeholder="Enter Your Coupon Name" name="careerName" />
                                                     </div>
                                                 </div>
 
-                                                <div class="row mb-3">
-                                                    <label class="col-sm-2 col-form-label"
-                                                        for="basic-default-message">Coupon type</label>
-                                                    <div class="col-sm-10">
-                                                        <select id="basic-default-message"
-                                                        class="form-control" placeholder="Enter Your Coupon Type"
-                                                        aria-label="Hi, Do you have a moment to talk Joe?"
-                                                        aria-describedby="basic-icon-default-message2" name="coupontype">
-                                                    <option name="Flat" value="Flat">Flat</option>
-                                                    <option name="parsentage" value="parsentage">Parsentage</option>
-                                                    
-                                                    </select>
-                                                    </div>
-                                                </div>
-
-                                                <div class="row mb-3">
-                                                    <label class="col-sm-2 col-form-label"
-                                                        for="basic-default-message">Coupon Status</label>
-                                                    <div class="col-sm-10">
-                                                        <select id="basic-default-message"
-                                                        class="form-control" placeholder="Enter Your Coupon Type"
-                                                        aria-label="Hi, Do you have a moment to talk Joe?"
-                                                        aria-describedby="basic-icon-default-message2" name="couponStatus">
-                                                    <option>Active</option>
-                                                    <option>Deactive</option>
-                                                    
-                                                    </select>
-                                                    </div>
-                                                </div>
-                                                <div class="row mb-3">
-                                                    <label class="col-sm-2 col-form-label"
-                                                        for="basic-default-name">Off Amount</label>
-                                                    <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="basic-default-name"
-                                                            placeholder="Enter Your Off Amount" name="couponAmount" />
-                                                    </div>
-                                                </div>
+                                                
+                                               
                                                 <div class="row justify-content-end">
                                                     <div class="col-sm-10">
                                                         <button type="submit" class="btn btn-primary">Add</button>
