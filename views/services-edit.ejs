@@ -89,7 +89,7 @@
                           <label class="col-sm-2 col-form-label" for="basic-default-company">Title</label>
                           <div class="col-sm-10">
                             <input type="text" class="form-control" id="basic-default-company"
-                              placeholder="Enter Your Title" name="title" value="<%=servicesData.title%>" />
+                              placeholder="Enter Your Short Title" name="title" value="<%=servicesData.title%>" required/>
                           </div>
                         </div>
 
@@ -97,7 +97,7 @@
                           <label class="col-sm-2 col-form-label" for="basic-default-company">Short Title</label>
                           <div class="col-sm-10">
                             <input type="text" class="form-control" id="basic-default-company"
-                              placeholder="Enter Your Title" name="shortTitle" value="<%=servicesData.shortTitle%>" />
+                              placeholder="Enter Your Title" name="shortTitle" value="<%=servicesData.shortTitle%>" required/>
                           </div>
                         </div>
 
@@ -107,14 +107,14 @@
                           <div class="col-sm-10">
                             <textarea id="basic-default-message" class="form-control"
                               placeholder="Enter Your Description" aria-label="Hi, Do you have a moment to talk Joe?"
-                              aria-describedby="basic-icon-default-message2" name="dec"><%=servicesData.dec%></textarea>
+                              aria-describedby="basic-icon-default-message2" name="dec" required><%=servicesData.dec%></textarea>
                           </div>
                         </div>
                         <div class="row mb-3">
                           <label class="col-sm-2 col-form-label" for="basic-default-company">Price</label>
                           <div class="col-sm-10">
                             <input type="text" class="form-control" id="basic-default-company"
-                              placeholder="Enter Your Title" name="price" value="<%=servicesData.price%>" />
+                              placeholder="Enter Your Title" name="price" value="<%=servicesData.price%>" required/>
                           </div>
                         </div>
                         <div class="row justify-content-end">
