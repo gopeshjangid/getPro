@@ -16,9 +16,10 @@ module.exports.register = async (req, res) => {
 
     let username = req.body.username;
     let email = req.body.email;
-    let password = await bcrypt.hash(req.body.password, 10)
+    let Originalpassword = req.body.password
     try {
         if(username !=='' && email !=='' && password !=='' && req.body.confirmPassword !==''){
+            let password= await bcrypt.hash(req.body.password, 10)
             let existUsername = await User.findOne({ username: req.body.username })
             let existEmail = await User.findOne({ email: req.body.email })
             if (existUsername === null) {
