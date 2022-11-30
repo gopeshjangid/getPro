@@ -18,34 +18,39 @@ module.exports.register = async (req, res) => {
     let email = req.body.email;
     let password = await bcrypt.hash(req.body.password, 10)
     try {
-        let existUsername = await User.findOne({ username: req.body.username })
-        let existEmail = await User.findOne({ email: req.body.email })
-        if (existUsername === null) {
-            if (existEmail === null) {
-                if(req.body.password === req.body.confirmPassword){
-                    const userData = new User({ username: username, email: email, password: password, status: "active" })
-                    await userData.save()
-                    res.status(201).json({
-                        message: "successfully register"
-                    })
-                }
-                else{
+        if(username !=='' && email !=='' && password !=='' && req.body.confirmPassword !==''){
+            let existUsername = await User.findOne({ username: req.body.username })
+            let existEmail = await User.findOne({ email: req.body.email })
+            if (existUsername === null) {
+                if (existEmail === null) {
+                    if(req.body.password === req.body.confirmPassword){
+                        const userData = new User({ username: username, email: email, password: password, status: "active" })
+                        await userData.save()
+                        res.status(201).json({
+                            message: "successfully register"
+                        })
+                    }
+                    else{
+                        res.status(404).json({
+                            message: 'please enter same password'
+                        })
+                    }
+                } else {
                     res.status(404).json({
-                        message: 'please enter same password'
+                        message: 'your email id is already exist'
                     })
                 }
+    
             } else {
                 res.status(404).json({
-                    message: 'your email id is already exist'
+                    message: 'your username is already exist'
                 })
             }
-
-        } else {
+        }else{
             res.status(404).json({
-                message: 'your username is already exist'
+                message: 'ypu can not submit blanck data'
             })
         }
-
     } catch (error) {
         res.json({
             error: error.message
