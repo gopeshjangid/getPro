@@ -18,7 +18,6 @@ module.exports.register = async (req, res) => {
     let email = req.body.email;
     let Originalpassword = req.body.password
     try {
-        if(username !=='' && email !=='' && Originalpassword !=='' && req.body.confirmPassword !==''){
             let password= await bcrypt.hash(Originalpassword, 10)
             let existUsername = await User.findOne({ username: req.body.username })
             let existEmail = await User.findOne({ email: req.body.email })
@@ -47,11 +46,6 @@ module.exports.register = async (req, res) => {
                     message: 'your username is already exist'
                 })
             }
-        }else{
-            res.status(404).json({
-                message: 'ypu can not submit blanck data'
-            })
-        }
     } catch (error) {
         res.json({
             error: error.message

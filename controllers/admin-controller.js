@@ -220,9 +220,17 @@ module.exports.updateworksampleSubmit = async (req, res) => {
     try {
         const newTitle = req.body.title
         const newDec = req.body.dec
-        const newImage = req.file.filename
         const id = req.params.id
-        await Worksample.findByIdAndUpdate(id, { title: newTitle, dec: newDec, image: newImage })
+        var img;
+        var pdf;
+       await req.files.img.forEach(element => {
+            img= element.filename
+        })
+        await req.files.pdf.forEach(element => {
+            pdf= element.filename
+        })
+        
+        await Worksample.findByIdAndUpdate(id, { title: newTitle, dec: newDec, image: img,pdf: pdf})
         res.redirect("/workSample")
     } catch (error) {
         res.status(500).json({
@@ -271,12 +279,19 @@ module.exports.addAuthors = async (req, res) => {
 module.exports.addAuthorsSubmit = async (req, res) => {
 
     try {
-        const img = req.file.filename
         const title = req.body.title
         const dec = req.body.dec
         const lognDec = req.body.longDec
-        const image = new Authors({ title: title, dec: dec, longDec: lognDec, image: img })
-        await image.save()
+        var img;
+        var pdf;
+        await req.files.img.forEach(element => {
+            img= element.filename
+        })
+        await req.files.pdf.forEach(element => {
+            pdf= element.filename
+        })
+        const auther = new Authors({ title: title, dec: dec, longDec: lognDec, image: img,pdf:pdf })
+        await auther.save()
         res.redirect("/authors")
     } catch (error) {
         res.status(500).json({
@@ -303,9 +318,16 @@ module.exports.updateAuthorsSubmit = async (req, res) => {
         const newTitle = req.body.title
         const newDec = req.body.dec
         const newlongDec = req.body.longDec
-        const newImage = req.file.filename
+        var img;
+        var pdf;
+        await req.files.img.forEach(element => {
+            img= element.filename
+        })
+        await req.files.pdf.forEach(element => {
+            pdf= element.filename
+        })
         const id = req.params.id
-        await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec, longDec: newlongDec, image: newImage })
+        await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec, longDec: newlongDec, image: img,pdf:pdf })
         res.redirect("/authors")
     } catch (error) {
         res.status(500).json({
@@ -414,9 +436,16 @@ module.exports.addblogSubmit = async (req, res) => {
     try {
         const Title = req.body.title
         const Dec = req.body.dec
-        const Image = req.file.filename
         const Name = req.body.name
-        const blogData = new Blog({ title: Title, name: Name, dec: Dec, image: Image })
+        var img;
+        var pdf;
+        await req.files.img.forEach(element => {
+            img= element.filename
+        })
+        await req.files.pdf.forEach(element => {
+            pdf= element.filename
+        })
+        const blogData = new Blog({ title: Title, name: Name, dec: Dec, image: img,pdf:pdf })
         await blogData.save()
         res.redirect("/blog")
     } catch (error) {
@@ -443,10 +472,17 @@ module.exports.updateBLogSubmit = async (req, res) => {
     try {
         const NewTitle = req.body.title
         const NewDec = req.body.dec
-        const NewImage = req.file.filename
         const NewName = req.body.name
         const id = req.params.id
-        await Blog.findByIdAndUpdate(id, { title: NewTitle, name: NewName, dec: NewDec, image: NewImage })
+        var img;
+        var pdf;
+        await req.files.img.forEach(element => {
+            img= element.filename
+        })
+        await req.files.pdf.forEach(element => {
+            pdf= element.filename
+        })
+        await Blog.findByIdAndUpdate(id, { title: NewTitle, name: NewName, dec: NewDec, image: img,pdf:pdf })
         res.redirect("/blog")
 
     } catch (error) {

@@ -48,7 +48,7 @@ adminRouter
 adminRouter
     .route('/updateworksample/:id')
     .get(adminController.checkLogin, adminController.updateworksample)
-    .post(adminController.upload.single('img'), adminController.updateworksampleSubmit)
+    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.updateworksampleSubmit)
 adminRouter
     .route('/deleteworksample/:id')
     .get(adminController.checkLogin, adminController.deleteworksampleSubmit)
@@ -58,11 +58,11 @@ adminRouter
 adminRouter
     .route('/addAuthors')
     .get(adminController.checkLogin, adminController.addAuthors)
-    .post(adminController.upload.single('img'), adminController.addAuthorsSubmit)
+    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.addAuthorsSubmit)
 adminRouter
     .route('/updateAuthors/:id')
     .get(adminController.checkLogin, adminController.updateAuthors)
-    .post(adminController.upload.single('img'), adminController.updateAuthorsSubmit)
+    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.updateAuthorsSubmit)
 adminRouter
     .route('/faqs')
     .get(adminController.checkLogin, adminController.faqs)
@@ -80,11 +80,11 @@ adminRouter
 adminRouter
     .route('/addblog')
     .get(adminController.checkLogin, adminController.addblog)
-    .post(adminController.upload.single('img'), adminController.addblogSubmit)
+    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.addblogSubmit)
 adminRouter
     .route('/updateblog/:id')
     .get(adminController.checkLogin, adminController.updateBLog)
-    .post(adminController.upload.single('img'), adminController.updateBLogSubmit)
+    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.updateBLogSubmit)
 adminRouter
     .route('/logout')
     .get(adminController.checkLogin, adminController.logout)

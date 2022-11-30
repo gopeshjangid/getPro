@@ -4,6 +4,7 @@ const Blog = mongoose.Schema({
     name:String,
     dec:String,
     image:String,  
+    pdf:String
 })
 
 module.exports= mongoose.model('Blog',Blog)
