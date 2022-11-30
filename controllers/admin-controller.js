@@ -1,4 +1,3 @@
-const adminRouter = require('express').Router()
 const User = require('../model/user')
 const Query = require('../model/query')
 const Worksample = require('../model/worksample')
