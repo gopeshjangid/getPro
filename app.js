@@ -1,4 +1,3 @@
-const http = require("http")
 const express= require('express')
 const cors = require('cors');
 const app= express();
@@ -19,6 +18,7 @@ const blogRouter= require('./router/blogRouter')
 const servicesRouter= require('./router/servicesRouter')
 const cartRouter= require('./router/cartRouter')
 const logoutRouter= require('./router/logoutRouter')
+const searchworksampleRouter= require('./router/searchworksampleRouter')
 const jwt= require('jsonwebtoken')
 const cookieParser= require('cookie-parser')
 var bodyParser = require('body-parser');
@@ -47,6 +47,7 @@ app.use(blogRouter)
 app.use(servicesRouter)
 app.use(cartRouter)
 app.use(logoutRouter)
+app.use(searchworksampleRouter)
 app.listen(process.env.PORT,(req,res)=>{
     console.log("server in running on port 5000")
 })
