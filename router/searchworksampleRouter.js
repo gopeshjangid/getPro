@@ -4,6 +4,6 @@ const searchWorkSampleController = require("../controllers/search-work-sample-co
 
 searchSampleRouter
     .route('/searchworksample')
-    .get(searchWorkSampleController.serarchWorkSample);
+    .post(searchWorkSampleController.serarchWorkSample);
 
 module.exports=searchSampleRouter
