@@ -738,6 +738,17 @@ module.exports.deleteCareer = async (req, res) => {
 
 }
 
+module.exports.chats = async (req, res) => {
+    try {
+       res.render("chats.ejs")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+
+}
+
 
 
 

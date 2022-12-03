@@ -17,10 +17,11 @@ module.exports.login = async (req, res) => {
             if (bcryptMatchPassword === true) {
                 let userId = usernameData._id
                 var token = jwt.sign({ userId }, 'zxcvbnm');
-                console.log("token")
-                res.cookie('userLoginToken', token)
+                //console.log("token")
+                //res.cookie('userLoginToken', token)
                 res.status(200).json({
-                    message: "successfully login"
+                    message: "successfully login",
+                    token:token
                 })
             } else {
                 res.status(404).json({
@@ -33,11 +34,12 @@ module.exports.login = async (req, res) => {
             if (bcryptMatchPassword2 === true) {
                 let userId = emailData._id
                 var token = jwt.sign({ userId }, 'zxcvbnm');
-                res.cookie('userLoginToken', token)
-                console.log(token)
-                console.log(userId)
+              //  res.cookie('userLoginToken', token)
+              //  console.log(token)
+              //  console.log(userId)
                 res.status(200).json({
-                    message: "successfully login"
+                    message: "successfully login",
+                    token:token
                 })
 
             } else {

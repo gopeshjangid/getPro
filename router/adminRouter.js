@@ -1,17 +1,10 @@
 const adminRouter = require('express').Router()
 const multer = require("multer")
 const adminController = require("../controllers/admin-controller")
+const Worksample = require('../model/worksample')
+const fs= require("fs")
 
 
-
-// adminRouter.get('/pdf/:id', function(request, response){
-//     const id= req.params.id
-//     console.log(__dirname)
-//     fs.readFile(tempFile, function (err,data){
-//        response.contentType("application/pdf");
-//        response.send(data);
-//     });
-//   });
 
 adminRouter
     .route('/getproadmin')
@@ -127,7 +120,9 @@ adminRouter
 adminRouter
     .route('/deleteCareer/:id')
     .get(adminController.checkLogin,adminController.deleteCareer)
-    
+adminRouter
+    .route('/chats')
+    .get(adminController.checkLogin,adminController.chats)
 
 
 
