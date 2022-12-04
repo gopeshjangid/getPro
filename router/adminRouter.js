@@ -1,8 +1,6 @@
 const adminRouter = require('express').Router()
-const multer = require("multer")
 const adminController = require("../controllers/admin-controller")
-const Worksample = require('../model/worksample')
-const fs= require("fs")
+
 
 
 
@@ -37,11 +35,11 @@ adminRouter
 adminRouter
     .route('/addworksample')
     .get(adminController.checkLogin, adminController.addworksample)
-    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.addworksampleSubmit)
+    .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.addworksampleSubmit)
 adminRouter
     .route('/updateworksample/:id')
     .get(adminController.checkLogin, adminController.updateworksample)
-    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.updateworksampleSubmit)
+    .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.updateworksampleSubmit)
 adminRouter
     .route('/deleteworksample/:id')
     .get(adminController.checkLogin, adminController.deleteworksampleSubmit)
@@ -51,11 +49,11 @@ adminRouter
 adminRouter
     .route('/addAuthors')
     .get(adminController.checkLogin, adminController.addAuthors)
-    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.addAuthorsSubmit)
+    .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.addAuthorsSubmit)
 adminRouter
     .route('/updateAuthors/:id')
     .get(adminController.checkLogin, adminController.updateAuthors)
-    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.updateAuthorsSubmit)
+    .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.updateAuthorsSubmit)
 adminRouter
     .route('/faqs')
     .get(adminController.checkLogin, adminController.faqs)
@@ -65,7 +63,7 @@ adminRouter
     .post(adminController.addFaqsSubmit)
 adminRouter
     .route('/updateFaqs/:id')
-    .get(adminController.checkLogin,adminController.updateFaqs)
+    .get(adminController.checkLogin, adminController.updateFaqs)
     .post(adminController.updateFaqsSubmit)
 adminRouter
     .route('/blog')
@@ -73,11 +71,11 @@ adminRouter
 adminRouter
     .route('/addblog')
     .get(adminController.checkLogin, adminController.addblog)
-    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.addblogSubmit)
+    .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.addblogSubmit)
 adminRouter
     .route('/updateblog/:id')
     .get(adminController.checkLogin, adminController.updateBLog)
-    .post(adminController.upload.fields([{name:'img'},{name:'pdf'}]), adminController.updateBLogSubmit)
+    .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.updateBLogSubmit)
 adminRouter
     .route('/logout')
     .get(adminController.checkLogin, adminController.logout)
@@ -105,24 +103,25 @@ adminRouter
     .post(adminController.updateCouponSubmit)
 adminRouter
     .route('/deleteCoupon/:id')
-    .get(adminController.checkLogin,adminController.deleteCoupon)
+    .get(adminController.checkLogin, adminController.deleteCoupon)
 adminRouter
     .route('/career')
-    .get(adminController.checkLogin,adminController.career)
+    .get(adminController.checkLogin, adminController.career)
 adminRouter
     .route('/addcareer')
-    .get(adminController.checkLogin,adminController.addCareer)
+    .get(adminController.checkLogin, adminController.addCareer)
     .post(adminController.addCareerSubmit)
 adminRouter
     .route('/updateCareer/:id')
-    .get(adminController.checkLogin,adminController.updateCareer)
+    .get(adminController.checkLogin, adminController.updateCareer)
     .post(adminController.updateCareerSubmit)
 adminRouter
     .route('/deleteCareer/:id')
-    .get(adminController.checkLogin,adminController.deleteCareer)
+    .get(adminController.checkLogin, adminController.deleteCareer)
 adminRouter
     .route('/chats')
-    .get(adminController.checkLogin,adminController.chats)
+    .get(adminController.checkLogin, adminController.chats)
+
 
 
 
