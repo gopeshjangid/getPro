@@ -15,27 +15,27 @@ module.exports.addCart = async (req, res) => {
         if (findCartUser.length < 1) {
             let addCart = new AddCart({ custemerId: UserDetails.email, productId: productId, quantity: quantity })
             await addCart.save()
-            const CartUser = await AddCart.find({ custemerId: UserDetails.email })
+            const CartUser = await AddCart.find({ custemerId: UserDetails.email }).populate("productId")
             res.status(200).json({
                 message: CartUser
             })
-        }else{
-            const findUserProduct = await AddCart.findOne({$and:[{custemerId: UserDetails.email },{productId:productId}]})
-            if(findUserProduct == null){
+        } else {
+            const findUserProduct = await AddCart.findOne({ $and: [{ custemerId: UserDetails.email }, { productId: productId }] })
+            if (findUserProduct == null) {
                 let addCart = new AddCart({ custemerId: UserDetails.email, productId: productId, quantity: quantity })
                 await addCart.save()
-                const CartUser = await AddCart.find({ custemerId: UserDetails.email })
+                const CartUser = await AddCart.find({ custemerId: UserDetails.email }).populate("productId")
                 res.status(200).json({
                     message: CartUser
                 })
-            }else{
-               let cartUpdate=  await AddCart.findByIdAndUpdate(findUserProduct._id,{quantity:quantity})
-               const CartUser = await AddCart.find({ custemerId: UserDetails.email })
-               res.status(200).json({
-                message:CartUser
-            })
+            } else {
+                let cartUpdate = await AddCart.findByIdAndUpdate(findUserProduct._id, { quantity: quantity })
+                const CartUser = await AddCart.find({ custemerId: UserDetails.email }).populate("productId")
+                res.status(200).json({
+                    message: CartUser
+                })
             }
-           
+
         }
 
 
@@ -53,16 +53,24 @@ module.exports.viewCart = async (req, res) => {
         const verifyTokenId = jwt.verify(token, "zxcvbnm")
         const UserDetails = await User.findById(verifyTokenId.userId)
         let CartData = await AddCart.find({ custemerId: UserDetails.email }).populate("productId")
-        if(CartData.length<1){
+        let totalPrice = 0
+        let totalItems = 0
+        if (CartData.length < 1) {
             res.status(200).json({
                 message: []
             })
-        }else{
-            res.status(200).json({
+        } else {
+            for (var i = 0; i < CartData.length; i++) {
+                totalPrice += CartData[i].productId.price * CartData[i].quantity
+                totalItems += CartData[i].quantity
+            }
+        res.status(200).json({
+                totalPrice: totalPrice,
+                totalItems: totalItems,
                 message: CartData
             })
         }
-       
+
     }
     catch (error) {
         res.status(500).json({ error: error.message })

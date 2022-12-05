@@ -34,9 +34,6 @@ module.exports.login = async (req, res) => {
             if (bcryptMatchPassword2 === true) {
                 let userId = emailData._id
                 var token = jwt.sign({ userId }, 'zxcvbnm');
-              //  res.cookie('userLoginToken', token)
-              //  console.log(token)
-              //  console.log(userId)
                 res.status(200).json({
                     message: "successfully login",
                     token:token
