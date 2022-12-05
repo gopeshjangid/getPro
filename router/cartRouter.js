@@ -8,6 +8,9 @@ cartRouter
 cartRouter
     .route('/viewCart')
     .get(cartController.viewCart)
+cartRouter
+    .route('/deleteCart/:id')
+    .post(cartController.deleteCart)
 
 
 module.exports=cartRouter

@@ -29,6 +29,9 @@ module.exports.addCart = async (req, res) => {
                     message: CartUser
                 })
             } else {
+                if(quantity===0){
+                   let cartDelete = await AddCart.findByIdAndDelete(findUserProduct._id)
+                }
                 let cartUpdate = await AddCart.findByIdAndUpdate(findUserProduct._id, { quantity: quantity })
                 const CartUser = await AddCart.find({ custemerId: UserDetails.email }).populate("productId")
                 res.status(200).json({
@@ -70,6 +73,25 @@ module.exports.viewCart = async (req, res) => {
                 message: CartData
             })
         }
+
+    }
+    catch (error) {
+        res.status(500).json({ error: error.message })
+    }
+}
+
+module.exports.deleteCart = async (req, res) => {
+
+    try {
+        const productId=req.params.id
+        const token = req.headers.authorization
+        const verifyTokenId = jwt.verify(token, "zxcvbnm")
+        const UserDetails = await User.findById(verifyTokenId.userId)
+        const findUserProduct = await AddCart.findOne({ $and: [{ custemerId: UserDetails.email }, { productId: productId }] })
+        await AddCart.findByIdAndDelete(findUserProduct._id)
+        res.status(200).json({
+            message:"product deleted"
+        })
 
     }
     catch (error) {
