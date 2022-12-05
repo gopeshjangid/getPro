@@ -21,7 +21,6 @@ module.exports.forgetPassword = async (req, res) => {
                     "pass": "zeczopkmiqbvbffc"
                 }
             })
-
             let mailDetails = {
                 from: 'bablusaini90310@gmail.com',
                 to: req.body.email,

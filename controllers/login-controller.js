@@ -9,7 +9,7 @@ module.exports.login = async (req, res) => {
 
         if (usernameData == null && emailData == null) {
             res.status(404).json({
-                error: "your account does not found"
+                message: "your account does not found"
             })
         }
         else if (usernameData !== null) {
