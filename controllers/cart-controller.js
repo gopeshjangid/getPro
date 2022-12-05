@@ -55,7 +55,7 @@ module.exports.viewCart = async (req, res) => {
         let CartData = await AddCart.find({ custemerId: UserDetails.email }).populate("productId")
         if(CartData.length<1){
             res.status(200).json({
-                message: "cart empty"
+                message: []
             })
         }else{
             res.status(200).json({
