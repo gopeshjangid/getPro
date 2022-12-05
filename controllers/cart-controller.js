@@ -15,21 +15,24 @@ module.exports.addCart = async (req, res) => {
         if (findCartUser.length < 1) {
             let addCart = new AddCart({ custemerId: UserDetails.email, productId: productId, quantity: quantity })
             await addCart.save()
+            const CartUser = await AddCart.find({ custemerId: UserDetails.email })
             res.status(200).json({
-                message: "cart added"
+                message: CartUser
             })
         }else{
             const findUserProduct = await AddCart.findOne({$and:[{custemerId: UserDetails.email },{productId:productId}]})
             if(findUserProduct == null){
                 let addCart = new AddCart({ custemerId: UserDetails.email, productId: productId, quantity: quantity })
                 await addCart.save()
+                const CartUser = await AddCart.find({ custemerId: UserDetails.email })
                 res.status(200).json({
-                    message: "cart added"
+                    message: CartUser
                 })
             }else{
                let cartUpdate=  await AddCart.findByIdAndUpdate(findUserProduct._id,{quantity:quantity})
+               const CartUser = await AddCart.find({ custemerId: UserDetails.email })
                res.status(200).json({
-                message: "cart update"
+                message:CartUser
             })
             }
            
