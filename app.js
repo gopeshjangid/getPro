@@ -3,21 +3,17 @@ const cors = require('cors');
 const app= express();
 const http = require("http");
 const server = http.createServer(app);
+
 const corsOptions = {
 	origin: 'http://localhost:3000',
 	optionsSuccessStatus: 200
 };
-
-
 app.use(cors(corsOptions));
-
 const socketIO = require("socket.io");
 const io = socketIO(server);
 const users = [{}];
 
 io.on("connection", (socket)=>{
-
-    console.log("sssssssssss",socket);
 
     socket.on("joined",({user})=>{
         users[socket.id] = user;
@@ -32,12 +28,7 @@ io.on("connection", (socket)=>{
         socket.broadcast.emit('leave', {user:"Admin", message:`User has left`});
         console.log(`User Left, ${users[socket.id]} `);
     })
-
-
 })
-
-
-
 const userRouter= require('./router/userRouter')
 const adminRouter= require('./router/adminRouter')
 const registerRouter= require('./router/registerRouter')
@@ -89,13 +80,9 @@ app.use(servicesRouter)
 app.use(cartRouter)
 app.use(logoutRouter)
 app.use(searchworksampleRouter)
-app.use(searchblogRouter)
-app.use(changePasswodRouter)
-app.use(careerRouter)
-app.use(couponRouter)
-app.use(viewProfileRouter)
+app.use(searchblogRouter);
 
-app.listen(process.env.PORT,(req,res)=>{
-    console.log("server in running on port 5000")
+server.listen(process.env.PORT,(req,res)=>{
+    console.log(`Server in running on port ${process.env.PORT}`)
 })
 
