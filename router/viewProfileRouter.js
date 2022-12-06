@@ -4,6 +4,6 @@ const viewProfileController = require("../controllers/view-profile-controller")
 
 viewProfileRouter
     .route('/viewProfile')
-    .get(viewProfileController.getCareers)
+    .get(viewProfileController.viewProfile)
 
 module.exports=viewProfileRouter
