@@ -54,6 +54,7 @@ const searchworksampleRouter= require('./router/searchworksampleRouter')
 const searchblogRouter= require('./router/searchblogRouter')
 const changePasswodRouter= require('./router/changePasswodRouter')
 const careerRouter= require('./router/careerRouter')
+const couponRouter= require('./router/couponRouter')
 
 
 
@@ -90,6 +91,7 @@ app.use(searchworksampleRouter)
 app.use(searchblogRouter)
 app.use(changePasswodRouter)
 app.use(careerRouter)
+app.use(couponRouter)
 
 app.listen(process.env.PORT,(req,res)=>{
     console.log("server in running on port 5000")
