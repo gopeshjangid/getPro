@@ -286,10 +286,7 @@ module.exports.addAuthorsSubmit = async (req, res) => {
         await req.files.img.forEach(element => {
             img= element.filename
         })
-        await req.files.pdf.forEach(element => {
-            pdf= element.filename
-        })
-        const auther = new Authors({ title: title, dec: dec, longDec: lognDec, image: img,pdf:pdf })
+         const auther = new Authors({ title: title, dec: dec, longDec: lognDec, image: img,pdf:pdf })
         await auther.save()
         res.redirect("/authors")
     } catch (error) {
@@ -322,9 +319,6 @@ module.exports.updateAuthorsSubmit = async (req, res) => {
         await req.files.img.forEach(element => {
             img= element.filename
         })
-        await req.files.pdf.forEach(element => {
-            pdf= element.filename
-        })
         const id = req.params.id
         await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec, longDec: newlongDec, image: img,pdf:pdf })
         res.redirect("/authors")
@@ -335,6 +329,19 @@ module.exports.updateAuthorsSubmit = async (req, res) => {
     }
 
 }
+
+module.exports.deleteAuthor = async (req, res) => {
+    try {
+        const id = req.params.id
+        await Authors.findByIdAndDelete(id)
+        res.redirect("/authors")
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
 
 
 module.exports.faqs = async (req, res) => {
@@ -441,9 +448,6 @@ module.exports.addblogSubmit = async (req, res) => {
         await req.files.img.forEach(element => {
             img= element.filename
         })
-        await req.files.pdf.forEach(element => {
-            pdf= element.filename
-        })
         const blogData = new Blog({ title: Title, name: Name, dec: Dec, image: img,pdf:pdf })
         await blogData.save()
         res.redirect("/blog")
@@ -477,9 +481,6 @@ module.exports.updateBLogSubmit = async (req, res) => {
         var pdf;
         await req.files.img.forEach(element => {
             img= element.filename
-        })
-        await req.files.pdf.forEach(element => {
-            pdf= element.filename
         })
         await Blog.findByIdAndUpdate(id, { title: NewTitle, name: NewName, dec: NewDec, image: img,pdf:pdf })
         res.redirect("/blog")

@@ -55,6 +55,9 @@ adminRouter
     .get(adminController.checkLogin, adminController.updateAuthors)
     .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.updateAuthorsSubmit)
 adminRouter
+    .route('/deleteAuthors/:id')
+    .get(adminController.checkLogin, adminController.deleteAuthor)
+adminRouter
     .route('/faqs')
     .get(adminController.checkLogin, adminController.faqs)
 adminRouter
