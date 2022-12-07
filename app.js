@@ -81,6 +81,10 @@ app.use(cartRouter)
 app.use(logoutRouter)
 app.use(searchworksampleRouter)
 app.use(searchblogRouter);
+app.use(changePasswodRouter);
+app.use(careerRouter);
+app.use(couponRouter);
+app.use(viewProfileRouter);
 
 server.listen(process.env.PORT,(req,res)=>{
     console.log(`Server in running on port ${process.env.PORT}`)
