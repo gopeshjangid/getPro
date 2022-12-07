@@ -4,7 +4,7 @@ const couponController = require("../controllers/coupon-controller")
 
 CouponRouter
     .route('/getCoupon')
-    .get(couponController.getCoupon)
+    .post(couponController.getCoupon)
 
 
 module.exports=CouponRouter
