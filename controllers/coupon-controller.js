@@ -3,10 +3,18 @@ const Coupon = require("../model/coupon")
 
 module.exports.getCoupon = async (req, res) =>{
      try {
-        const CouponData = await Coupon.find()
+        const CouponName=req.body.applyCouponName
+        const CouponData = await Coupon.findOne({couponName:CouponName})
+       if(CouponData !==null){
         res.status(200).json({
-            data: CouponData
+            message: CouponData
         })
+       }else{
+        res.status(404).json({
+            message: null
+        })
+       }
+       
     } catch (error) {
         res.status(500).json({
             error: error.message

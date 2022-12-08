@@ -12,7 +12,7 @@ const multer = require("multer")
 const bcrypt = require('bcrypt');
 const httpMsgs = require("http-msgs")
 const jwt = require('jsonwebtoken')
-const path=require('path')
+const path = require('path')
 
 
 module.exports.checkLogin = (req, res, next) => {
@@ -25,21 +25,21 @@ module.exports.checkLogin = (req, res, next) => {
 
 const Storage = multer.diskStorage({
     destination: function (req, file, callback) {
-         let a= file.originalname
-       let extname=  path.extname(a)
-        if(extname===".jpg" || extname===".png"){
+        let a = file.originalname
+        let extname = path.extname(a)
+        if (extname === ".jpg" || extname === ".png") {
             callback(null, './public/image')
-        }else if(extname===".pdf"){
+        } else if (extname === ".pdf") {
             callback(null, './public/upload-pdf')
-        }   
+        }
     },
     filename: function (req, file, callback) {
-        callback(null, file.fieldname+ Date.now() + file.originalname)
+        callback(null, file.fieldname + Date.now() + file.originalname)
     }
 })
 
 module.exports.upload = multer({
-    storage: Storage,  
+    storage: Storage,
 })
 module.exports.adminLogin = async (req, res) => {
 
@@ -185,21 +185,21 @@ module.exports.addworksample = (req, res) => {
 module.exports.addworksampleSubmit = async (req, res) => {
 
     try {
-       // const img = req.file.filename
+        // const img = req.file.filename
         const title = req.body.title
         const dec = req.body.dec
         var img;
         var pdf;
-       await req.files.img.forEach(element => {
-            img= element.filename
+        await req.files.img.forEach(element => {
+            img = element.filename
         })
         await req.files.pdf.forEach(element => {
-            pdf= element.filename
+            pdf = element.filename
         })
-        
-     
-       const workSample = new Worksample({ title: title, dec: dec, image: img ,pdf:pdf})
-       await workSample.save()
+
+
+        const workSample = new Worksample({ title: title, dec: dec, image: img, pdf: pdf })
+        await workSample.save()
         res.redirect("/workSample")
     } catch (error) {
         res.status(500).json({
@@ -222,14 +222,14 @@ module.exports.updateworksampleSubmit = async (req, res) => {
         const id = req.params.id
         var img;
         var pdf;
-       await req.files.img.forEach(element => {
-            img= element.filename
+        await req.files.img.forEach(element => {
+            img = element.filename
         })
         await req.files.pdf.forEach(element => {
-            pdf= element.filename
+            pdf = element.filename
         })
-        
-        await Worksample.findByIdAndUpdate(id, { title: newTitle, dec: newDec, image: img,pdf: pdf})
+
+        await Worksample.findByIdAndUpdate(id, { title: newTitle, dec: newDec, image: img, pdf: pdf })
         res.redirect("/workSample")
     } catch (error) {
         res.status(500).json({
@@ -284,9 +284,9 @@ module.exports.addAuthorsSubmit = async (req, res) => {
         var img;
         var pdf;
         await req.files.img.forEach(element => {
-            img= element.filename
+            img = element.filename
         })
-         const auther = new Authors({ title: title, dec: dec, longDec: lognDec, image: img,pdf:pdf })
+        const auther = new Authors({ title: title, dec: dec, longDec: lognDec, image: img, pdf: pdf })
         await auther.save()
         res.redirect("/authors")
     } catch (error) {
@@ -317,10 +317,10 @@ module.exports.updateAuthorsSubmit = async (req, res) => {
         var img;
         var pdf;
         await req.files.img.forEach(element => {
-            img= element.filename
+            img = element.filename
         })
         const id = req.params.id
-        await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec, longDec: newlongDec, image: img,pdf:pdf })
+        await Authors.findByIdAndUpdate(id, { title: newTitle, dec: newDec, longDec: newlongDec, image: img, pdf: pdf })
         res.redirect("/authors")
     } catch (error) {
         res.status(500).json({
@@ -446,9 +446,9 @@ module.exports.addblogSubmit = async (req, res) => {
         var img;
         var pdf;
         await req.files.img.forEach(element => {
-            img= element.filename
+            img = element.filename
         })
-        const blogData = new Blog({ title: Title, name: Name, dec: Dec, image: img,pdf:pdf })
+        const blogData = new Blog({ title: Title, name: Name, dec: Dec, image: img, pdf: pdf })
         await blogData.save()
         res.redirect("/blog")
     } catch (error) {
@@ -480,9 +480,9 @@ module.exports.updateBLogSubmit = async (req, res) => {
         var img;
         var pdf;
         await req.files.img.forEach(element => {
-            img= element.filename
+            img = element.filename
         })
-        await Blog.findByIdAndUpdate(id, { title: NewTitle, name: NewName, dec: NewDec, image: img,pdf:pdf })
+        await Blog.findByIdAndUpdate(id, { title: NewTitle, name: NewName, dec: NewDec, image: img, pdf: pdf })
         res.redirect("/blog")
 
     } catch (error) {
@@ -603,13 +603,22 @@ module.exports.addcoupon = async (req, res) => {
 module.exports.addCouponSubmit = async (req, res) => {
 
     try {
+
         const couponName = req.body.couponName
         const couponType = req.body.coupontype
         const couponAmount = req.body.couponAmount
         const couponStatus = req.body.couponStatus
-        const couponData = new Coupon({ couponName: couponName, couponType: couponType, offAmount: couponAmount ,status:couponStatus})
-        await couponData.save()
-        res.redirect("/coupon")
+        const CouponData = await Coupon.findOne({ couponName: couponName })
+        if (CouponData == null) {
+            const couponData = new Coupon({ couponName: couponName, couponType: couponType, offAmount: couponAmount, status: couponStatus })
+            await couponData.save()
+            res.redirect("/coupon")
+        }else{
+            res.json({
+                message:"couponName is already exist"
+            })
+        }
+
     } catch (error) {
         res.status(500).json({
             error: error.message
@@ -637,7 +646,7 @@ module.exports.updateCouponSubmit = async (req, res) => {
         const newoffAmount = req.body.couponAmount
         const couponStatus = req.body.couponStatus
         const id = req.params.id
-        await Coupon.findByIdAndUpdate(id, { couponName: newcouponNamee, couponType: newcouponType, offAmount: newoffAmount ,status:couponStatus})
+        await Coupon.findByIdAndUpdate(id, { couponName: newcouponNamee, couponType: newcouponType, offAmount: newoffAmount, status: couponStatus })
         res.redirect("/coupon")
     } catch (error) {
         res.status(500).json({
@@ -741,7 +750,7 @@ module.exports.deleteCareer = async (req, res) => {
 
 module.exports.chats = async (req, res) => {
     try {
-       res.render("chats.ejs")
+        res.render("chats.ejs")
     } catch (error) {
         res.status(500).json({
             error: error.message
