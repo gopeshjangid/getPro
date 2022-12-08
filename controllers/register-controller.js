@@ -7,8 +7,9 @@ module.exports.register = async (req, res) => {
     let username = req.body.username;
     let email = req.body.email;
     let Originalpassword = req.body.password
+    console.log(req.body)
     try {
-        if(username !=='' && email !=='' && Originalpassword !=='' && username !==undefined && email !==undefined && Originalpassword !== undefined && req.body.confirmPassword !=='' && req.body.confirmPassword !==undefined){
+        
             let password= await bcrypt.hash(Originalpassword, 10)
             let existUsername = await User.findOne({ username: req.body.username })
             let existEmail = await User.findOne({ email: req.body.email })
@@ -37,11 +38,6 @@ module.exports.register = async (req, res) => {
                     message: 'your username is already exist'
                 })
             }
-        }else{
-            res.status(404).json({
-                message: 'you can not insert blank data'
-            })
-        }
            
     } catch (error) {
         res.json({
