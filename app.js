@@ -48,6 +48,7 @@ const careerRouter= require('./router/careerRouter')
 const couponRouter= require('./router/couponRouter')
 const viewProfileRouter= require('./router/viewProfileRouter')
 const paymentRouter= require('./router/paymentRouter')
+const walletRechargeRouter= require('./router/walletRechargeRouter')
 
 
 const jwt= require('jsonwebtoken')
@@ -85,6 +86,7 @@ app.use(careerRouter);
 app.use(couponRouter);
 app.use(viewProfileRouter);
 app.use(paymentRouter);
+app.use(walletRechargeRouter)
 
 server.listen(process.env.PORT,(req,res)=>{
     console.log(`Server in running on port ${process.env.PORT}`)

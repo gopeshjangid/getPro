@@ -23,7 +23,6 @@ module.exports.updateProfile = async (req, res) => {
     try {
         const token = req.headers.authorization
         const verifyTokenId = jwt.verify(token, "zxcvbnm")
-        console.log(verifyTokenId)
         const newUserName = req.body.NewUserName
         const UserDetails = await User.findOne({ username: newUserName })
         if (UserDetails === null) {
