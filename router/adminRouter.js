@@ -80,6 +80,10 @@ adminRouter
     .get(adminController.checkLogin, adminController.updateBLog)
     .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.updateBLogSubmit)
 adminRouter
+    .route('/deleteBlog/:id')
+    .get(adminController.checkLogin, adminController.deleteBlog)
+    
+adminRouter
     .route('/logout')
     .get(adminController.checkLogin, adminController.logout)
 adminRouter
