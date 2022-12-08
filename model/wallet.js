@@ -4,6 +4,7 @@ const wallet = mongoose.Schema({
   wallet: Number,
   datetime: String,
   pay_id: String,
+  pay_type:String
 });
 
 module.exports = mongoose.model("wallet", wallet);

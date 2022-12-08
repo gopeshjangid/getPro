@@ -3,7 +3,8 @@ const user = mongoose.Schema({
     username:String,
     email:String,
     password:String,
-    status:String
+    status:String,
+    wallet:Number
   
 })
 

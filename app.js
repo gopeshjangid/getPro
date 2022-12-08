@@ -49,6 +49,8 @@ const couponRouter= require('./router/couponRouter')
 const viewProfileRouter= require('./router/viewProfileRouter')
 const paymentRouter= require('./router/paymentRouter')
 const walletRechargeRouter= require('./router/walletRechargeRouter')
+const getUserWalletRouter= require('./router/getUserWalletRouter')
+const useWalletRouter= require('./router/useWalletRouter')
 
 
 const jwt= require('jsonwebtoken')
@@ -87,6 +89,8 @@ app.use(couponRouter);
 app.use(viewProfileRouter);
 app.use(paymentRouter);
 app.use(walletRechargeRouter)
+app.use(getUserWalletRouter)
+app.use(useWalletRouter)
 
 server.listen(process.env.PORT,(req,res)=>{
     console.log(`Server in running on port ${process.env.PORT}`)

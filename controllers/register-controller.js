@@ -16,7 +16,7 @@ module.exports.register = async (req, res) => {
             if (existUsername === null) {
                 if (existEmail === null) {
                     if(req.body.password === req.body.confirmPassword){
-                        const userData = new User({ username: username, email: email, password: password, status: "active" })
+                        const userData = new User({ username: username, email: email, password: password, status: "active" ,wallet:0 })
                         await userData.save()
                         res.status(201).json({
                             message: "successfully register"
