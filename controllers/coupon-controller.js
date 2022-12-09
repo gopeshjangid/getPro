@@ -10,7 +10,7 @@ module.exports.getCoupon = async (req, res) =>{
             message: CouponData
         })
        }else{
-        res.status(404).json({
+        res.status(200).json({
             message: null
         })
        }
