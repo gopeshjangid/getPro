@@ -128,6 +128,9 @@ adminRouter
 adminRouter
     .route('/chats')
     .get(adminController.checkLogin, adminController.chats)
+adminRouter
+    .route('/adminWalletHistory')
+    .get(adminController.checkLogin, adminController.adminWalletTransactionHistory)
 
 
 

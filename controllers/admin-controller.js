@@ -8,6 +8,7 @@ const Services = require("../model/services")
 const Admin = require("../model/admin")
 const Coupon = require("../model/coupon")
 const Career = require("../model/career")
+const Wallet = require("../model/wallet")
 const multer = require("multer")
 const bcrypt = require('bcrypt');
 const httpMsgs = require("http-msgs")
@@ -773,5 +774,17 @@ module.exports.chats = async (req, res) => {
 }
 
 
+module.exports.adminWalletTransactionHistory = async (req, res) => {
+
+    try {
+        const creditHistory = await Wallet.find({pay_type: "credited"})
+        const debitHistory = await Wallet.find({ pay_type: "debited" })
+        res.render("wallethistory.ejs",{creditHistory,debitHistory})
+     } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
 
 

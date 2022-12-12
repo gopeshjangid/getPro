@@ -81,49 +81,68 @@
 		   <!-- / FAQ Start -->
 		  
 		  <div class="container-xxl flex-grow-1 container-p-y">
-              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Faq</h4>
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Wallet History</h4>
 
               <!-- Basic Bootstrap Table -->
               <div class="card">
-                <h5 class="card-header">FAQ(Frequently Asked Questions)</h5>
-				<h5 class="card-header">
-				   <a href="/addFaqs"><button type="button" class="btn btn-dark">Add FAQ</button>
-				</a></h5>
+                <h5 class="card-header">Credited Wallet History</h5>
+				
                 <div class="table-responsive text-nowrap">
                   <table class="table align-middle" id="myTable">
                     <thead>
                       
                       <tr>
                         <!-- <th>Sr. No.</th> -->
-                        <th>Title</th>
-                        <th>Description</th>
-                        <th>Actions</th>
+                        <th>User</th>
+                        <th>TransectionId</th>
+                        <th>Amount</th>
+                        <th>DateTime</th>
+                        <th>Status</th>
                       </tr>
                     </thead>
                     <tbody class="table-border-bottom-0">
-                      <% FaqsData.forEach((result)=>{ %>
+                     <% creditHistory.forEach((result)=>{ %> 
                       <tr>
-					               <!-- <td>1</td> -->
-                        
-                        <td><%=result.title%></td>
-                        <td><%=result.dec%></td>
-                        <td>
-                          <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                              <i class="bi bi-three-dots-vertical"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" href="/updateFaqs/<%=result._id%>"
-                                ><i class="bx bx-edit-alt me-1"></i> Edit</a
-                              >
-                              <a class="dropdown-item" href="javascript:void(0);"
-                                ><i class="bx bx-trash me-1"></i> View Pdf</a
-                              >
-                            </div>
-                          </div>
-                        </td>
+                        <td><%=result.user%></td>
+					              <td><%=result.transactionId%></td>
+                        <td><%=result.wallet%></td>
+                        <td><%=result.datetime%></td>
+                        <td><%=result.pay_type%></td>
                       </tr>
                       <% })%>
+                   
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+
+              <div class="card mt-5">
+                <h5 class="card-header">Debited Wallet History</h5>
+				
+                <div class="table-responsive text-nowrap">
+                  <table class="table align-middle" id="myTable">
+                    <thead>
+                      
+                      <tr>
+                        <!-- <th>Sr. No.</th> -->
+                        <th>user</th>
+                        <th>TransectionId</th>
+                        <th>Amount</th>
+                        <th>DateTime</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      <% debitHistory.forEach((result)=>{ %> 
+                        <tr>
+                          <td><%=result.user%></td>
+                          <td><%=result.transactionId%></td>
+                          <td><%=result.wallet%></td>
+                          <td><%=result.datetime%></td>
+                          <td><%=result.pay_type%></td>
+                        </tr>
+                        <% })%>
                    
                     </tbody>
                   </table>
