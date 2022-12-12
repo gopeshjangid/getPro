@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const wallet = mongoose.Schema({
+  transactionId:String,
   user: String,
   wallet: Number,
   datetime: String,

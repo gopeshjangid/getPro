@@ -8,7 +8,7 @@ const orderScema= mongoose.Schema({
     couponAmount:Number,
     cartItems:{
         type:Array,
-        ref:"addCart"
+        ref:"services"
     }
 
 })

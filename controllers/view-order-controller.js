@@ -8,6 +8,8 @@ module.exports.viewOrder = async (req, res) => {
         const verifyTokenId = jwt.verify(token, "zxcvbnm");
         const UserDetails = await User.findById(verifyTokenId.userId)
         let OrderData = await Order.find({ email: UserDetails.email })
+        
+        
         res.status(200).json({
             data: OrderData
         })

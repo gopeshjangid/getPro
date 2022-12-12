@@ -29,8 +29,8 @@ module.exports.addCart = async (req, res) => {
                     message: CartUser
                 })
             } else {
-                if(quantity===0){
-                   let cartDelete = await AddCart.findByIdAndDelete(findUserProduct._id)
+                if (quantity === 0) {
+                    let cartDelete = await AddCart.findByIdAndDelete(findUserProduct._id)
                 }
                 let cartUpdate = await AddCart.findByIdAndUpdate(findUserProduct._id, { quantity: quantity })
                 const CartUser = await AddCart.find({ custemerId: UserDetails.email }).populate("productId")
@@ -67,7 +67,7 @@ module.exports.viewCart = async (req, res) => {
                 totalPrice += CartData[i].productId.price * CartData[i].quantity
                 totalItems += CartData[i].quantity
             }
-        res.status(200).json({
+            res.status(200).json({
                 totalPrice: totalPrice,
                 totalItems: totalItems,
                 message: CartData
@@ -83,14 +83,14 @@ module.exports.viewCart = async (req, res) => {
 module.exports.deleteCart = async (req, res) => {
 
     try {
-        const productId=req.params.id
+        const productId = req.params.id
         const token = req.headers.authorization
         const verifyTokenId = jwt.verify(token, "zxcvbnm")
         const UserDetails = await User.findById(verifyTokenId.userId)
         const findUserProduct = await AddCart.findOne({ $and: [{ custemerId: UserDetails.email }, { productId: productId }] })
         await AddCart.findByIdAndDelete(findUserProduct._id)
         res.status(200).json({
-            message:"product deleted"
+            message: "product deleted"
         })
 
     }
