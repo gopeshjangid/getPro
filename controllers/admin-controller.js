@@ -9,6 +9,7 @@ const Admin = require("../model/admin")
 const Coupon = require("../model/coupon")
 const Career = require("../model/career")
 const Wallet = require("../model/wallet")
+const Order = require("../model/order")
 const multer = require("multer")
 const bcrypt = require('bcrypt');
 const httpMsgs = require("http-msgs")
@@ -627,9 +628,9 @@ module.exports.addCouponSubmit = async (req, res) => {
             const couponData = new Coupon({ couponName: couponName, couponType: couponType, offAmount: couponAmount, status: couponStatus })
             await couponData.save()
             res.redirect("/coupon")
-        }else{
+        } else {
             res.json({
-                message:"couponName is already exist"
+                message: "couponName is already exist"
             })
         }
 
@@ -777,14 +778,42 @@ module.exports.chats = async (req, res) => {
 module.exports.adminWalletTransactionHistory = async (req, res) => {
 
     try {
-        const creditHistory = await Wallet.find({pay_type: "credited"})
+        const creditHistory = await Wallet.find({ pay_type: "credited" })
         const debitHistory = await Wallet.find({ pay_type: "debited" })
-        res.render("wallethistory.ejs",{creditHistory,debitHistory})
-     } catch (error) {
+        res.render("wallethistory.ejs", { creditHistory, debitHistory })
+    } catch (error) {
         res.status(500).json({
             error: error.message
         })
     }
 }
 
+module.exports.adminOrderHistory = async (req, res) => {
+
+    try {
+        const OrderHistory = await Order.find()
+        res.render("orderHistory.ejs", { OrderHistory })
+    }
+    catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+}
+
+
+module.exports.viewOrderDetails = async (req, res) => {
+    try {
+        const id = req.params.id
+       let OrderData= await Order.findById(id)
+       console.log(OrderData)
+       let Products=OrderData.products
+        res.render("viewOrderDetails.ejs",{OrderData,Products})
+    } catch (error) {
+        res.status(500).json({
+            error: error.message
+        })
+    }
+
+}
 

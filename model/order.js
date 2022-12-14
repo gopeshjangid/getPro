@@ -14,6 +14,7 @@ const orderScema= mongoose.Schema({
         p_price:Number
        }
     ],
+    status:String
     
 
 })

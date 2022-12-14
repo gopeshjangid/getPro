@@ -131,6 +131,12 @@ adminRouter
 adminRouter
     .route('/adminWalletHistory')
     .get(adminController.checkLogin, adminController.adminWalletTransactionHistory)
+adminRouter
+    .route('/adminOrderHistory')
+    .get(adminController.checkLogin, adminController.adminOrderHistory)
+adminRouter
+    .route('/viewOrderDetails/:id')
+    .get(adminController.checkLogin, adminController.viewOrderDetails)
 
 
 

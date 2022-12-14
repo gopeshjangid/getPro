@@ -8,7 +8,6 @@ const Services = require("../model/services")
 
 module.exports.useWallet = async (req, res) => {
     try {
-
         const token = req.headers.authorization;
         const verifyTokenId = jwt.verify(token, "zxcvbnm");
         const totalAmount = req.body.totalAmount
@@ -50,7 +49,8 @@ module.exports.useWallet = async (req, res) => {
                         totalAmoumt: totalAmount,
                         CouponName: couponName,
                         couponAmount: couponAmount,
-                        products: arr
+                        products: arr,
+                        status:"success"
                     }
                 )
                 await orderPlaced.save()
