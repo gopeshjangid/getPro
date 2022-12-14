@@ -6,10 +6,15 @@ const orderScema= mongoose.Schema({
     totalAmoumt:Number,
     CouponName:String,
     couponAmount:Number,
-    cartItems:{
-        type:Array,
-        ref:"services"
-    }
+    products:[
+       {
+        p_title:String,
+        p_shortTitle:String,
+        p_dec:String,
+        p_price:Number
+       }
+    ],
+    
 
 })
 

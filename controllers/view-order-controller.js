@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
 const Order = require("../model/order");
+const Services = require("../model/services");
 
 module.exports.viewOrder = async (req, res) => {
     try {
@@ -9,9 +10,9 @@ module.exports.viewOrder = async (req, res) => {
         const UserDetails = await User.findById(verifyTokenId.userId)
         let OrderData = await Order.find({ email: UserDetails.email })
         
-        
         res.status(200).json({
-            data: OrderData
+            data: OrderData,
+           
         })
     } catch (error) {
         res.status(500).json({

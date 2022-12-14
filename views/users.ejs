@@ -65,73 +65,76 @@
           <!-- Navbar -->
 
           <%- include("../partials/header.ejs")%>
-          <!-- / Navbar -->
+            <!-- / Navbar -->
 
 
-         
 
-          <div class="container-xxl flex-grow-1 container-p-y">
-            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span>Users</h4>
 
-            <!-- Basic Bootstrap Table -->
-            <div class="card">
-              <div>
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span>Users</h4>
 
-                <table class="table" id="myTable">
-                  <thead>
-                     <tr> 
-                      <!-- <th>Sr. No.</th> -->
-                      <th>Usermane</th>
-                      <th>Email</th>
-                      <th>Wallet</th>
-                      <th>Status</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody class="table-border-bottom-0">
-                    <% userData.forEach((result)=>{ %>
+              <!-- Basic Bootstrap Table -->
+              <div class="card">
+                <div>
+
+                  <table class="table" id="myTable">
+                    <thead>
                       <tr>
-                        <!-- <td>1</td> -->
-
-                        <td>
-                          <%=result.username%>
-                        </td>
-                        <td>
-                          <%=result.email%>
-                        </td>
-                        <td>
-                          <%=result.wallet%>
-                        </td>>
-
-                        <td>
-                          <%=result.status%>
-                        </td>>
-
-
-                        <td>
-                          <div class="dropdown">
-                            <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
-                              <i class="bi bi-three-dots-vertical"></i>
-                            </button>
-                            <div class="dropdown-menu">
-                              <a class="dropdown-item" href="/updateUser/<%=result._id%>"><i class="bx bx-edit-alt me-1"></i>
-                                Edit</a>
-                              <a class="dropdown-item" href="/delete/<%=result._id%>" onclick="return confirmDelete()" ><i class="bx bx-trash me-1"></i>
-                                Delete</a>
-                            </div>
-                          </div>
-                        </td>
+                        <!-- <th>Sr. No.</th> -->
+                        <th>Usermane</th>
+                        <th>Email</th>
+                        <th>Wallet</th>
+                        <th>Status</th>
+                        <th>Actions</th>
                       </tr>
-                      <% })%>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                      <% userData.forEach((result)=>{ %>
+                        <tr>
 
-                  </tbody>
-                 </table>
+
+                          <td>
+                            <%=result.username%>
+                          </td>
+                          <td>
+                            <%=result.email%>
+                          </td>
+                          <td>
+                            <%=result.wallet%>
+                          </td>
+
+                          <td>
+                            <%=result.status%>
+                          </td>
+
+
+                          <td>
+                            <div class="dropdown">
+                              <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
+                                data-bs-toggle="dropdown">
+                                <i class="bi bi-three-dots-vertical"></i>
+                              </button>
+                              <div class="dropdown-menu">
+                                <a class="dropdown-item" href="/updateUser/<%=result._id%>"><i
+                                    class="bx bx-edit-alt me-1"></i>
+                                  Edit</a>
+                                <a class="dropdown-item" href="/delete/<%=result._id%>"
+                                  onclick="return confirmDelete()"><i class="bx bx-trash me-1"></i>
+                                  Delete</a>
+                              </div>
+                            </div>
+                          </td>
+                        </tr>
+                        <% })%>
+
+                    </tbody>
+                  </table>
+                </div>
               </div>
+              <!--/ Basic Bootstrap Table -->
             </div>
-            <!--/ Basic Bootstrap Table -->
-          </div>
 
-          <!-- / FAQ End -->
+            <!-- / FAQ End -->
 
 
 
@@ -142,22 +145,22 @@
 
 
 
-          <!-- Footer -->
-          <footer class="content-footer footer bg-footer-theme">
-            <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
-              <div class="mb-2 mb-md-0">
-                ©
+            <!-- Footer -->
+            <footer class="content-footer footer bg-footer-theme">
+              <div class="container-xxl d-flex flex-wrap justify-content-between py-2 flex-md-row flex-column">
+                <div class="mb-2 mb-md-0">
+                  ©
 
-                , made with ❤️ by
-                <a href="https://niantechnologies.com" target="_blank" class="footer-link fw-bolder">Nian
-                  Technologies</a>
+                  , made with ❤️ by
+                  <a href="https://niantechnologies.com" target="_blank" class="footer-link fw-bolder">Nian
+                    Technologies</a>
+                </div>
+
               </div>
+            </footer>
+            <!-- / Footer -->
 
-            </div>
-          </footer>
-          <!-- / Footer -->
-
-          <div class="content-backdrop fade"></div>
+            <div class="content-backdrop fade"></div>
         </div>
         <!-- Content wrapper -->
     </div>
@@ -169,35 +172,35 @@
   </div>
   <!-- / Layout wrapper -->
 
-<script>
-  function myFunction() {
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById("myInput");
-  filter = input.value.toUpperCase();
-  table = document.getElementById("myTable");
-  tr = table.getElementsByTagName("tr");
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName("td")[0];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = "";
-      } else {
-        tr[i].style.display = "none";
+  <script>
+    function myFunction() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("myInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("myTable");
+      tr = table.getElementsByTagName("tr");
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[0];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+          } else {
+            tr[i].style.display = "none";
+          }
+        }
       }
-    }       
-  }
-}
-</script>
-
-<script>
-  function confirmDelete() {
-    if(confirm("are you sure you delete this document")){
-
-    }else{
-      return false;
     }
-  }
+  </script>
+
+  <script>
+    function confirmDelete() {
+      if (confirm("are you sure you delete this document")) {
+
+      } else {
+        return false;
+      }
+    }
   </script>
 
 
