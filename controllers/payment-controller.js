@@ -23,6 +23,7 @@ module.exports.payment = async (req, res) => {
       success_url: "http://localhost:3000/success",
       cancel_url: "http://localhost:3000/fail",
     });
+    
     res.send(200, { url: session.url, id: session.id });
     console.log(session)
   } catch (error) {

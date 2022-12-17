@@ -11,7 +11,8 @@ const orderScema= mongoose.Schema({
         p_title:String,
         p_shortTitle:String,
         p_dec:String,
-        p_price:Number
+        p_price:Number,
+        p_quantity:Number
        }
     ],
     status:String
