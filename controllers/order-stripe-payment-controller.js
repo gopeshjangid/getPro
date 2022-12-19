@@ -22,7 +22,7 @@ module.exports.orderStripe = async (req, res) => {
                   product_data: {
                     name: "Total Amount",
                   },
-                  unit_amount: 20 * 100,
+                  unit_amount: TotalAmount * 100,
                 },
                 quantity: 1,
               },
@@ -70,7 +70,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
             transactionId: OrdertransactionId,
             email: UserDetails.email,
             datetime: new Date(),
-            totalAmoumt: totalAmount,
+            totalAmount: totalAmount,
             CouponName: couponName,
             couponAmount: couponAmount,
             products: arr,

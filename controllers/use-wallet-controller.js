@@ -48,7 +48,7 @@ module.exports.useWallet = async (req, res) => {
                 transactionId: OrdertransactionId,
                 email: UserDetails.email,
                 datetime: new Date(),
-                totalAmoumt: totalAmount,
+                totalAmount: totalAmount,
                 CouponName: couponName,
                 couponAmount: couponAmount,
                 products: arr,

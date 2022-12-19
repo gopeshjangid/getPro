@@ -91,20 +91,15 @@
                       
                     </div>
                     <div class="card-body">
-                      <form action="/updateUser/<%=idUserData._id%>" method="post">
-                        <!-- <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-default-name">Sr. No.</label>
-                          <div class="col-sm-10">
-                            <input type="text" class="form-control" id="basic-default-name" placeholder="John Doe" />
-                          </div>
-                        </div> -->
+                      <form action="/updateUser/<%=idUserData._id%>" method="post" id="form">
                         <div class="row mb-3">
                           <label class="col-sm-2 col-form-label" for="basic-default-company">Username</label>
                           <div class="col-sm-10">
+                            <label for="" id="usernameLabel" style="display: none;color: red;"></label>
                             <input
                               type="text"
                               class="form-control"
-                              id="basic-default-company"
+                              id="usernameInput"
                               placeholder="enter your username"
                               name="username"
                               value="<%=idUserData.username%>"
@@ -118,7 +113,7 @@
                           <label class="col-sm-2 col-form-label" for="basic-default-message">Email</label>
                           <div class="col-sm-10">
                             <input
-                              id="basic-default-message"
+                              id="emailInput"
                               class="form-control"
                               placeholder="Enter your email"
                               aria-label="Hi, Do you have a moment to talk Joe?"
@@ -134,7 +129,7 @@
                           <label class="col-sm-2 col-form-label" for="basic-default-message">Password</label>
                           <div class="col-sm-10">
                             <input
-                            id="basic-default-message"
+                            id="passwordInput"
                             class="form-control"
                             placeholder="Enter your password"
                             aria-label="Hi, Do you have a moment to talk Joe?"
@@ -199,7 +194,41 @@
     <!-- / Layout wrapper -->
 
     
-
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+      
+        let usernameInput = document.getElementById('usernameInput')
+        let passwordInput = document.getElementById('passwordInput')
+     //   let emailInput = document.getElementById('emailInput')
+        let usernameLabel = document.getElementById('usernameLabel')
+        let form= document.getElementById('form')
+        let formAction=form.attributes[0].value
+        form.addEventListener("submit", (e) => {
+              e.preventDefault();
+              let username=  $('#usernameInput').val();
+              let password=  $('#passwordInput').val();
+             // let couponType=  $('#emailInput').val();
+              $.ajax({
+                        url: `http://localhost:5000${formAction}`,
+                        method: "post",
+                        contentType: "application/x-www-form-urlencoded",
+                        data: {
+                            username,password
+                        },
+                        success: function (res) {
+                            window.location = "http://localhost:5000/users"
+                        },
+                        error: function (error) {
+                            console.log(error)
+                            if (error.responseJSON.data === "Internal error occured: username is already exist") {
+                              usernameLabel.style.display='block'
+                              usernameLabel.innerHTML = "username is already exist";
+                            }
+                        }
+                    })
+            }
+            );
+   </script>
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
     <script src="../js/jquery.js"></script>

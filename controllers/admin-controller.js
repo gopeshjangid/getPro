@@ -15,6 +15,7 @@ const bcrypt = require('bcrypt');
 const httpMsgs = require("http-msgs")
 const jwt = require('jsonwebtoken')
 const path = require('path')
+const { Console } = require('console')
 
 
 module.exports.checkLogin = (req, res, next) => {
@@ -116,9 +117,7 @@ module.exports.updateUserSubmit = async (req, res) => {
             await User.findByIdAndUpdate(id, { username: newUser, password: password })
             res.redirect("/users")
         } else {
-            res.status(404).json({
-                message: "username is already taken"
-            })
+            httpMsgs.send500(req, res, "username is already exist")
         }
 
     } catch (error) {
@@ -345,6 +344,7 @@ module.exports.updateAuthorsSubmit = async (req, res) => {
     }
 
 }
+
 
 module.exports.deleteAuthor = async (req, res) => {
     try {
@@ -641,7 +641,7 @@ module.exports.addCouponSubmit = async (req, res) => {
     try {
 
         const couponName = req.body.couponName
-        const couponType = req.body.coupontype
+        const couponType = req.body.couponType
         const couponAmount = req.body.couponAmount
         const couponStatus = req.body.couponStatus
         const CouponData = await Coupon.findOne({ couponName: couponName })
@@ -650,9 +650,7 @@ module.exports.addCouponSubmit = async (req, res) => {
             await couponData.save()
             res.redirect("/coupon")
         } else {
-            res.json({
-                message: "couponName is already exist"
-            })
+           httpMsgs.send500(req, res, "coupon name is already exist")
         }
 
     } catch (error) {
@@ -682,8 +680,14 @@ module.exports.updateCouponSubmit = async (req, res) => {
         const newoffAmount = req.body.couponAmount
         const couponStatus = req.body.couponStatus
         const id = req.params.id
-        await Coupon.findByIdAndUpdate(id, { couponName: newcouponNamee, couponType: newcouponType, offAmount: newoffAmount, status: couponStatus })
-        res.redirect("/coupon")
+        const CouponData = await Coupon.findOne({ couponName: newcouponNamee })
+        if (CouponData == null) {
+            await Coupon.findByIdAndUpdate(id, { couponName: newcouponNamee, couponType: newcouponType, offAmount: newoffAmount, status: couponStatus })
+            res.redirect("/coupon")
+        } else {
+           httpMsgs.send500(req, res, "coupon name is already exist")
+        }
+        
     } catch (error) {
         res.status(500).json({
             error: error.message

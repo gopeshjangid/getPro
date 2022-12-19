@@ -85,12 +85,13 @@
 
                                         </div>
                                         <div class="card-body">
-                                            <form action="/addcoupon" method="post">
+                                            <form action="/addcoupon" method="post" id="form">
                                                 <div class="row mb-3">
                                                     <label class="col-sm-2 col-form-label"
                                                         for="basic-default-name">Coupon Name</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="basic-default-name"
+                                                        <label for="" id="LableCoupon" style="display:none;color: red;margin-bottom: 10px;"></label>
+                                                        <input type="text" class="form-control" id="CouponInput"
                                                             placeholder="Enter Your Coupon Name" name="couponName" required/>
                                                     </div>
                                                 </div>
@@ -99,10 +100,10 @@
                                                     <label class="col-sm-2 col-form-label"
                                                         for="basic-default-message">Coupon type</label>
                                                     <div class="col-sm-10">
-                                                        <select id="basic-default-message"
+                                                        <select
                                                         class="form-control" placeholder="Enter Your Coupon Type"
                                                         aria-label="Hi, Do you have a moment to talk Joe?"
-                                                        aria-describedby="basic-icon-default-message2" name="coupontype" required>
+                                                        aria-describedby="basic-icon-default-message2" id="CouponTypeInput" name="coupontype" required>
                                                     <option name="Flat" value="Flat">Flat</option>
                                                     <option name="parsentage" value="parsentage">Parsentage</option>
                                                     
@@ -114,10 +115,10 @@
                                                     <label class="col-sm-2 col-form-label"
                                                         for="basic-default-message">Coupon Status</label>
                                                     <div class="col-sm-10">
-                                                        <select id="basic-default-message"
+                                                        <select
                                                         class="form-control" placeholder="Enter Your Coupon Type"
                                                         aria-label="Hi, Do you have a moment to talk Joe?"
-                                                        aria-describedby="basic-icon-default-message2" name="couponStatus" required>
+                                                        aria-describedby="basic-icon-default-message2" id="CouponStatusInput" name="couponStatus" required>
                                                     <option>Active</option>
                                                     <option>Deactive</option>
                                                     
@@ -128,7 +129,7 @@
                                                     <label class="col-sm-2 col-form-label"
                                                         for="basic-default-name">Off Amount</label>
                                                     <div class="col-sm-10">
-                                                        <input type="text" class="form-control" id="basic-default-name"
+                                                        <input type="number" class="form-control" id="couponAmountInput"
                                                             placeholder="Enter Your Off Amount" name="couponAmount" />
                                                     </div>
                                                 </div>
@@ -185,8 +186,51 @@
     <div class="layout-overlay layout-menu-toggle"></div>
     </div>
     <!-- / Layout wrapper -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script>
+        let CouponInput = document.getElementById('CouponInput')
+        let CouponTypeInput = document.getElementById('CouponTypeInput')
+        let CouponStatusInput = document.getElementById('CouponStatusInput')
+        let couponAmountInput = document.getElementById('couponAmountInput')
+        let LableCoupon = document.getElementById('LableCoupon')
+        let form= document.getElementById('form')
+        
+        //  let form = document.getElementById('form');
+        form.addEventListener("submit", (e) => {
+              e.preventDefault();
+              let couponName=  $('#CouponInput').val();
+              let couponType=  $('#CouponTypeInput').val();
+              let couponStatus=  $('#CouponStatusInput').val();
+              let couponAmount=  $('#couponAmountInput').val();
+              console.log("couponType====",couponType)
+              console.log("couponStatus====",couponStatus)
+               $.ajax({
+                        url: "http://localhost:5000/addcoupon",
+                        method: "post",
+                        contentType: "application/x-www-form-urlencoded",
+                        data: {
+                            couponName, couponType, couponStatus,couponAmount
+                        },
+                        success: function (res) {
+                            window.location = "http://localhost:5000/coupon"
+                        },
+                        error: function (error) {
+                            console.log(error)
+                            if (error.responseJSON.data === "Internal error occured: coupon name is already exist") {
+                                LableCoupon.style.display='block'
+                                LableCoupon.innerHTML = "coupon name is already exist";
+                            }
+                        }
+                    })
+            }
+            
+           
+            
+            
+             );
+              
 
-
+    </script>
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->

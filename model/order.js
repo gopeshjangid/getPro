@@ -3,7 +3,7 @@ const orderScema= mongoose.Schema({
     transactionId:String,
     email:String,
     datetime:String,
-    totalAmoumt:Number,
+    totalAmount:Number,
     CouponName:String,
     couponAmount:Number,
     products:[
