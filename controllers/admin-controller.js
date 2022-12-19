@@ -229,8 +229,7 @@ module.exports.updateworksampleSubmit = async (req, res) => {
             })
             await Worksample.findByIdAndUpdate(id, { title: newTitle, dec: newDec, image: img})
         res.redirect("/workSample")
-        }; 
-        if(req.files.pdf){
+        }else if(req.files.pdf){
             await req.files.pdf.forEach(element => {
                 pdf = element.filename
             })

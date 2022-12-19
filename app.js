@@ -54,6 +54,7 @@ const useWalletRouter= require('./router/useWalletRouter')
 const viewOrderRouter= require('./router/viewOrderRouter')
 const walletHistoryRouter= require('./router/walletHistoryRouter')
 const orderStripeRouter= require('./router/orderStripePaymentRouter')
+const paypalPaymentRouter= require('./router/paypalPaymentRouter')
 
 
 const jwt= require('jsonwebtoken')
@@ -97,6 +98,7 @@ app.use(useWalletRouter)
 app.use(viewOrderRouter)
 app.use(walletHistoryRouter)
 app.use(orderStripeRouter)
+app.use(paypalPaymentRouter)
 
 
 

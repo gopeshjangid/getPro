@@ -29,6 +29,7 @@
     "nodemon": "^2.0.19",
     "otp-generator": "^4.0.0",
     "path": "^0.12.7",
+    "paypal-rest-sdk": "^1.8.1",
     "socket.io": "^4.5.4",
     "stripe": "^11.2.0"
   }
