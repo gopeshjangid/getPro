@@ -40,7 +40,8 @@ module.exports.orderStripe = async (req, res) => {
 }
 
 module.exports.orderStripeSuccess = async (req, res) => {
-        const token = req.headers.authorization;
+        try {
+          const token = req.headers.authorization;
         const verifyTokenId = jwt.verify(token, "zxcvbnm");
         const totalAmount = req.body.TotalAmount
         const UserDetails = await User.findById(verifyTokenId.userId)
@@ -87,4 +88,9 @@ module.exports.orderStripeSuccess = async (req, res) => {
         res.status(200).json({
           data: "order Placed"
       })
+        } catch (error) {
+          res.status(500).json({
+            error:error
+          })
+        }
 }
