@@ -27,7 +27,7 @@ module.exports.PaypalPayment = async (req, res) => {
               {
                 name: "Red Sox Hat",
                 sku: "001",
-                price: "200",
+                price: "0",
                 currency: "USD",
                 quantity: 1,
               },
@@ -35,7 +35,7 @@ module.exports.PaypalPayment = async (req, res) => {
           },
           amount: {
             currency: "USD",
-            total: "200",
+            total: "3",
           },
           description: "Hat for the best team ever",
         },
