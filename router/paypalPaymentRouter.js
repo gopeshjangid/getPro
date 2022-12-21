@@ -5,5 +5,8 @@ const PaypalPaymentController = require("../controllers/paypal-payment-controlle
 PaypalPaymentRouter
     .route('/PaypalPayment')
     .post(PaypalPaymentController.PaypalPayment);
+PaypalPaymentRouter
+    .route('/payplesuccess')
+    .post(PaypalPaymentController.PaypalPaymentSuccess);
 
 module.exports=PaypalPaymentRouter
