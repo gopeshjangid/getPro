@@ -48,8 +48,12 @@ module.exports.orderStripeSuccess = async (req, res) => {
          //    ORDER PLACED
             const couponAmount = req.body.couponAmount
             const couponName = req.body.couponName
+            let WallettransactionId = otpGenerator.generate(25, { upperCaseAlphabets: false, specialChars: false });
             let OrdertransactionId = otpGenerator.generate(25, { upperCaseAlphabets: false, specialChars: false });
+            const walletData = new Wallet({ user: UserDetails.email, wallet: totalAmount, datetime: new Date(), pay_type: "debited", transactionId: WallettransactionId })
+            await walletData.save()
             let CartData = await AddCart.find({ custemerId: UserDetails.email })
+
             let arr = []
             for (let i = 0; i < CartData.length; i++) {
                 const element = CartData[i];
