@@ -11,7 +11,24 @@ const corsOptions = {
 app.use(cors(corsOptions));
 const socketIO = require("socket.io");
 const io = socketIO(server);
+const users = [{}];
 
+io.on("connection", (socket)=>{
+
+    socket.on("joined",({user})=>{
+        users[socket.id] = user;
+        console.log(`${user} has joined.`);
+        socket.broadcast.emit('userJoined',{user:"Admin", message:`${users[socket.id]} User has joined`});
+        socket.emit('welcome', {user:"Admin", message:`welcome to the chat, ${users[socket.id]}`})
+    });
+    socket.on('message',({message,id})=>{
+        io.emit('sendMessage',{user:users[id], message,id});
+    })
+    socket.on('disconnect',()=>{
+        socket.broadcast.emit('leave', {user:"Admin", message:`User has left`});
+        console.log(`User Left, ${users[socket.id]} `);
+    })
+})
 const userRouter= require('./router/userRouter')
 const adminRouter= require('./router/adminRouter')
 const registerRouter= require('./router/registerRouter')
