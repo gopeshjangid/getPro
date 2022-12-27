@@ -77,6 +77,8 @@ const walletHistoryRouter = require("./router/walletHistoryRouter");
 const orderStripeRouter = require("./router/orderStripePaymentRouter");
 const paypalPaymentRouter = require("./router/paypalPaymentRouter");
 const razorpayPaymentRouter = require("./router/razorpayPaymentRouter");
+const chatRoutes = require("./router/chatRoutes");
+const messageRoutes = require("./router/messageRoutes");
 
 const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
@@ -119,6 +121,9 @@ app.use(walletHistoryRouter);
 app.use(orderStripeRouter);
 app.use(paypalPaymentRouter);
 app.use(razorpayPaymentRouter);
+app.use(chatRoutes);
+app.use(messageRoutes);
+
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);
