@@ -66,7 +66,29 @@ module.exports.PaypalPayment = async (req, res) => {
 };
 
 module.exports.PaypalPaymentSuccess = async (req, res) => {
+ 
   try {
+  //   const payerId = req.query.PayerID;
+  //   const paymentId = req.query.paymentId;
+  //   const execute_payment_json = {
+  //     "payer_id": payerId,
+  //     "transactions": [{
+  //         "amount": {
+  //             "currency": "USD",
+  //             "total": "5"
+  //         }
+  //     }]
+  //   };
+  //   paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+  //   if (error) {
+  //       console.log(error.response);
+  //       throw error;
+  //   } else {
+  //     console.log(payment)
+  //       res.json(payment);
+  //   }
+  // })
+         // console.log("====",req.query)
           const token = req.headers.authorization;
           const verifyTokenId = jwt.verify(token, "zxcvbnm");
           const UserDetails = await User.findById(verifyTokenId.userId);

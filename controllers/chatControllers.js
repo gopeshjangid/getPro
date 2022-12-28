@@ -37,6 +37,8 @@ const accessChat = asyncHandler(async (req, res) => {
       const FullChat = await Chat.findOne({ _id: createdChat._id });
       res.status(200).json(FullChat);
     }
+   }else{
+    res.status(400).json({message:"send order id"})
    }
   } catch (error) {
       res.status(400);

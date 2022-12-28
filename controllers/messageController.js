@@ -14,7 +14,6 @@ const allMessages = asyncHandler(async (req, res) => {
     throw new Error(error.message);
   }
 });
-
 const sendMessage = asyncHandler(async (req, res) => {
   const { content, chatId } = req.body;
 
