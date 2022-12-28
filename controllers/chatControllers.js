@@ -4,39 +4,45 @@ const User = require("../model/user");
 const Admin = require("../model/admin");
 
 const accessChat = asyncHandler(async (req, res) => {
-  var isChat = await Chat.find({
-    isGroupChat: false,
-    $and: [
-      { users: { $elemMatch: { $eq: req.user._id } } },
-      { users: { $elemMatch: { $eq: "63a9b35d91b9d03d5748361c" } } },
-    ],
-  })
-    .populate("users", "-password")
-    .populate("latestMessage");
-
-  isChat = await User.populate(isChat, {
-    path: "latestMessage.sender",
-    select: "name pic email",
-  });
-
-  if (isChat.length > 0) {
-    res.send(isChat[0]);
-  } else {
-    var chatData = {
-      chatName: "sender",
+  try {
+  var orderId = req.body.orderId
+  if(orderId){
+    var isChat = await Chat.find({
       isGroupChat: false,
-      users: [req.user._id, "63a9b35d91b9d03d5748361c"],
-    };
-
-    try {
+      orderId:orderId,
+      $and: [
+        { users: { $elemMatch: { $eq: req.user._id } } },
+        { users: { $elemMatch: { $eq: "63a9b35d91b9d03d5748361c" } } },
+      ],
+    })
+      .populate("users", "-password")
+      .populate("latestMessage")
+      .populate("orderId")
+  
+    isChat = await User.populate(isChat, {
+      path: "latestMessage.sender",
+      select: "name pic email",
+    });
+  console.log("========",isChat)
+    if (isChat.length > 0) {
+      res.send(isChat[0]);
+    } else {
+      var chatData = {
+        chatName: "sender",
+        isGroupChat: false,
+        orderId:orderId,
+        users: [req.user._id, "63a9b35d91b9d03d5748361c"],
+      };
       const createdChat = await Chat.create(chatData);
       const FullChat = await Chat.findOne({ _id: createdChat._id });
       res.status(200).json(FullChat);
-    } catch (error) {
+    }
+   }
+  } catch (error) {
       res.status(400);
       throw new Error(error.message);
     }
-  }
+  
 });
 
 const fetchChats = asyncHandler(async (req, res) => {
