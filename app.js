@@ -11,43 +11,50 @@ const corsOptions = {
   optionsSuccessStatus: 200,
 };
 app.use(cors(corsOptions));
-const socketIO = require("socket.io");
-const io = socketIO(server);
-const users = [];
-let UserMessage = [];
+
+const io = require("socket.io")(server, {
+  pingTimeout: 60000,
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
 
 io.on("connection", (socket) => {
-  socket.on("joined", ({ user }) => {
-    users[socket.id] = user;
-    console.log(`${user} has joined.`);
-    socket.broadcast.to("yLcNDjOtZy5gpG0AAAAF").emit("userJoined", {
-      message: `${users[socket.id]} User has joined`,
-    });
-    socket.emit("welcome", {
-      //  user: "Admin",
-      //   message: `welcome to the chat, ${users[socket.id]}`,
-    });
+  console.log("connected to socket.io");
+
+  socket.on("setup", (userData) => {
+    socket.join(userData._id);
+    socket.emit("connected");
   });
 
-  socket.on("message", async ({ message, id, token }) => {
-    obj = {
-      message: message,
-      //  user: UserDetails.username,
-    };
-    const verifyTokenId = jwt.verify(token, "zxcvbnm");
-    const UserDetails = await User.findById(verifyTokenId.userId);
-    console.log(UserDetails);
-    UserMessage.push(obj);
-    socket.broadcast.emit("sendMessage", {
-      user: UserDetails.username,
-      message,
-      id,
-    });
-    // io.emit("sendMessage", { user: users[id], message, id });
+  socket.on("join chat", (room) => {
+    socket.join(room);
+    console.log("User Joined Room: " + room);
+    socket.emit("emitText", "bablu");
   });
-  socket.on("disconnect", () => {
-    socket.broadcast.emit("leave", { user: "Admin", message: `User has left` });
-    console.log(`User Left, ${users[socket.id]} `);
+  socket.on("typing", (room) => socket.in(room).emit("typing"));
+  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
+
+  socket.on("new message", (newMessageRecieved) => {
+    // console.log("NEW MESSAGE", newMessageRecieved);
+    var chat = newMessageRecieved.chat;
+
+    if (!chat.users) return console.log("chat.users not defined");
+
+    chat.users.forEach((user) => {
+      console.log(user._id);
+      console.log(newMessageRecieved.sender._id);
+      console.log(user._id == newMessageRecieved.sender._id);
+      // if (user._id == newMessageRecieved.sender._id) {
+      //   return;
+      // }
+    });
+    socket.emit("message recieved", newMessageRecieved);
+  });
+
+  socket.off("setup", () => {
+    // console.log("USER DISCONNECTED");
+    socket.leave(userData._id);
   });
 });
 
@@ -123,7 +130,6 @@ app.use(paypalPaymentRouter);
 app.use(razorpayPaymentRouter);
 app.use(chatRoutes);
 app.use(messageRoutes);
-
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);

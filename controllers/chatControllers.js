@@ -5,46 +5,46 @@ const Admin = require("../model/admin");
 
 const accessChat = asyncHandler(async (req, res) => {
   try {
-  var orderId = req.body.orderId
-  if(orderId){
-    var isChat = await Chat.find({
-      isGroupChat: false,
-      orderId:orderId,
-      $and: [
-        { users: { $elemMatch: { $eq: req.user._id } } },
-        { users: { $elemMatch: { $eq: "63a9b35d91b9d03d5748361c" } } },
-      ],
-    })
-      .populate("users", "-password")
-      .populate("latestMessage")
-      .populate("orderId")
-  
-    isChat = await User.populate(isChat, {
-      path: "latestMessage.sender",
-      select: "name pic email",
-    });
-  console.log("========",isChat)
-    if (isChat.length > 0) {
-      res.send(isChat[0]);
-    } else {
-      var chatData = {
-        chatName: "sender",
+    var orderId = req.body.orderId;
+    // console.log(orderId);
+    if (orderId) {
+      var isChat = await Chat.find({
         isGroupChat: false,
-        orderId:orderId,
-        users: [req.user._id, "63a9b35d91b9d03d5748361c"],
-      };
-      const createdChat = await Chat.create(chatData);
-      const FullChat = await Chat.findOne({ _id: createdChat._id });
-      res.status(200).json(FullChat);
+        orderId: orderId,
+        $and: [
+          { users: { $elemMatch: { $eq: req.user._id } } },
+          { users: { $elemMatch: { $eq: "63a9b35d91b9d03d5748361c" } } },
+        ],
+      })
+        .populate("users", "-password")
+        .populate("latestMessage")
+        .populate("orderId");
+
+      isChat = await User.populate(isChat, {
+        path: "latestMessage.sender",
+        select: "name pic email",
+      });
+      // console.log("========", isChat);
+      if (isChat.length > 0) {
+        res.send(isChat[0]);
+      } else {
+        var chatData = {
+          chatName: "sender",
+          isGroupChat: false,
+          orderId: orderId,
+          users: [req.user._id, "63a9b35d91b9d03d5748361c"],
+        };
+        const createdChat = await Chat.create(chatData);
+        const FullChat = await Chat.findOne({ _id: createdChat._id });
+        res.status(200).json(FullChat);
+      }
+    } else {
+      res.status(400).json({ message: "send order id" });
     }
-   }else{
-    res.status(400).json({message:"send order id"})
-   }
   } catch (error) {
-      res.status(400);
-      throw new Error(error.message);
-    }
-  
+    res.status(400);
+    throw new Error(error.message);
+  }
 });
 
 const fetchChats = asyncHandler(async (req, res) => {
@@ -53,6 +53,7 @@ const fetchChats = asyncHandler(async (req, res) => {
       .populate("users", "-password")
       .populate("groupAdmin", "-password")
       .populate("latestMessage")
+      .populate("orderId")
       .sort({ updatedAt: -1 })
       .then(async (results) => {
         results = await User.populate(results, {

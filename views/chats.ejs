@@ -10,6 +10,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+  
   <title>Hello, world!</title>
   <style>
     .outgoing {
@@ -106,11 +107,40 @@
     </div>
     </div>
   </section>
-
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script>
     const token = localStorage.getItem("token");
     var theChatId
+    var userData
+    const ENDPOINT = "http://localhost:5000";
+     var socket = io(ENDPOINT)
+
+     var socket, selectedChatCompare;
+
+    $.ajax({
+        url: `http://localhost:5000/viewProfile`,
+        method: "get",
+        mode: "cors",
+        contentType: "application/x-www-form-urlencoded",
+        headers: {
+          authorization: token,
+        },
+        success: function (res) {
+          console.log("***current user****", res.data);
+          userData = res.data
+           socket.emit("setup", userData);
+           socket.on("connected", () => console.log('ljjfj'));
+           socket.on("typing", () => console.log('fkjf'));
+           socket.on("stop typing", () => console.log('dk'));
+        },
+        error: function (error) {
+          console.log(error);
+        },
+      });
+
+
+    console.log(userData);
 
     const sendMessage = () => {
 
@@ -136,14 +166,14 @@
         console.log(response);
 
         let chatBox = document.querySelector("#chatBox");
-
         let div = document.createElement("div");
         div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
         div.setAttribute("id", response._id);
         let content = `<div><h6 id="scrollspyHeading1">${response.sender.username}</h6>
-               <p>${response.content}</p>
-              <div>`;
-        div.innerHTML = content;
+          <p>${response.content}</p>
+          <div>`;
+            div.innerHTML = content;
+        socket.emit("new message", response);
 
         chatBox.appendChild(div);
       })
@@ -174,9 +204,12 @@
               <div>`;
             div.innerHTML = content;
 
+            
+            
             chatBox.appendChild(div);
           });
-          const chat = res[0].chatName;
+          socket.emit("join chat", res[0].chat._id);
+          const chat = res[0].chat.chatName;
           console.log(chat);
         },
         error: function (error) {
@@ -208,10 +241,11 @@
           </td>
           <td id=${response._id}>${response.users.filter(
             (user) => user.email !== "getproadmin000@gmail.com"
-          )[0].username
+          )[0].username + " (" + response.orderId?.products.map((product) => product.p_title + " ") + ")"
             }
           </td>`;
           tr.innerHTML = content;
+
 
           tr.onclick = trClicked;
           chatsList.appendChild(tr);
@@ -221,19 +255,6 @@
       },
       error: function (error) {
         console.log(error);
-        if (
-          error.responseJSON.data ===
-          "Internal error occured: your account dose not exist"
-        ) {
-          Labelemail.style.display = "block";
-          Labelemail.innerHTML = "your account dose not exist";
-        } else if (
-          error.responseJSON.data ===
-          "Internal error occured: your password is inccorect"
-        ) {
-          labelpassword.style.display = "block";
-          labelpassword.innerHTML = "your password is inccorect";
-        }
       },
     });
     console.log(localStorage.getItem("token"));
