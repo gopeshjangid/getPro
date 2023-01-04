@@ -5,56 +5,50 @@ const cors = require("cors");
 const app = express();
 const http = require("http");
 const server = http.createServer(app);
-
-const corsOptions = {
-  origin: "http://localhost:3000",
-  optionsSuccessStatus: 200,
-};
-app.use(cors(corsOptions));
-
-const io = require("socket.io")(server, {
-  pingTimeout: 60000,
+// const corsOptions = {
+//   server,
+//   origin: "http://localhost:3000",
+//   optionsSuccessStatus: 200,
+// };
+// app.use(cors(corsOptions));
+const io = new require("socket.io")(server, {
   cors: {
     origin: "http://localhost:3000",
+    methods: ["GET", "POST"],
+    credentials: true,
   },
 });
+app.set("socketIo", io);
+var corsOptions = {
+  origin: ["http://localhost:3000", "http://localhost:5000/chats"],
+  credentials: true,
+};
 
+app.use(cors(corsOptions));
 io.on("connection", (socket) => {
   console.log("connected to socket.io");
+  socket.emit("receive-user", { name: "bablu saini" });
+  socket.emit("user", socket.id);
 
-  socket.on("setup", (userData) => {
-    socket.join(userData._id);
-    socket.emit("connected");
+  // socket.on("chat-id", (data) => {
+  //   console.log("skhgsh", 'lkdkjddkjd');
+  // });
+  // var id;
+  // console.log("99999",socket)
+  socket.on("message", (data) => {
+    console.log("socket id >>>>>>>>>", data);
+    // socket.to(roomId).emit("message2", "message two is here 2222");
   });
 
-  socket.on("join chat", (room) => {
+  socket.on("room", (room) => {
     socket.join(room);
-    console.log("User Joined Room: " + room);
-    socket.emit("emitText", "bablu");
-  });
-  socket.on("typing", (room) => socket.in(room).emit("typing"));
-  socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
-
-  socket.on("new message", (newMessageRecieved) => {
-    // console.log("NEW MESSAGE", newMessageRecieved);
-    var chat = newMessageRecieved.chat;
-
-    if (!chat.users) return console.log("chat.users not defined");
-
-    chat.users.forEach((user) => {
-      console.log(user._id);
-      console.log(newMessageRecieved.sender._id);
-      console.log(user._id == newMessageRecieved.sender._id);
-      // if (user._id == newMessageRecieved.sender._id) {
-      //   return;
-      // }
-    });
-    socket.emit("message recieved", newMessageRecieved);
+    console.log("dkjhdkjdhkdjh");
+    console.log("rooom", room);
   });
 
-  socket.off("setup", () => {
-    // console.log("USER DISCONNECTED");
-    socket.leave(userData._id);
+  socket.on("new message", (data) => {
+    console.log("8888", data.chat._id);
+    socket.broadcast.emit("message2", data);
   });
 });
 

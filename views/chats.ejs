@@ -109,14 +109,22 @@
   </section>
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-  <script>
+  <script >
+
     const token = localStorage.getItem("token");
     var theChatId
     var userData
     const ENDPOINT = "http://localhost:5000";
-     var socket = io(ENDPOINT)
+     var socket = io()
+      console.log("socket",socket)
+      socket.on('receive-user',function(data){
+        console.log(data)
+    })
+    socket.on("new-user-joined", (id) => {
+      console.log("user", id)
+    })
+    //  var socket, selectedChatCompare;
 
-     var socket, selectedChatCompare;
 
     $.ajax({
         url: `http://localhost:5000/viewProfile`,
@@ -164,6 +172,7 @@
 
       $.ajax(settings).done(function (response) {
         console.log(response);
+        socket.emit("new message", response);
 
         let chatBox = document.querySelector("#chatBox");
         let div = document.createElement("div");
@@ -173,7 +182,7 @@
           <p>${response.content}</p>
           <div>`;
             div.innerHTML = content;
-        socket.emit("new message", response);
+
 
         chatBox.appendChild(div);
       })
@@ -192,10 +201,11 @@
           authorization: token,
         },
         success: function (res) {
+          const result = res;
           console.log("***00000000000****", res);
           let chatBox = document.querySelector("#chatBox");
 
-          res.forEach((response) => {
+          result.forEach((response) => {
             let div = document.createElement("div");
             div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
             div.setAttribute("id", response._id);
@@ -208,7 +218,7 @@
             
             chatBox.appendChild(div);
           });
-          socket.emit("join chat", res[0].chat._id);
+          socket.emit("room", res[0].chat._id);
           const chat = res[0].chat.chatName;
           console.log(chat);
         },
@@ -217,6 +227,17 @@
         },
       });
     };
+
+        
+          // socket.on("message2", (chatId) => {
+          //   console.log("chatId", chatId)
+          // })
+
+    socket.on("message2", (chatId) => {
+      trClicked({target: {id: chatId.chat._id}});
+      console.log("chatId", chatId)
+    })
+
 
     $.ajax({
       url: "http://localhost:5000/chat",
