@@ -10,13 +10,15 @@ const otpGenerator = require("otp-generator");
 
 module.exports.razorpayPayment = async (req, res) => {
   try {
+    const amount=req.body.amount
     var options = {
-      amount: 5 * 100,
+      amount: amount * 100,
       currency: "INR",
     };
     instance.orders.create(options, function (err, order) {
       res.status(200).json({
         order,
+        amount
       });
     });
   } catch (error) {
@@ -28,7 +30,7 @@ module.exports.razorpayPayment = async (req, res) => {
 
 module.exports.razorpay_is_completed = async (req, res) => {
   try {
-    let checkPayment = await instance.payments.fetch(
+      let checkPayment = await instance.payments.fetch(
       req.body.razorpay_payment_id
     );
     console.log('*****',checkPayment);

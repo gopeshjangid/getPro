@@ -41,7 +41,7 @@ module.exports.orderStripe = async (req, res) => {
 
 module.exports.orderStripeSuccess = async (req, res) => {
         try {
-          const token = req.headers.authorization;
+        const token = req.headers.authorization;
         const verifyTokenId = jwt.verify(token, "zxcvbnm");
         const totalAmount = req.body.totalAmount
         const UserDetails = await User.findById(verifyTokenId.userId)
