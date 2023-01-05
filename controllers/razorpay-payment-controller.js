@@ -10,7 +10,8 @@ const otpGenerator = require("otp-generator");
 
 module.exports.razorpayPayment = async (req, res) => {
   try {
-    const amount=req.body.amount
+    const amount = parseInt(req.body.amount);
+    console.log("-------", amount);
     var options = {
       amount: amount * 100,
       currency: "INR",
@@ -18,7 +19,7 @@ module.exports.razorpayPayment = async (req, res) => {
     instance.orders.create(options, function (err, order) {
       res.status(200).json({
         order,
-        amount
+        amount,
       });
     });
   } catch (error) {
@@ -30,15 +31,15 @@ module.exports.razorpayPayment = async (req, res) => {
 
 module.exports.razorpay_is_completed = async (req, res) => {
   try {
-      let checkPayment = await instance.payments.fetch(
+    let checkPayment = await instance.payments.fetch(
       req.body.razorpay_payment_id
     );
-    console.log('*****',checkPayment);
+    console.log("*****", checkPayment);
     if (checkPayment.status === "captured") {
       const token = req.headers.authorization;
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
       const UserDetails = await User.findById(verifyTokenId.userId);
-      const wallet = checkPayment.amount;
+      const wallet = checkPayment.amount / 100;
       const pay_id = checkPayment._id;
       let WallettransactionId = otpGenerator.generate(25, {
         upperCaseAlphabets: false,
