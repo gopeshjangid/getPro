@@ -2,8 +2,6 @@ const express = require("express");
 const {
   allMessages,
   sendMessage,
-  chatImgUpload
-
 } = require("../controllers/messageController");
 
 const User = require("../model/user");
@@ -35,6 +33,6 @@ router
   .get(protect, allMessages);
 router
   .route("/message")
-  .post(protect,chatImgUpload.fields([{ name: 'img' }]), sendMessage);
+  .post(protect ,sendMessage);
 
 module.exports = router;

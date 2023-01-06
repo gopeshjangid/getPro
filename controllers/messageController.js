@@ -2,28 +2,8 @@ const asyncHandler = require("express-async-handler");
 const Message = require("../model/messageModel");
 const User = require("../model/user");
 const Chat = require("../model/chatModel");
-const path = require("path");
-const multer = require("multer");
 
-const Storage = multer.diskStorage({
-  destination: function (req, file, callback) {
-    let a = file.originalname;
-    let extname = path.extname(a);
-    console.log("====",extname)
-    // if (extname === ".jpg" || extname === ".png") {
-    //   callback(null, "./public/image");
-    // } else if (extname === ".pdf") {
-    //   callback(null, "./public/upload-pdf");
-    // }
-  },
-  filename: function (req, file, callback) {
-    callback(null, file.fieldname + Date.now() + file.originalname);
-  },
-});
 
- const chatImgUpload = multer({
-  storage: Storage,
-});
 const allMessages = asyncHandler(async (req, res) => {
   try {
     const messages = await Message.find({ chat: req.params.chatId })
@@ -70,4 +50,4 @@ const sendMessage = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { allMessages, sendMessage ,chatImgUpload};
+module.exports = { allMessages, sendMessage};

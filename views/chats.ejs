@@ -98,7 +98,7 @@
           </div>
           <div>
             <textarea name="" id="textfield" class="form-control mt-4 border border-2" rows="5"></textarea>
-            <button onclick="sendMessage()" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
+            <button onclick="loopsendmsg()" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
               Send
             </button>
             <a style="background: #d44848" class="btn py-1 px-4 mt-3 text-light" href="/dashboard">Back</a>
@@ -151,17 +151,46 @@
 
 
     console.log(userData);
+    const loopsendmsg = ()=>{
+      let arr=[]
+      let text = document.getElementById("textfield").value;
+      var selectfile = document.getElementById("fileInput").files[0]
+      // console.log("selectfile",selectfile.name)
+      if(text && selectfile){
+       arr.push({"text":text})
+       arr.push({"selectfile":selectfile})
+       console.log(arr[0].selectfile)
+       for (let i = 0; i < arr.length; i++) {
+        if(arr[i].text !==undefined){
+          sendMessage("message",arr[i].text)
+        }else{
+          // console.log("hiiii")
+          console.log(arr[i])
+          sendMessage("image","https://www.shutterstock.com/image-photo/archway-enchanted-fairy-forest-landscape-260nw-1505459789.jpg")
+        }
+       
+       }
+     }else if(text){
+      sendMessage("message",text)
+     }else if(selectfile){
+      sendMessage("image","https://www.shutterstock.com/image-photo/archway-enchanted-fairy-forest-landscape-260nw-1505459789.jpg")
+     }
+      
+      // console.log("selectfile",selectfile)
+      
+    }
 
-    const sendMessage = () => {
+    const sendMessage = (type,content) => {
 
-      let text = document.getElementById("textfield").value
+     
+      // if (selectfile !== undefined) {
+      //   var fd = new FormData()
+      //   if (!selectfile.type.match('image.*')) {
+      //     alert("you can select only image")
+      //     return;
+      //   }
+      // }
 
-     // console.log("fklfjfl")
-     // var fd = new FormData()
-      //  const files=document.getElementById("fileInput").files[0]
-      // var files = $('#fileInput')[0].files[0];
-      // fd.append('file', files);
-      // console.log("fd", fd)
       var settings = {
         "url": "http://localhost:5000/message",
         "method": "POST",
@@ -172,18 +201,16 @@
         },
         "data": JSON.stringify({
           "chatId": theChatId,
-          "content": text,
-          fd
+          "content": content,
+          "type": type
+
         }),
       };
 
       $.ajax(settings).done(function (response) {
-        console.log(response);
-        // const a=document.getElementById("fileInput").files
-        // console.log("aaaaaa",a)
         socket.emit("new message", response);
-
-        let chatBox = document.querySelector("#chatBox");
+        if(response.type !=="image"){
+          let chatBox = document.querySelector("#chatBox");
         let div = document.createElement("div");
         div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
         div.setAttribute("id", response._id);
@@ -194,6 +221,22 @@
 
 
         chatBox.appendChild(div);
+        }else{
+          let div = document.createElement("div");
+            div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+            div.setAttribute("id", response._id);
+            let content = `<div><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+              <img src="${response.content}" />
+              <div>`;
+            div.innerHTML = content;
+            chatBox.appendChild(div);
+        }
+        // console.log("00000",response);
+        // const a=document.getElementById("fileInput").files
+        // console.log("aaaaaa",a)
+       
+
+        
       })
     }
 
@@ -214,17 +257,30 @@
           let chatBox = document.querySelector("#chatBox");
 
           result.forEach((response) => {
-            let div = document.createElement("div");
+            if(response.type=="image"){
+              let div = document.createElement("div");
             div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
             div.setAttribute("id", response._id);
             let content = `<div><h6 id="scrollspyHeading1">${response.sender.username}</h6>
-               <p>${response.content}</p>
+              <img src="${response.content}" />
               <div>`;
             div.innerHTML = content;
 
 
 
             chatBox.appendChild(div);
+            }else{
+              let div = document.createElement("div");
+            div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+            div.setAttribute("id", response._id);
+            let content = `<div><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+               <p>${response.content}</p>
+              <div>`;
+            div.innerHTML = content;
+            chatBox.appendChild(div);
+
+            }
+            
           });
           socket.emit("room", res[0].chat._id);
           const chat = res[0].chat.chatName;
