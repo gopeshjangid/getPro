@@ -2,6 +2,8 @@ const express = require("express");
 const {
   allMessages,
   sendMessage,
+  chatImgUpload
+
 } = require("../controllers/messageController");
 
 const User = require("../model/user");
@@ -28,7 +30,11 @@ const protect = async (req, res, next) => {
   }
 };
 
-router.route("/message/:chatId").get(protect, allMessages);
-router.route("/message").post(protect, sendMessage);
+router
+  .route("/message/:chatId")
+  .get(protect, allMessages);
+router
+  .route("/message")
+  .post(protect,chatImgUpload.fields([{ name: 'img' }]), sendMessage);
 
 module.exports = router;
