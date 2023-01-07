@@ -7,6 +7,7 @@ const messageSchema = mongoose.Schema(
     chat: { type: mongoose.Schema.Types.ObjectId, ref: "Chat" },
     readBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "user" }],
     type:String,
+    name:String,
   },
   { timestamps: true }
 );

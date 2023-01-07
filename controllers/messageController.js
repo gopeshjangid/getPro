@@ -17,7 +17,7 @@ const allMessages = asyncHandler(async (req, res) => {
 });
 const sendMessage = asyncHandler(async (req, res) => {
   console.log("fileeeee",req.files)
-  const { content, chatId , type} = req.body;
+  const { content, chatId , type, name} = req.body;
 
   if (!content || !chatId) {
     console.log("Invalid data passed into request");
@@ -28,7 +28,8 @@ const sendMessage = asyncHandler(async (req, res) => {
     sender: req.user._id,
     content: content,
     chat: chatId,
-    type:type
+    type:type,
+    name:name
   };
 
   try {
