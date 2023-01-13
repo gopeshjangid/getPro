@@ -59,12 +59,14 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
         user: UserDetails.email,
         wallet: totalAmount,
         datetime: new Date(),
-        pay_type: "debited",
+        pay_id: req.body.razorpay_payment_id,
+        pay_type: "Razorpay",
+        pay_transaction: "debited",
         transactionId: WallettransactionId,
       });
       await walletData.save();
       let CartData = await AddCart.find({ custemerId: UserDetails.email });
-
+      console.log("dddd", CartData);
       let arr = [];
       for (let i = 0; i < CartData.length; i++) {
         const element = CartData[i];
@@ -79,9 +81,12 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
 
         arr.push(obj);
       }
-
+      console.log("arrrr", arr);
       const orderPlaced = new Order({
         transactionId: OrdertransactionId,
+        pay_id: req.body.razorpay_payment_id,
+        pay_method: "RazorPay",
+        type: "Ordered",
         email: UserDetails.email,
         datetime: new Date(),
         totalAmount: totalAmount,
@@ -91,6 +96,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
         status: "success",
       });
       await orderPlaced.save();
+      console.log("oooo", orderPlaced);
       // DELETE CART OF USER
 
       for (let i = 0; i < CartData.length; i++) {
