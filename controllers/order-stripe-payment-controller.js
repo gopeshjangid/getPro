@@ -45,72 +45,87 @@ module.exports.orderStripe = async (req, res) => {
 
 module.exports.orderStripeSuccess = async (req, res) => {
   try {
-    const pay_id = req.body.pay_id;
-    const token = req.headers.authorization;
-    const verifyTokenId = jwt.verify(token, "zxcvbnm");
-    const totalAmount = req.body.totalAmount;
-    const UserDetails = await User.findById(verifyTokenId.userId);
-    //    ORDER PLACED
-    const couponAmount = req.body.couponAmount;
-    const couponName = req.body.couponName;
-    let WallettransactionId = otpGenerator.generate(25, {
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
-    let OrdertransactionId = otpGenerator.generate(25, {
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
-    const walletData = new Wallet({
-      user: UserDetails.email,
-      wallet: totalAmount,
-      datetime: new Date(),
-      pay_type: "Stripe",
-      pay_id: pay_id,
-      pay_transaction: "debited",
-      transactionId: WallettransactionId,
-    });
-    await walletData.save();
-    let CartData = await AddCart.find({ custemerId: UserDetails.email });
+    if (req.body.pay_id) {
+      const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
+      console.log("sessionCheck", session);
+      if (session.status === "complete") {
+        const pay_id = req.body.pay_id;
+        console.log("qwertyui", req.body.pay_id);
+        const token = req.headers.authorization;
+        const verifyTokenId = jwt.verify(token, "zxcvbnm");
+        const totalAmount = session.amount_total / 100;
+        const UserDetails = await User.findById(verifyTokenId.userId);
+        //    ORDER PLACED
+        const couponAmount = req.body.couponAmount;
+        const couponName = req.body.couponName;
+        let WallettransactionId = otpGenerator.generate(25, {
+          upperCaseAlphabets: false,
+          specialChars: false,
+        });
+        let OrdertransactionId = otpGenerator.generate(25, {
+          upperCaseAlphabets: false,
+          specialChars: false,
+        });
+        const walletData = new Wallet({
+          user: UserDetails.email,
+          wallet: totalAmount,
+          datetime: new Date(),
+          pay_type: "Stripe",
+          pay_id: pay_id,
+          pay_transaction: "debited",
+          transactionId: WallettransactionId,
+        });
+        await walletData.save();
+        let CartData = await AddCart.find({ custemerId: UserDetails.email });
 
-    let arr = [];
-    for (let i = 0; i < CartData.length; i++) {
-      const element = CartData[i];
-      const FindProduct = await Services.findById(element.productId);
-      let obj = {
-        p_title: FindProduct.title,
-        p_shortTitle: FindProduct.shortTitle,
-        p_dec: FindProduct.dec,
-        p_price: FindProduct.price,
-        p_quantity: element.quantity,
-      };
+        let arr = [];
+        for (let i = 0; i < CartData.length; i++) {
+          const element = CartData[i];
+          const FindProduct = await Services.findById(element.productId);
+          let obj = {
+            p_title: FindProduct.title,
+            p_shortTitle: FindProduct.shortTitle,
+            p_dec: FindProduct.dec,
+            p_price: FindProduct.price,
+            p_quantity: element.quantity,
+          };
 
-      arr.push(obj);
+          arr.push(obj);
+        }
+
+        const orderPlaced = new Order({
+          transactionId: OrdertransactionId,
+          pay_id: pay_id,
+          pay_method: "Stripe",
+          type: "Ordered",
+          email: UserDetails.email,
+          datetime: new Date(),
+          totalAmount: totalAmount,
+          CouponName: couponName,
+          couponAmount: couponAmount,
+          products: arr,
+          status: "success",
+        });
+        await orderPlaced.save();
+        // DELETE CART OF USER
+
+        for (let i = 0; i < CartData.length; i++) {
+          const id = CartData[i]._id;
+          await AddCart.findByIdAndDelete(id);
+        }
+        res.status(200).json({
+          data: "order Placed",
+        });
+      } else {
+        res.status(200).json({
+          data: "payment failed",
+        });
+      }
+    } else {
+      res.status(200).json({
+        data: "please send paymentId",
+      });
     }
-
-    const orderPlaced = new Order({
-      transactionId: OrdertransactionId,
-      pay_id: pay_id,
-      pay_method: "Stripe",
-      type: "Ordered",
-      email: UserDetails.email,
-      datetime: new Date(),
-      totalAmount: totalAmount,
-      CouponName: couponName,
-      couponAmount: couponAmount,
-      products: arr,
-      status: "success",
-    });
-    await orderPlaced.save();
-    // DELETE CART OF USER
-
-    for (let i = 0; i < CartData.length; i++) {
-      const id = CartData[i]._id;
-      await AddCart.findByIdAndDelete(id);
-    }
-    res.status(200).json({
-      data: "order Placed",
-    });
   } catch (error) {
     res.status(500).json({
       error: error,

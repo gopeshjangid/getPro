@@ -4,8 +4,114 @@ const Wallet = require("../model/wallet");
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
 const otpGenerator = require("otp-generator");
+const crypto = require("crypto");
+const Services = require("../model/services");
+const Order = require("../model/order");
 dotenv.config();
 const stripe = Stripe(process.env.SECRET);
+
+module.exports.stripeSubscription = async (req, res) => {
+  try {
+    console.log(req.params.id);
+    const token = req.headers.authorization;
+    console.log("token", token);
+    const verifyTokenId = jwt.verify(token, "zxcvbnm");
+    const UserDetails = await User.findById(verifyTokenId.userId);
+    console.log("details", UserDetails);
+
+    // const paymentMethod = await stripe.paymentMethods.create({
+    //   type: "card",
+    //   card: {
+    //     number: "4242424242424242",
+    //     exp_month: 8,
+    //     exp_year: 2023,
+    //     cvc: "314u75645634534fe",
+    //   },
+    // });
+
+    // console.log("pm", paymentMethod);
+    // const customer = await stripe.customers.create({
+    //   payment_method: paymentMethod.id,
+    //   name: UserDetails.username,
+    //   email: UserDetails.email,
+    //   shipping: {
+    //     name: "RD",
+    //     address: {
+    //       line1: "510",
+    //       postal_code: "10115",
+    //       city: "Berlin",
+    //       state: "BE",
+    //       country: "DE",
+    //     },
+    //   },
+    //   invoice_settings: {
+    //     default_payment_method: paymentMethod.id,
+    //   },
+    // });
+
+    // console.log("custmer", customer);
+
+    // const product = await stripe.products.create({
+    //   name: "Gold Special",
+    // });
+    // const price = await stripe.prices.create({
+    //   unit_amount: 100,
+    //   currency: "INR",
+    //   recurring: { interval: "month" },
+    //   product: product.id,
+    // });
+    // console.log("ppppp", price);
+    // const FindProduct = await Services.findById(req.params.id);
+
+    // const subscription = await stripe.subscriptions.create({
+    //   customer: customer.id,
+    //   items: [{ price: price.id }],
+    // });
+
+    let customer = await stripe.customers.create({
+      email: UserDetails.email,
+      description: "New Customer",
+    });
+    console.log("cust", customer);
+    customer = customer.id;
+
+    // create product
+
+    const product = await stripe.products.create({
+      name: "test_product",
+    });
+
+    // create price
+
+    const price = await stripe.prices.create({
+      unit_amount: 1000,
+      currency: "INR",
+      recurring: { interval: "day", interval_count: 5 },
+
+      product: product.id,
+    });
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      payment_method_types: ["card"],
+      customer,
+
+      line_items: [
+        {
+          price: price.id,
+          quantity: 1,
+        },
+      ],
+
+      success_url: "http://localhost:3000/success",
+      cancel_url: "http://localhost:3000/cancel",
+    });
+    console.log("session", session);
+
+    res.send(200, { url: session.url, id: session.id });
+  } catch (error) {
+    res.json({ message: error });
+  }
+};
 
 module.exports.payment = async (req, res) => {
   const wallet = req.body.wallet;
