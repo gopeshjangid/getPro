@@ -11,6 +11,7 @@ const orderScema = mongoose.Schema({
   couponAmount: Number,
   products: [
     {
+      id:String,
       p_title: String,
       p_shortTitle: String,
       p_dec: String,

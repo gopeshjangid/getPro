@@ -72,6 +72,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
         const element = CartData[i];
         const FindProduct = await Services.findById(element.productId);
         let obj = {
+          id:FindProduct.id,
           p_title: FindProduct.title,
           p_shortTitle: FindProduct.shortTitle,
           p_dec: FindProduct.dec,
