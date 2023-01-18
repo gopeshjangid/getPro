@@ -104,7 +104,7 @@ module.exports.verifySubscriptionPayment = async (req, res) => {
 
       const walletData = new Wallet({
         user: UserDetails.email,
-        wallet: 50,
+        wallet: planDetails.item.amount / 100,
         datetime: new Date(),
         pay_type: "Razorpay",
         pay_id: razorpay_payment_id,
@@ -119,7 +119,7 @@ module.exports.verifySubscriptionPayment = async (req, res) => {
       );
       //  console.log("rrreswwww", FindProduct);
       let obj = {
-        id:FindProduct.id,
+        id: FindProduct.id,
         p_title: FindProduct.title,
         p_shortTitle: FindProduct.shortTitle,
         p_dec: FindProduct.dec,

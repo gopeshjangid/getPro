@@ -18,6 +18,7 @@ module.exports.stripeSubscription = async (req, res) => {
     const verifyTokenId = jwt.verify(token, "zxcvbnm");
     const UserDetails = await User.findById(verifyTokenId.userId);
     console.log("details", UserDetails);
+    const FindProduct = await Services.findById(req.params.id);
 
     // const paymentMethod = await stripe.paymentMethods.create({
     //   type: "card",
@@ -84,9 +85,9 @@ module.exports.stripeSubscription = async (req, res) => {
     // create price
 
     const price = await stripe.prices.create({
-      unit_amount: 1000,
+      unit_amount: FindProduct.price * 100,
       currency: "INR",
-      recurring: { interval: "day", interval_count: 5 },
+      recurring: { interval: "day" },
 
       product: product.id,
     });
@@ -107,16 +108,15 @@ module.exports.stripeSubscription = async (req, res) => {
     });
     console.log("session", session);
 
-    res.send(200, { url: session.url, id: session.id });
+    res.status(200).send({ url: session.url, id: session.id });
   } catch (error) {
     res.json({ message: error });
   }
 };
 
-
 module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
   try {
-    if(req.body.pay_id){
+    if (req.body.pay_id) {
       const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
       console.log("sessionCheck", session);
       if (session.status === "complete") {
@@ -125,7 +125,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
         const UserDetails = await User.findById(verifyTokenId.userId);
         console.log("token", UserDetails);
         //    ORDER PLACED
-  
+
         let WallettransactionId = await otpGenerator.generate(25, {
           upperCaseAlphabets: false,
           specialChars: false,
@@ -134,10 +134,10 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           upperCaseAlphabets: false,
           specialChars: false,
         });
-  
+
         const walletData = new Wallet({
           user: UserDetails.email,
-          wallet: session.amount_total/100,
+          wallet: session.amount_total / 100,
           datetime: new Date(),
           pay_type: "Stripe",
           pay_id: req.body.pay_id,
@@ -151,7 +151,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
         // );
         //  console.log("rrreswwww", FindProduct);
         let obj = {
-          id:"35454656575765",
+          id: "35454656575765",
           p_title: "title",
           p_shortTitle: "shortTitle",
           p_dec: "dec",
@@ -164,7 +164,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           pay_method: "Stripe",
           type: "subscription",
           email: UserDetails.email,
-          totalAmount: session.amount_total/100,
+          totalAmount: session.amount_total / 100,
           datetime: new Date(),
           products: obj,
           status: "success",
@@ -174,10 +174,9 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
       } else {
         res.json({ message: "payment failed" });
       }
-    }else{
+    } else {
       res.json({ message: "please send payment id" });
     }
-    
   } catch (error) {
     res.status(500).json({
       error: error,
