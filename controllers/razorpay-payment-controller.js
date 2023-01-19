@@ -10,7 +10,7 @@ const otpGenerator = require("otp-generator");
 const crypto = require("crypto");
 const Services = require("../model/services");
 const Order = require("../model/order");
-const ExtraCredit = require("../model/extraCredit")
+const ExtraCredit = require("../model/extraCredit");
 
 module.exports.razorpayCreateSubscription = async (req, res) => {
   const productId = req.params.id;
@@ -178,35 +178,51 @@ module.exports.razorpay_is_completed = async (req, res) => {
     );
     console.log("*****", checkPayment);
     if (checkPayment.status === "captured") {
-      let extraCredit= await ExtraCredit.findOne()
+      let extraCredit = await ExtraCredit.findOne();
       const token = req.headers.authorization;
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
       const UserDetails = await User.findById(verifyTokenId.userId);
       const wallet = checkPayment.amount / 100;
-      if(wallet>500){
-        wallet=wallet+extraCredit.extraCredit
-      }
       const pay_id = checkPayment.id;
       let WallettransactionId = otpGenerator.generate(25, {
         upperCaseAlphabets: false,
         specialChars: false,
       });
-      const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
-        wallet: UserDetails.wallet + wallet,
-      });
-      const walletData = new Wallet({
-        user: UserDetails.email,
-        wallet: wallet,
-        datetime: new Date(),
-        pay_type: "RazorPay",
-        pay_id: pay_id,
-        pay_transaction: "credited",
-        transactionId: WallettransactionId,
-      });
-      await walletData.save();
-      res.status(200).json({
-        data: walletData,
-      });
+      if (wallet >= 500) {
+        const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
+          wallet: UserDetails.wallet + wallet + extraCredit.extraCredit,
+        });
+        const walletData = new Wallet({
+          user: UserDetails.email,
+          wallet: wallet + extraCredit.extraCredit,
+          datetime: new Date(),
+          pay_type: "RazorPay",
+          pay_id: pay_id,
+          pay_transaction: "credited",
+          transactionId: WallettransactionId,
+        });
+        await walletData.save();
+        res.status(200).json({
+          data: walletData,
+        });
+      } else {
+        const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
+          wallet: UserDetails.wallet + wallet,
+        });
+        const walletData = new Wallet({
+          user: UserDetails.email,
+          wallet: wallet,
+          datetime: new Date(),
+          pay_type: "RazorPay",
+          pay_id: pay_id,
+          pay_transaction: "credited",
+          transactionId: WallettransactionId,
+        });
+        await walletData.save();
+        res.status(200).json({
+          data: walletData,
+        });
+      }
     } else {
       res.status(200).send("payment failed");
     }

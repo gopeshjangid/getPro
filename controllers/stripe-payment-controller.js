@@ -7,7 +7,7 @@ const otpGenerator = require("otp-generator");
 const crypto = require("crypto");
 const Services = require("../model/services");
 const Order = require("../model/order");
-const ExtraCredit = require("../model/extraCredit")
+const ExtraCredit = require("../model/extraCredit");
 dotenv.config();
 const stripe = Stripe(process.env.SECRET);
 
@@ -215,46 +215,80 @@ module.exports.payment = async (req, res) => {
 
 module.exports.rechargeWallet = async (req, res) => {
   try {
+    console.log(req.body.pay_id);
     if (req.body.pay_id) {
       const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
       console.log("sessionCheck", session);
       if (session.status === "complete") {
-    let extraCredit= await ExtraCredit.findOne()
-    const token = req.headers.authorization;
-    const verifyTokenId = jwt.verify(token, "zxcvbnm");
-    const UserDetails = await User.findById(verifyTokenId.userId);
-    const wallet = session.amount_total / 100
-    if(wallet>500){
-      wallet=wallet+extraCredit.extraCredit
+        let extraCredit = await ExtraCredit.findOne();
+
+        const token = req.headers.authorization;
+        const verifyTokenId = jwt.verify(token, "zxcvbnm");
+        const UserDetails = await User.findById(verifyTokenId.userId);
+        const wallet = session.amount_total / 100;
+        console.log("eeeee", extraCredit);
+        const pay_id = req.body.pay_id;
+        let WallettransactionId = otpGenerator.generate(25, {
+          upperCaseAlphabets: false,
+          specialChars: false,
+        });
+        if (wallet >= 500) {
+          const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
+            wallet: UserDetails.wallet + wallet + extraCredit.extraCredit,
+          });
+          const walletData = new Wallet({
+            user: UserDetails.email,
+            wallet: wallet + extraCredit.extraCredit,
+            datetime: new Date(),
+            pay_type: "Stripe",
+            pay_id: pay_id,
+            pay_transaction: "credited",
+            transactionId: WallettransactionId,
+          });
+          await walletData.save();
+          res.status(200).json({
+            data: walletData,
+          });
+        } else {
+          const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
+            wallet: UserDetails.wallet + wallet,
+          });
+          const walletData = new Wallet({
+            user: UserDetails.email,
+            wallet: wallet,
+            datetime: new Date(),
+            pay_type: "Stripe",
+            pay_id: pay_id,
+            pay_transaction: "credited",
+            transactionId: WallettransactionId,
+          });
+          await walletData.save();
+          res.status(200).json({
+            data: walletData,
+          });
+        }
+
+        // else {
+        // const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
+        //   wallet: UserDetails.wallet + wallet,
+        // });
+        // const walletData = new Wallet({
+        //   user: UserDetails.email,
+        //   wallet: wallet,
+        //   datetime: new Date(),
+        //   pay_type: "Stripe",
+        //   pay_id: pay_id,
+        //   pay_transaction: "credited",
+        //   transactionId: WallettransactionId,
+        // });
+        //  }
+      } else {
+        res.status(200).json({ message: "payment failed" });
+      }
+    } else {
+      res.status(200).json({ message: "please send pay_Id" });
     }
-    const pay_id = req.body.pay_id;
-    let WallettransactionId = otpGenerator.generate(25, {
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
-    const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
-      wallet: UserDetails.wallet + wallet,
-    });
-    const walletData = new Wallet({
-      user: UserDetails.email,
-      wallet: wallet,
-      datetime: new Date(),
-      pay_type: "Stripe",
-      pay_id: pay_id,
-      pay_transaction: "credited",
-      transactionId: WallettransactionId,
-    });
-    await walletData.save();
-    res.status(200).json({
-      data: walletData,
-    });
-  }else{
-    res.status(200).json({message:"payment failed"})
-  }
-}else{
-    res.status(200).json({message:"please send pay_Id"})
-  }
-} catch (error) {
+  } catch (error) {
     res.status(500).json({
       error: error.message,
     });
