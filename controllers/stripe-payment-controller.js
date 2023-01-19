@@ -7,6 +7,7 @@ const otpGenerator = require("otp-generator");
 const crypto = require("crypto");
 const Services = require("../model/services");
 const Order = require("../model/order");
+const ExtraCredit = require("../model/extraCredit")
 dotenv.config();
 const stripe = Stripe(process.env.SECRET);
 
@@ -214,10 +215,18 @@ module.exports.payment = async (req, res) => {
 
 module.exports.rechargeWallet = async (req, res) => {
   try {
+    if (req.body.pay_id) {
+      const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
+      console.log("sessionCheck", session);
+      if (session.status === "complete") {
+    let extraCredit= await ExtraCredit.findOne()
     const token = req.headers.authorization;
     const verifyTokenId = jwt.verify(token, "zxcvbnm");
     const UserDetails = await User.findById(verifyTokenId.userId);
-    const wallet = req.body.wallet;
+    const wallet = session.amount_total / 100
+    if(wallet>500){
+      wallet=wallet+extraCredit.extraCredit
+    }
     const pay_id = req.body.pay_id;
     let WallettransactionId = otpGenerator.generate(25, {
       upperCaseAlphabets: false,
@@ -239,7 +248,13 @@ module.exports.rechargeWallet = async (req, res) => {
     res.status(200).json({
       data: walletData,
     });
-  } catch (error) {
+  }else{
+    res.status(200).json({message:"payment failed"})
+  }
+}else{
+    res.status(200).json({message:"please send pay_Id"})
+  }
+} catch (error) {
     res.status(500).json({
       error: error.message,
     });

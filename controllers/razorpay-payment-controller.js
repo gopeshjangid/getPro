@@ -10,6 +10,7 @@ const otpGenerator = require("otp-generator");
 const crypto = require("crypto");
 const Services = require("../model/services");
 const Order = require("../model/order");
+const ExtraCredit = require("../model/extraCredit")
 
 module.exports.razorpayCreateSubscription = async (req, res) => {
   const productId = req.params.id;
@@ -177,10 +178,14 @@ module.exports.razorpay_is_completed = async (req, res) => {
     );
     console.log("*****", checkPayment);
     if (checkPayment.status === "captured") {
+      let extraCredit= await ExtraCredit.findOne()
       const token = req.headers.authorization;
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
       const UserDetails = await User.findById(verifyTokenId.userId);
       const wallet = checkPayment.amount / 100;
+      if(wallet>500){
+        wallet=wallet+extraCredit.extraCredit
+      }
       const pay_id = checkPayment.id;
       let WallettransactionId = otpGenerator.generate(25, {
         upperCaseAlphabets: false,
