@@ -143,6 +143,18 @@ adminRouter
 adminRouter
     .route('/edit-message/:id')
     .post(adminController.checkLogin, adminController.findupdatemessagesubmit)
+adminRouter
+    .route('/extraCredit')
+    .get(adminController.checkLogin, adminController.extraCredit)
+adminRouter
+    .route('/AddextraCredit')
+    .get(adminController.checkLogin, adminController.AddextraCredit)
+adminRouter
+    .route('/AddextraCredit')
+    .post(adminController.checkLogin, adminController.AddextraCreditSubmit)
+adminRouter
+    .route('/editExtraCredit/:id')
+    .get(adminController.checkLogin, adminController.editExtraCredit)
 
 
 

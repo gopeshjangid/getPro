@@ -16,6 +16,7 @@ const httpMsgs = require("http-msgs");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const Message = require("../model/messageModel");
+const ExtraCredit = require("../model/extraCredit")
 
 module.exports.checkLogin = (req, res, next) => {
   if (req.cookies.userLoginToken === undefined) {
@@ -857,6 +858,53 @@ module.exports.findupdatemessagesubmit = async (req, res) => {
     console.log(new_message)
     let messageData = await Message.findByIdAndUpdate(id,{content:new_message});
     res.status(200).json({message:messageData})
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.extraCredit = async (req, res) => {
+  try {
+    let extraCreditData= await ExtraCredit.find()
+    console.log(extraCreditData)
+   res.render("extraCredit.ejs",{extraCreditData})
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+module.exports.AddextraCredit = async (req, res) => {
+  try {
+  res.render("extra-credit-add.ejs")
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.AddextraCreditSubmit = async (req, res) => {
+  try {
+  const message = req.body.message
+  const credit = req.body.credit
+  let extraCredit=  new ExtraCredit({message:message,extraCredit:credit})
+  await extraCredit.save()
+  res.redirect("/extraCredit")
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.editExtraCredit = async (req, res) => {
+  try {
+    const id= req.params.id
+  let CreditData= await ExtraCredit.findById(id)
+  res.render("extra-credit-edit.ejs",{CreditData})
   } catch (error) {
     res.status(500).json({
       error: error.message,
