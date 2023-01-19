@@ -87,12 +87,6 @@
 
                                         <tr>
                                             <!-- <th>Sr. No.</th> -->
-                                            <form action="/orderStripe" method="post">
-                                                <button type="submit">
-                                                    pay now
-                                                </button>
-                                            </form>
-                                            <th></th>
                                             <th>Title</th>
                                             <th>Description</th>
                                             <th>Long Description</th>
@@ -111,7 +105,7 @@
                                                     <%=result.dec%>
                                                 </td>
                                                 <td>
-                                                    <%=result.longDec%>
+                                                    <%-result.longDec-%>
                                                 </td>
                                                 <td style="width: 150px;"><img style="width: 100%;"
                                                         src="../image/<%=result.image%>" alt="">

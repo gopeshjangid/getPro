@@ -137,7 +137,12 @@ adminRouter
 adminRouter
     .route('/viewOrderDetails/:id')
     .get(adminController.checkLogin, adminController.viewOrderDetails)
-
+adminRouter
+    .route('/findupdatemessage/:id')
+    .get(adminController.checkLogin, adminController.findupdatemessage)
+adminRouter
+    .route('/edit-message/:id')
+    .post(adminController.checkLogin, adminController.findupdatemessagesubmit)
 
 
 

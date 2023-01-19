@@ -15,6 +15,7 @@ const bcrypt = require("bcrypt");
 const httpMsgs = require("http-msgs");
 const jwt = require("jsonwebtoken");
 const path = require("path");
+const Message = require("../model/messageModel");
 
 module.exports.checkLogin = (req, res, next) => {
   if (req.cookies.userLoginToken === undefined) {
@@ -249,8 +250,7 @@ module.exports.updateworksampleSubmit = async (req, res) => {
       await Worksample.findByIdAndUpdate(id, {
         title: newTitle,
         dec: newDec,
-        image: img,
-        pdf: pdf,
+       
       });
       res.redirect("/workSample");
     }
@@ -831,6 +831,32 @@ module.exports.viewOrderDetails = async (req, res) => {
     console.log(OrderData);
     let Products = OrderData.products;
     res.render("viewOrderDetails.ejs", { OrderData, Products });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+module.exports.findupdatemessage = async (req, res) => {
+  try {
+    const id = req.params.id;
+    let messageData = await Message.findById(id);
+   //s console.log(messageData);
+   res.status(200).json({message:messageData})
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.findupdatemessagesubmit = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const new_message=req.body.newMessage
+    console.log(new_message)
+    let messageData = await Message.findByIdAndUpdate(id,{content:new_message});
+    res.status(200).json({message:messageData})
   } catch (error) {
     res.status(500).json({
       error: error.message,

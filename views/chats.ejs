@@ -230,9 +230,32 @@
           let div = document.createElement("div");
           div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
           div.setAttribute("id", response._id);
-          let content = `<div><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+          let content = `<div style="position: relative"><h6 id="scrollspyHeading1">${response.sender.username}</h6>
           <p>${response.content}</p>
-          <div>`;
+         
+          <button id="babluuu" onclick= clickId("${response._id}") type="button" class="bg-transparent border-0 position-absolute top-0 end-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <i class="bi bi-pencil-square"></i>
+                                  </button>
+                                  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                         <form action="/edit-message" method="post" id="updateForm">
+                                          <input type="text" placeholder="Enter New Message...." id="updateForminput" class="form-control">
+                                          <div class="modal-footer">
+                                           <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Update</button>
+                                          </div>
+                                          </form>
+                                        </div>
+                                       
+                                      </div>
+                                    </div>
+                                  </div>
+                              <div>`;
           div.innerHTML = content;
           chatBox.appendChild(div);
         }
@@ -245,8 +268,8 @@
                 <h6 id="scrollspyHeading1">${response.sender.username}</h6>
                 <img style="width:230px" src="${response.content}" />
               <div>`;
-              div.innerHTML = content;
-              chatBox.appendChild(div);
+          div.innerHTML = content;
+          chatBox.appendChild(div);
         }
         else if (response.type === "pdf") {
           let div = document.createElement("div");
@@ -267,8 +290,8 @@
                                       </div>
                 
                               <div>`;
-              div.innerHTML = content;
-              chatBox.appendChild(div);
+          div.innerHTML = content;
+          chatBox.appendChild(div);
         }
         else if (response.type === "docx") {
           let div = document.createElement("div");
@@ -289,8 +312,8 @@
                                       </div>
                 
                               <div>`;
-              div.innerHTML = content;
-              chatBox.appendChild(div);
+          div.innerHTML = content;
+          chatBox.appendChild(div);
         }
         // console.log("00000",response);
         // const a=document.getElementById("fileInput").files
@@ -300,6 +323,9 @@
 
       })
     }
+
+
+
 
     const trClicked = (e) => {
       theChatId = e.target.id;
@@ -325,12 +351,34 @@
               let div = document.createElement("div");
               div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
               div.setAttribute("id", response._id);
-              let content = `<div>
+              let content = `<div style="position: relative">
                                   <h6 id="scrollspyHeading1">${response.sender.username}</h6>
                                   <p>${response.content}</p>
+                                  <button id="babluuu" onclick= clickId("${response._id}") type="button" class="bg-transparent border-0 position-absolute top-0 end-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <i class="bi bi-pencil-square"></i>
+                                  </button>
+                                  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                         <form action="/edit-message" method="post" id="updateForm">
+                                          <input type="text" placeholder="Enter New Message...." id="updateForminput" class="form-control">
+                                          <div class="modal-footer">
+                                           <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Update</button>
+                                          </div>
+                                          </form>
+                                        </div>
+                                       
+                                      </div>
+                                    </div>
+                                  </div>
                               <div>`;
-                              div.innerHTML = content;
-                              chatBox.appendChild(div);
+              div.innerHTML = content;
+              chatBox.appendChild(div);
             }
 
             else if (response.type === "image") {
@@ -409,6 +457,52 @@
       });
     };
 
+
+    function clickId(id) {
+      let updateForm = document.getElementById("updateForm")
+      let ChatId;
+      $.ajax({
+        url: `http://localhost:5000/findupdatemessage/${id}`,
+        method: "get",
+        contentType: "application/x-www-form-urlencoded",
+        success: function (res) {
+          document.getElementById("updateForminput").value = res.message.content
+          console.log("resss",res.message.chat)
+          ChatId=res.message.chat
+        },
+        error: function (error) {
+          console.log(error)
+        }
+      })
+      updateForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let newMessage = $("#updateForminput").val();
+        console.log("new", newMessage)
+        $.ajax({
+          url: `http://localhost:5000/edit-message/${id}`,
+          method: "post",
+          contentType: "application/x-www-form-urlencoded",
+          data: {
+            newMessage,
+          },
+          success: function (res) {
+            console.log(res);
+            trClicked(
+              {
+                target: {
+                  id:ChatId
+                }
+              }
+            )
+          },
+          error: function (error) {
+            console.log(error)
+          }
+        })
+
+      })
+
+    }
 
 
     // socket.on("message2", (chatId) => {

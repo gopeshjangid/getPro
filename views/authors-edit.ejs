@@ -127,8 +127,8 @@
                           <label class="col-sm-2 col-form-label" for="basic-default-message">Long Description</label>
                           <div class="col-sm-10">
                             <textarea
-                              id="basic-default-message"
-                              class="form-control"
+                              id="editor"
+                              class="ckeditor form-control"
                               placeholder="Enter Work Sample Description"
                               aria-label="Hi, Do you have a moment to talk Joe?"
                               aria-describedby="basic-icon-default-message2"
@@ -202,6 +202,11 @@
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
+
+    <script type="text/javascript" src="../ckeditor/ckeditor.js"></script>
+    <script>
+      CKEDITOR.replace("editor")
+    </script>
     <script src="../js/jquery.js"></script>
     <script src="../js/popper.js"></script>
     <script src="../js/bootstrap.js"></script>
