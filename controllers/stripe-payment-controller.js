@@ -186,22 +186,19 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
 };
 
 module.exports.CancelStripeSubcription = async (req, res) => {
-  
   try {
-    if(req.body.sub_id){
-      const deleted = await stripe.subscriptions.del(
-        req.body.sub_id
-      );
-      res.status(200).json({message:"your subscription canceled"})
-    }else{
-      res.status(500).json({message:"please send sub_id"})
+    //  console.log(req.body);
+    if (req.body.sub_id) {
+      const deleted = await stripe.subscriptions.del(req.body.sub_id);
+      console.log(deleted);
+      res.status(200).json({ message: "your subscription canceled" });
+    } else {
+      res.status(500).json({ message: "please send sub_id" });
     }
-   
   } catch (error) {
     res.send(error);
   }
 };
-
 
 module.exports.payment = async (req, res) => {
   const wallet = req.body.wallet;
