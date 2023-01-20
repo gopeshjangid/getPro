@@ -169,6 +169,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           datetime: new Date(),
           products: obj,
           status: "success",
+          sub_status:"Active"
         });
         await orderPlaced.save();
         res.json({ message: "subscriptiion successfull" });
@@ -190,7 +191,8 @@ module.exports.CancelStripeSubcription = async (req, res) => {
     //  console.log(req.body);
     if (req.body.sub_id) {
       const deleted = await stripe.subscriptions.del(req.body.sub_id);
-      console.log(deleted);
+      await Order.findByIdAndUpdate(req.body.mainOrderId,{sub_status:"canceled"})
+     // console.log(deleted);
       res.status(200).json({ message: "your subscription canceled" });
     } else {
       res.status(500).json({ message: "please send sub_id" });

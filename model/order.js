@@ -21,6 +21,7 @@ const orderScema = mongoose.Schema({
   ],
   type: String,
   status: String,
+  sub_status:String
 });
 
 module.exports = mongoose.model("order", orderScema);
