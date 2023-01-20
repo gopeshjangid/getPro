@@ -11,6 +11,14 @@ const ExtraCredit = require("../model/extraCredit");
 dotenv.config();
 const stripe = Stripe(process.env.SECRET);
 
+
+const Razorpay = require("razorpay");
+var instance = new Razorpay({
+  key_id: process.env.RAZORPAY_ID,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
+
+
 module.exports.stripeSubscription = async (req, res) => {
   try {
     console.log(req.params.id);
@@ -169,7 +177,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           datetime: new Date(),
           products: obj,
           status: "success",
-          sub_status:"Active"
+          sub_status: "Active"
         });
         await orderPlaced.save();
         res.json({ message: "subscriptiion successfull" });
@@ -190,10 +198,24 @@ module.exports.CancelStripeSubcription = async (req, res) => {
   try {
     //  console.log(req.body);
     if (req.body.sub_id) {
-      const deleted = await stripe.subscriptions.del(req.body.sub_id);
-      await Order.findByIdAndUpdate(req.body.mainOrderId,{sub_status:"canceled"})
-     // console.log(deleted);
-      res.status(200).json({ message: "your subscription canceled" });
+      if (req.body.mainOrderId) {
+        if (req.body.pay_method === "Stripe") {
+          const deleted = await stripe.subscriptions.del(req.body.sub_id);
+          await Order.findByIdAndUpdate(req.body.mainOrderId, { sub_status: "canceled" })
+          // console.log(deleted);
+          res.status(200).json({ message: "your subscription canceled" });
+
+        }else if(req.body.pay_method === "RazorPay"){
+         await instance.subscriptions.cancel(req.body.sub_id)
+         await Order.findByIdAndUpdate(req.body.mainOrderId, { sub_status: "canceled" })
+         // console.log(deleted);
+         res.status(200).json({ message: "your subscription canceled" });
+
+        }
+      } else {
+        res.status(500).json({ message: "please send main order id" });
+      }
+
     } else {
       res.status(500).json({ message: "please send sub_id" });
     }

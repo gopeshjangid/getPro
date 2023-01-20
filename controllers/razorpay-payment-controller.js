@@ -137,6 +137,7 @@ module.exports.verifySubscriptionPayment = async (req, res) => {
         datetime: new Date(),
         products: obj,
         status: "success",
+        sub_status:"Active"
       });
       await orderPlaced.save();
       res.json({ message: "subscriptiion successfull" });
