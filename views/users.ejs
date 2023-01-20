@@ -75,15 +75,19 @@
 
               <!-- Basic Bootstrap Table -->
               <div class="card">
-                <div>
+                <div class="text-nowrap table-responsive">
 
-                  <table class="table" id="myTable">
+                  <table class="table " style="overflow-x: auto;" id="myTable">
                     <thead>
                       <tr>
                         <!-- <th>Sr. No.</th> -->
                         <th>Usermane</th>
                         <th>Email</th>
                         <th>Wallet</th>
+                           <th>IP_address</th>   
+                           <th>Location</th>   
+                           <th>Login/Register Time</th>
+                             <th>Login Type</th>
                         <th>Status</th>
                         <th>Actions</th>
                       </tr>
@@ -101,6 +105,18 @@
                           </td>
                           <td>
                             <%=result.wallet%>
+                          </td>
+                           <td>
+                            <%=result.IP_Address%>
+                          </td>
+                           <td>
+                            <%=result.location%>
+                          </td>
+                           <td>
+                            <%=result.datetime%>
+                          </td>
+                           <td>
+                            <%=result.logintype%>
                           </td>
 
                           <td>
