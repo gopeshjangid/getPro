@@ -150,11 +150,14 @@ adminRouter
     .route('/AddextraCredit')
     .get(adminController.checkLogin, adminController.AddextraCredit)
 adminRouter
-    .route('/AddextraCredit')
+    .route('/AddextraCrsedit')
     .post(adminController.checkLogin, adminController.AddextraCreditSubmit)
 adminRouter
     .route('/editExtraCredit/:id')
     .get(adminController.checkLogin, adminController.editExtraCredit)
+adminRouter
+    .route('/editExtraCredit/:id')
+    .post(adminController.checkLogin, adminController.editExtraCreditSubmit)
 
 
 

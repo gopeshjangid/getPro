@@ -7,7 +7,14 @@ paymentRouter
 paymentRouter
   .route("/StripeSubscriptionSuccess")
   .post(paymentController.verifyStripeSubscriptionPayment);
-paymentRouter.route("/payment").post(paymentController.payment);
-paymentRouter.route("/rechargeWallet").post(paymentController.rechargeWallet);
+paymentRouter
+  .route("/CancelStripeSubcription")
+  .post(paymentController.CancelStripeSubcription);
+paymentRouter
+  .route("/payment")
+  .post(paymentController.payment);
+paymentRouter
+  .route("/rechargeWallet")
+  .post(paymentController.rechargeWallet);
 
 module.exports = paymentRouter;

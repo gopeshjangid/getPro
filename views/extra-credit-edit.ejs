@@ -91,7 +91,7 @@
                       
                     </div>
                     <div class="card-body">
-                      <form action="/updateCoupon/<%=CreditData.id%>" method="post" id="form">
+                      <form action="/editExtraCredit/<%=CreditData.id%>" method="post" id="form">
                         <div class="row mb-3">
                             <label class="col-sm-2 col-form-label"
                                 for="basic-default-name">Message</label>
@@ -100,15 +100,12 @@
                                     placeholder="Enter Your New Message" name="message" value="<%=CreditData.message%>" required/>
                             </div>
                         </div>
-
-                      
-                       
-                        <div class="row mb-3">
+                             <div class="row mb-3">
                             <label class="col-sm-2 col-form-label"
                                 for="basic-default-name">Extra Credit</label>
                             <div class="col-sm-10">
                                 <input type="number" class="form-control" id="couponAmountInput"
-                                    placeholder="Enter Your Off Amount" name="couponAmount" value="<%=CreditData.extraCredit%>"/>
+                                    placeholder="Enter Your Off Amount" name="credit" value="<%=CreditData.extraCredit%>"/>
                             </div>
                         </div>
                         <div class="row justify-content-end">
@@ -164,42 +161,7 @@
     <!-- / Layout wrapper -->
 
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <script>
-      
-        let CouponInput = document.getElementById('CouponInput')
-        let CouponTypeInput = document.getElementById('CouponTypeInput')
-        let CouponStatusInput = document.getElementById('CouponStatusInput')
-        let couponAmountInput = document.getElementById('couponAmountInput')
-        let LableCoupon = document.getElementById('LableCoupon')
-        let form= document.getElementById('form')
-        let formAction=form.attributes[0].value
-        form.addEventListener("submit", (e) => {
-              e.preventDefault();
-              let couponName=  $('#CouponInput').val();
-              let couponType=  $('#CouponTypeInput').val();
-              let couponStatus=  $('#CouponStatusInput').val();
-              let couponAmount=  $('#couponAmountInput').val();
-                $.ajax({
-                        url: `http://localhost:5000${formAction}`,
-                        method: "post",
-                        contentType: "application/x-www-form-urlencoded",
-                        data: {
-                            couponName, couponType, couponStatus,couponAmount
-                        },
-                        success: function (res) {
-                            window.location = "http://localhost:5000/coupon"
-                        },
-                        error: function (error) {
-                            console.log(error)
-                            if (error.responseJSON.data === "Internal error occured: coupon name is already exist") {
-                                LableCoupon.style.display='block'
-                                LableCoupon.innerHTML = "coupon name is already exist";
-                            }
-                        }
-                    })
-            }
-            );
-   </script>
+    
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->

@@ -855,7 +855,6 @@ module.exports.findupdatemessagesubmit = async (req, res) => {
   try {
     const id = req.params.id;
     const new_message=req.body.newMessage
-    console.log(new_message)
     let messageData = await Message.findByIdAndUpdate(id,{content:new_message});
     res.status(200).json({message:messageData})
   } catch (error) {
@@ -868,7 +867,6 @@ module.exports.findupdatemessagesubmit = async (req, res) => {
 module.exports.extraCredit = async (req, res) => {
   try {
     let extraCreditData= await ExtraCredit.find()
-    console.log(extraCreditData)
    res.render("extraCredit.ejs",{extraCreditData})
   } catch (error) {
     res.status(500).json({
@@ -905,6 +903,20 @@ module.exports.editExtraCredit = async (req, res) => {
     const id= req.params.id
   let CreditData= await ExtraCredit.findById(id)
   res.render("extra-credit-edit.ejs",{CreditData})
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+module.exports.editExtraCreditSubmit = async (req, res) => {
+  try {
+    const id= req.params.id
+    const NewMessage=req.body.message
+    const credit=req.body.credit
+    console.log(req.body)
+    let CreditData= await ExtraCredit.findByIdAndUpdate(id,{message:NewMessage,extraCredit:credit})
+    res.redirect("/extraCredit")
   } catch (error) {
     res.status(500).json({
       error: error.message,
