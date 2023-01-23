@@ -137,7 +137,7 @@ module.exports.verifySubscriptionPayment = async (req, res) => {
         datetime: new Date(),
         products: obj,
         status: "success",
-        sub_status:"Active"
+        sub_status: "Active",
       });
       await orderPlaced.save();
       res.json({ message: "subscriptiion successfull" });
@@ -174,6 +174,7 @@ module.exports.razorpayPayment = async (req, res) => {
 
 module.exports.razorpay_is_completed = async (req, res) => {
   try {
+    console.log("bodyyyyyy", req.body);
     let checkPayment = await instance.payments.fetch(
       req.body.razorpay_payment_id
     );

@@ -11,13 +11,11 @@ const ExtraCredit = require("../model/extraCredit");
 dotenv.config();
 const stripe = Stripe(process.env.SECRET);
 
-
 const Razorpay = require("razorpay");
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_ID,
   key_secret: process.env.RAZORPAY_SECRET,
 });
-
 
 module.exports.stripeSubscription = async (req, res) => {
   try {
@@ -177,7 +175,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           datetime: new Date(),
           products: obj,
           status: "success",
-          sub_status: "Active"
+          sub_status: "Active",
         });
         await orderPlaced.save();
         res.json({ message: "subscriptiion successfull" });
@@ -201,21 +199,22 @@ module.exports.CancelStripeSubcription = async (req, res) => {
       if (req.body.mainOrderId) {
         if (req.body.pay_method === "Stripe") {
           const deleted = await stripe.subscriptions.del(req.body.sub_id);
-          await Order.findByIdAndUpdate(req.body.mainOrderId, { sub_status: "canceled" })
+          await Order.findByIdAndUpdate(req.body.mainOrderId, {
+            sub_status: "canceled",
+          });
           // console.log(deleted);
           res.status(200).json({ message: "your subscription canceled" });
-
-        }else if(req.body.pay_method === "RazorPay"){
-         await instance.subscriptions.cancel(req.body.sub_id)
-         await Order.findByIdAndUpdate(req.body.mainOrderId, { sub_status: "canceled" })
-         // console.log(deleted);
-         res.status(200).json({ message: "your subscription canceled" });
-
+        } else if (req.body.pay_method === "RazorPay") {
+          await instance.subscriptions.cancel(req.body.sub_id);
+          await Order.findByIdAndUpdate(req.body.mainOrderId, {
+            sub_status: "canceled",
+          });
+          // console.log(deleted);
+          res.status(200).json({ message: "your subscription canceled" });
         }
       } else {
         res.status(500).json({ message: "please send main order id" });
       }
-
     } else {
       res.status(500).json({ message: "please send sub_id" });
     }
@@ -254,7 +253,7 @@ module.exports.payment = async (req, res) => {
 
 module.exports.rechargeWallet = async (req, res) => {
   try {
-    console.log(req.body.pay_id);
+    console.log(req.body);
     if (req.body.pay_id) {
       const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
       console.log("sessionCheck", session);
@@ -306,21 +305,46 @@ module.exports.rechargeWallet = async (req, res) => {
             data: walletData,
           });
         }
+      } else {
+        res.status(200).json({ message: "payment failed" });
+      }
+    } else {
+      res.status(200).json({ message: "please send pay_Id" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
 
-        // else {
-        // const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
-        //   wallet: UserDetails.wallet + wallet,
-        // });
-        // const walletData = new Wallet({
-        //   user: UserDetails.email,
-        //   wallet: wallet,
-        //   datetime: new Date(),
-        //   pay_type: "Stripe",
-        //   pay_id: pay_id,
-        //   pay_transaction: "credited",
-        //   transactionId: WallettransactionId,
-        // });
-        //  }
+module.exports.stripeGuestPaymentSuccess = async (req, res) => {
+  try {
+    console.log(req.body);
+    if (req.body.pay_id && req.body.email) {
+      const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
+      console.log("sessionCheck", session);
+      if (session.status === "complete") {
+        const pay_id = req.body.pay_id;
+        const wallet = session.amount_total / 100;
+        let WallettransactionId = otpGenerator.generate(25, {
+          upperCaseAlphabets: false,
+          specialChars: false,
+        });
+
+        const walletData = new Wallet({
+          user: req.body.email,
+          wallet: wallet,
+          datetime: new Date(),
+          pay_type: "Stripe",
+          pay_id: pay_id,
+          pay_transaction: "credited",
+          transactionId: WallettransactionId,
+        });
+        await walletData.save();
+        res.status(200).json({
+          data: walletData,
+        });
       } else {
         res.status(200).json({ message: "payment failed" });
       }

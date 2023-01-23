@@ -82,8 +82,10 @@ const chatRoutes = require("./router/chatRoutes");
 const messageRoutes = require("./router/messageRoutes");
 const orderRazorpayPayment = require("./router/orderRazorpayPayment");
 const extraCreditRouter = require("./router/extraCreditRouter");
+const stripeGuestPaymentRouter = require("./router/stripeGuestPaymentRouter");
+const razorPayGuestPaymentRouter = require("./router/razorPayGuestPaymentRouter");
 
-const cookieParser = require("cookie-parser")
+const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -126,8 +128,10 @@ app.use(paypalPaymentRouter);
 app.use(razorpayPaymentRouter);
 app.use(chatRoutes);
 app.use(messageRoutes);
-app.use(orderRazorpayPayment)
-app.use(extraCreditRouter)
+app.use(orderRazorpayPayment);
+app.use(extraCreditRouter);
+app.use(stripeGuestPaymentRouter);
+app.use(razorPayGuestPaymentRouter);
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);
