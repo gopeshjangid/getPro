@@ -18,6 +18,7 @@ var instance = new Razorpay({
 });
 
 module.exports.payment = async (req, res) => {
+  console.log(req.body);
   const wallet = req.body.wallet;
   try {
     const session = await stripe.checkout.sessions.create({

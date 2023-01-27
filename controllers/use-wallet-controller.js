@@ -8,6 +8,7 @@ const Services = require("../model/services");
 
 module.exports.useWallet = async (req, res) => {
   try {
+    console.log(req.body);
     const token = req.headers.authorization;
     const verifyTokenId = jwt.verify(token, "zxcvbnm");
     const totalAmount = req.body.totalAmount;
@@ -46,11 +47,12 @@ module.exports.useWallet = async (req, res) => {
       for (let i = 0; i < CartData.length; i++) {
         const element = CartData[i];
         const FindProduct = await Services.findById(element.productId);
-        let FindTransectionId = await Order.findOne({
-          transactionId: OrdertransactionId,
-        });
+        // let FindTransectionId = await Order.findOne({
+        //   transactionId: OrdertransactionId,
+        // });
+        //  console.log("oopooo", FindTransectionId);
         let obj = {
-          id:FindTransectionId.id,
+          id: FindProduct.id,
           p_title: FindProduct.title,
           p_shortTitle: FindProduct.shortTitle,
           p_dec: FindProduct.dec,
@@ -60,6 +62,7 @@ module.exports.useWallet = async (req, res) => {
 
         arr.push(obj);
       }
+      console.log("arrr", arr);
       const orderPlaced = new Order({
         transactionId: OrdertransactionId,
         pay_method: "Wallet",
