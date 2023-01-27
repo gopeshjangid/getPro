@@ -1,3 +1,21 @@
+const Stripe = require("stripe");
+const dotenv = require("dotenv");
+const Wallet = require("../model/wallet");
+const jwt = require("jsonwebtoken");
+const User = require("../model/user");
+const otpGenerator = require("otp-generator");
+const crypto = require("crypto");
+const Services = require("../model/services");
+const Order = require("../model/order");
+const ExtraCredit = require("../model/extraCredit");
+dotenv.config();
+const stripe = Stripe(process.env.SECRET);
+
+const Razorpay = require("razorpay");
+var instance = new Razorpay({
+  key_id: process.env.RAZORPAY_ID,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
 
 
 module.exports.CancelStripeSubcription = async (req, res) => {
