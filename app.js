@@ -84,6 +84,9 @@ const orderRazorpayPayment = require("./router/orderRazorpayPayment");
 const extraCreditRouter = require("./router/extraCreditRouter");
 const stripeGuestPaymentRouter = require("./router/stripeGuestPaymentRouter");
 const razorPayGuestPaymentRouter = require("./router/razorPayGuestPaymentRouter");
+const stripeSubscriptionRouter = require("./router/stripeSubscriptionRouter");
+const razorpaySubscriptionRouter = require("./router/razorpaySubscriptionRouter");
+const withoutPaymentOrderRouter = require("./router/withoutPaymentOrderRouter");
 
 const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
@@ -132,6 +135,9 @@ app.use(orderRazorpayPayment);
 app.use(extraCreditRouter);
 app.use(stripeGuestPaymentRouter);
 app.use(razorPayGuestPaymentRouter);
+app.use(stripeSubscriptionRouter)
+app.use(razorpaySubscriptionRouter)
+app.use(withoutPaymentOrderRouter)
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);
