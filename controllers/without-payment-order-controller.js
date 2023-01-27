@@ -1,12 +1,16 @@
-
-
+const Wallet = require("../model/wallet");
+const jwt = require("jsonwebtoken");
+const User = require("../model/user");
+const otpGenerator = require("otp-generator");
+const Services = require("../model/services");
+const Order = require("../model/order");
 
 
 module.exports.withoutPaymentOrder = async (req, res) => {
     try {
         const token = req.headers.authorization;
         const verifyTokenId = jwt.verify(token, "zxcvbnm");
-        const totalAmount = session.amount_total / 100;
+        const totalAmount = req.body.totalAmount
         const UserDetails = await User.findById(verifyTokenId.userId);
         //    ORDER PLACED
         const couponAmount = req.body.couponAmount;
@@ -23,9 +27,9 @@ module.exports.withoutPaymentOrder = async (req, res) => {
           user: UserDetails.email,
           wallet: totalAmount,
           datetime: new Date(),
-          pay_type: "Stripe",
+          pay_type: "Pending",
           pay_id: pay_id,
-          pay_transaction: "debited",
+          pay_transaction: "Pending",
           transactionId: WallettransactionId,
         });
         await walletData.save();
@@ -49,8 +53,8 @@ module.exports.withoutPaymentOrder = async (req, res) => {
 
         const orderPlaced = new Order({
           transactionId: OrdertransactionId,
-          pay_id: pay_id,
-          pay_method: "Stripe",
+          pay_id: "Pending",
+          pay_method: "Pending",
           type: "Ordered",
           email: UserDetails.email,
           datetime: new Date(),
@@ -58,7 +62,7 @@ module.exports.withoutPaymentOrder = async (req, res) => {
           CouponName: couponName,
           couponAmount: couponAmount,
           products: arr,
-          status: "success",
+          status: "Pending",
         });
         await orderPlaced.save();
         // DELETE CART OF USER
