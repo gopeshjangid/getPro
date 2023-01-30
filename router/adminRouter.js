@@ -158,6 +158,9 @@ adminRouter
 adminRouter
     .route('/editExtraCredit/:id')
     .post(adminController.checkLogin, adminController.editExtraCreditSubmit)
+adminRouter
+    .route('/getOrderDetailsInChat/:id')
+    .get(adminController.checkLogin, adminController.getOrderDetailsInChat)
 
 
 

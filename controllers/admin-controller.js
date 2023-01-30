@@ -16,6 +16,7 @@ const httpMsgs = require("http-msgs");
 const jwt = require("jsonwebtoken");
 const path = require("path");
 const Message = require("../model/messageModel");
+const Chat = require("../model/chatModel");
 const ExtraCredit = require("../model/extraCredit")
 
 module.exports.checkLogin = (req, res, next) => {
@@ -917,6 +918,22 @@ module.exports.editExtraCreditSubmit = async (req, res) => {
     console.log(req.body)
     let CreditData= await ExtraCredit.findByIdAndUpdate(id,{message:NewMessage,extraCredit:credit})
     res.redirect("/extraCredit")
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+
+module.exports.getOrderDetailsInChat = async (req, res) => {
+  try {
+    const id= req.params.id
+    console.log(id)
+  const ChatData=  await Chat.findById(id)
+  
+  const OrderData= await Order.findById(ChatData.orderId)
+   res.status(200).json({message:OrderData})
   } catch (error) {
     res.status(500).json({
       error: error.message,

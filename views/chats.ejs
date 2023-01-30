@@ -18,7 +18,7 @@
       width: 63%;
       float: right;
       text-align: left;
-      padding-left: 10px;
+      /* padding-left: 10px; */
       background: #e8ffe8;
       border-radius: 12px;
       margin-bottom: 12px;
@@ -109,6 +109,9 @@
             <a style="background: #d44848" class="btn py-1 px-4 mt-3 text-light" href="/dashboard">Back</a>
             <input id="fileInput" type="file" style="background: #d44848" class="btn py-1 px-4 mt-3 text-light"
               name="img">
+              <button onclick="sendPaymentLink()" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
+                Send Payment Link
+              </button>
           </div>
         </div>
       </div>
@@ -156,6 +159,27 @@
 
 
     console.log(userData);
+    const sendPaymentLink=()=>{
+      console.log("chat id",theChatId)
+      var settings = {
+        "url": `http://localhost:5000/getOrderDetailsInChat/${theChatId}`,
+        "method": "get",
+        "headers": {
+          "Content-Type": "application/json"
+        },
+      };
+
+      $.ajax(settings).done(function (response) {
+      console.log("amount status",response)
+     if(response.message.status !=="success"){
+      sendMessage("link", "null", response.message.totalAmount)
+     }else{
+      alert("your order amount is already paid")
+     }
+     
+      })
+      
+    }
     const loopsendmsg = () => {
       let arr = []
       let text = document.getElementById("textfield").value;
@@ -314,6 +338,23 @@
                               <div>`;
           div.innerHTML = content;
           chatBox.appendChild(div);
+        }else if (response.type === "link") {
+          let div = document.createElement("div");
+          div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+          div.setAttribute("id", response._id);
+          let content = `
+          <div>
+                <div class="bg-light text-center p-4">
+                  <h3>
+                    Payment
+                    </h3>
+                    <p>please make payment</p>
+                  </div>
+                  <label class="form-control text-light" style="background: rgb(91 163 98)">
+                Pay<b style="float: right">${response.content}</b>
+                </label>`;
+          div.innerHTML = content;
+          chatBox.appendChild(div);
         }
         // console.log("00000",response);
         // const a=document.getElementById("fileInput").files
@@ -434,6 +475,25 @@
                                       </div>
                 
                               <div>`;
+              div.innerHTML = content;
+              chatBox.appendChild(div);
+            }else if (response.type === "link") {
+              let div = document.createElement("div");
+              div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+              div.setAttribute("id", response._id);
+              let content = `
+              <div>
+                <div class="bg-light text-center p-4">
+                  <h3>
+                    Payment
+                    </h3>
+                    <p>please make payment</p>
+                  </div>
+                  <label class="form-control text-light" style="background: rgb(91 163 98)">
+                Pay<b style="float: right">${response.content}</b>
+                </label>
+                
+              `;
               div.innerHTML = content;
               chatBox.appendChild(div);
             }
