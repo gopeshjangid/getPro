@@ -37,20 +37,14 @@ module.exports.useWallet = async (req, res) => {
       //    ORDER PLACED
       const couponAmount = req.body.couponAmount;
       const couponName = req.body.couponName;
-      let OrdertransactionId = otpGenerator.generate(25, {
-        upperCaseAlphabets: false,
-        specialChars: false,
-      });
+      
       let CartData = await AddCart.find({ custemerId: UserDetails.email });
       console.log(CartData);
       let arr = [];
       for (let i = 0; i < CartData.length; i++) {
         const element = CartData[i];
         const FindProduct = await Services.findById(element.productId);
-        // let FindTransectionId = await Order.findOne({
-        //   transactionId: OrdertransactionId,
-        // });
-        //  console.log("oopooo", FindTransectionId);
+        
         let obj = {
           id: FindProduct.id,
           p_title: FindProduct.title,
@@ -64,7 +58,7 @@ module.exports.useWallet = async (req, res) => {
       }
       console.log("arrr", arr);
       const orderPlaced = new Order({
-        transactionId: OrdertransactionId,
+        transactionId: WallettransactionId,
         pay_method: "Wallet",
         type: "Ordered",
         email: UserDetails.email,

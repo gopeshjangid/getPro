@@ -62,10 +62,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
           upperCaseAlphabets: false,
           specialChars: false,
         });
-        let OrdertransactionId = otpGenerator.generate(25, {
-          upperCaseAlphabets: false,
-          specialChars: false,
-        });
+        
         const walletData = new Wallet({
           user: UserDetails.email,
           wallet: totalAmount,
@@ -95,7 +92,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
         }
 
         const orderPlaced = new Order({
-          transactionId: OrdertransactionId,
+          transactionId: WallettransactionId,
           pay_id: pay_id,
           pay_method: "Stripe",
           type: "Ordered",
@@ -174,11 +171,12 @@ module.exports.PendingPaymentStripeSuccess = async (req, res) => {
       const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
       console.log("sessionCheck", session);
       if (session.status === "complete") {
-        await Order.findByIdAndUpdate(req.body.orderId, {
+      const updateOrderDetails=  await Order.findByIdAndUpdate(req.body.orderId, {
           pay_id: req.body.pay_id,
           pay_method: "Stripe",
           status: "success",
         });
+        await Wallet.findByIdAndUpdate(updateOrderDetails.transactionId,{pay_id:req.body.pay_id,pay_type:"Razorpay"})
         res.status(200).json({
           message: "payment Successfull",
         });

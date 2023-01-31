@@ -98,10 +98,7 @@ module.exports.verifySubscriptionPayment = async (req, res) => {
         upperCaseAlphabets: false,
         specialChars: false,
       });
-      let OrdertransactionId = await otpGenerator.generate(25, {
-        upperCaseAlphabets: false,
-        specialChars: false,
-      });
+     
 
       const walletData = new Wallet({
         user: UserDetails.email,
@@ -127,7 +124,7 @@ module.exports.verifySubscriptionPayment = async (req, res) => {
         p_price: FindProduct.price,
       };
       const orderPlaced = new Order({
-        transactionId: OrdertransactionId,
+        transactionId: WallettransactionId,
         sub_id: subscription_id,
         pay_id: razorpay_payment_id,
         pay_method: "RazorPay",

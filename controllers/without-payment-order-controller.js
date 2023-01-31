@@ -21,10 +21,7 @@ module.exports.withoutPaymentOrder = async (req, res) => {
       upperCaseAlphabets: false,
       specialChars: false,
     });
-    let OrdertransactionId = otpGenerator.generate(25, {
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
+    
     const walletData = new Wallet({
       user: UserDetails.email,
       wallet: totalAmount,
@@ -54,7 +51,7 @@ module.exports.withoutPaymentOrder = async (req, res) => {
     }
 
     const orderPlaced = new Order({
-      transactionId: OrdertransactionId,
+      transactionId: WallettransactionId,
       pay_id: "Pending",
       pay_method: "Pending",
       type: "Ordered",

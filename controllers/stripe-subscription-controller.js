@@ -88,10 +88,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           upperCaseAlphabets: false,
           specialChars: false,
         });
-        let OrdertransactionId = await otpGenerator.generate(25, {
-          upperCaseAlphabets: false,
-          specialChars: false,
-        });
+        
 
         const walletData = new Wallet({
           user: UserDetails.email,
@@ -116,7 +113,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           p_price: 10,
         };
         const orderPlaced = new Order({
-          transactionId: OrdertransactionId,
+          transactionId: WallettransactionId,
           sub_id: session.subscription,
           pay_id: req.body.pay_id,
           pay_method: "Stripe",
