@@ -368,7 +368,7 @@
 
 
 
-    const trClicked = (e) => {
+    const trClicked = async(e) => {
       theChatId = e.target.id;
       document.getElementById("chatBox").innerHTML = "";
 
@@ -384,10 +384,11 @@
           console.log("***00000000000****", res);
           let chatBox = document.querySelector("#chatBox");
 
-          result.forEach((response) => {
+          result.forEach( async(response) => {
 
 
             if (response.type === "message") {
+              console.log("message")
               let chatBox = document.querySelector("#chatBox");
               let div = document.createElement("div");
               div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
@@ -477,8 +478,22 @@
                               <div>`;
               div.innerHTML = content;
               chatBox.appendChild(div);
-            }else if (response.type === "link") {
-              let div = document.createElement("div");
+            }
+            else if (response.type === "link" ) {
+              console.log("link")
+      //         var settings = {
+      //               "url": await `http://localhost:5000/getOrderDetailsInChat/${theChatId}`,
+      //               "method": "get",
+      //               "headers": {
+      //                 "Content-Type": "application/json"
+      //               },
+      //             };
+      //             console.log(settings)
+      //            $.ajax(settings).done( function (result) {
+      // console.log("amount status",result)
+    // if(result.message.status !=="success"){
+    //    console.log("pendding")
+      let div = document.createElement("div");
               div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
               div.setAttribute("id", response._id);
               let content = `
@@ -492,11 +507,39 @@
                   <label class="form-control text-light" style="background: rgb(91 163 98)">
                 Pay<b style="float: right">${response.content}</b>
                 </label>
+                </div>
                 
               `;
               div.innerHTML = content;
-              chatBox.appendChild(div);
-            }
+             chatBox.appendChild(div);
+    //  }
+    //else{
+    //   console.log("success")
+    //     let div = document.createElement("div");
+    //           div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+    //           div.setAttribute("id", response._id);
+    //           let content = `
+    //           <div>
+    //             <div class="bg-light text-center p-4">
+    //               <h3>
+    //                 Payment
+    //                 </h3>
+    //                 <p> Payment Successfull</p>
+    //               </div>
+    //               <label class="form-control text-light text-center" style="background:green">
+    //            Payment Successfull
+    //             </label>
+    //             </div>
+                
+    //           `;
+    //           div.innerHTML = content;
+    //           chatBox.appendChild(div);
+    
+    // }
+  
+   
+   
+  }
 
           });
           socket.emit("room", res[0].chat._id);

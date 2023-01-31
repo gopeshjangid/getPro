@@ -51,7 +51,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
         upperCaseAlphabets: false,
         specialChars: false,
       });
-      
+
       const walletData = new Wallet({
         user: UserDetails.email,
         wallet: totalAmount,
@@ -145,12 +145,23 @@ module.exports.PendingPaymentRazorpaySuccess = async (req, res) => {
       console.log("sessionCheck", checkPayment);
 
       if (checkPayment.status === "captured") {
-      const updateOrderDetails =  await Order.findByIdAndUpdate(req.body.orderId, {
-          pay_id: req.body.pay_id,
-          pay_method: "Razorpay",
-          status: "success",
+        const updateOrderDetails = await Order.findByIdAndUpdate(
+          req.body.orderId,
+          {
+            pay_id: req.body.pay_id,
+            pay_method: "Razorpay",
+            status: "success",
+          }
+        );
+        console.log("updateOrderDetails", updateOrderDetails);
+        const findWalletTransaction = await Wallet.findOne({
+          transactionId: updateOrderDetails.transactionId,
         });
-     await Wallet.findByIdAndUpdate(updateOrderDetails.transactionId,{pay_id:req.body.pay_id,pay_type:"Razorpay"})
+        console.log("ffiffff", findWalletTransaction);
+        await Wallet.findByIdAndUpdate(findWalletTransaction._id, {
+          pay_id: req.body.pay_id,
+          pay_type: "Razorpay",
+        });
         res.status(200).json({
           message: "payment Successfull",
         });
