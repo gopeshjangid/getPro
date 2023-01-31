@@ -83,7 +83,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
           const element = CartData[i];
           const FindProduct = await Services.findById(element.productId);
           let obj = {
-            id:FindProduct.id,
+            id: FindProduct.id,
             p_title: FindProduct.title,
             p_shortTitle: FindProduct.shortTitle,
             p_dec: FindProduct.dec,
@@ -130,6 +130,69 @@ module.exports.orderStripeSuccess = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: error,
+    });
+  }
+};
+
+module.exports.PendingPaymentStripe = async (req, res) => {
+  try {
+    console.log(req.body);
+    const TotalAmount = req.body.totalAmount;
+    console.log(TotalAmount);
+    const checkoutObject = {
+      payment_method_types: ["card"],
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: "Total Amount",
+            },
+            unit_amount: parseInt(TotalAmount) * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      mode: "payment",
+      success_url: "http://localhost:3000/PendingPaymentStripeSuccess",
+      cancel_url: "http://localhost:3000/cancel",
+    };
+    const session = await stripe.checkout.sessions.create(checkoutObject);
+    console.log(session);
+    res.status(200).send({ url: session.url, id: session.id });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.PendingPaymentStripeSuccess = async (req, res) => {
+  try {
+    console.log("PendingPaymentStripeSuccess======", req.body);
+    if (req.body.pay_id && req.body.orderId) {
+      const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
+      console.log("sessionCheck", session);
+      if (session.status === "complete") {
+        await Order.findByIdAndUpdate(req.body.orderId, {
+          pay_id: req.body.pay_id,
+          pay_method: "Stripe",
+          status: "success",
+        });
+        res.status(200).json({
+          message: "payment Successfull",
+        });
+      } else {
+        res.status(200).json({
+          message: "Payment failed",
+        });
+      }
+    } else {
+      res.status(200).json({ message: "please send pay_id and order id" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
     });
   }
 };

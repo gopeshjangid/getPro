@@ -72,7 +72,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
         const element = CartData[i];
         const FindProduct = await Services.findById(element.productId);
         let obj = {
-          id:FindProduct.id,
+          id: FindProduct.id,
           p_title: FindProduct.title,
           p_shortTitle: FindProduct.shortTitle,
           p_dec: FindProduct.dec,
@@ -113,6 +113,60 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: error,
+    });
+  }
+};
+
+module.exports.PendingPaymentRazorpay = async (req, res) => {
+  try {
+    const TotalAmount = parseInt(req.body.amount);
+    console.log(req.body);
+
+    var options = {
+      amount: TotalAmount * 100,
+      currency: "INR",
+    };
+    instance.orders.create(options, function (err, order) {
+      console.log(order);
+      res.status(200).json({
+        order,
+      });
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error,
+    });
+  }
+};
+
+module.exports.PendingPaymentRazorpaySuccess = async (req, res) => {
+  try {
+    console.log("PendingPaymentSuccess======", req.body);
+
+    if (req.body.pay_id && req.body.orderId) {
+      let checkPayment = await instance.payments.fetch(req.body.pay_id);
+      console.log("sessionCheck", checkPayment);
+
+      if (checkPayment.status === "captured") {
+        await Order.findByIdAndUpdate(req.body.orderId, {
+          pay_id: req.body.pay_id,
+          pay_method: "Razorpay",
+          status: "success",
+        });
+        res.status(200).json({
+          message: "payment Successfull",
+        });
+      } else {
+        res.status(200).json({
+          message: "Payment failed",
+        });
+      }
+    } else {
+      res.status(200).json({ message: "please send pay_id and order id" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
     });
   }
 };
