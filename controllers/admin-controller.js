@@ -18,6 +18,9 @@ const path = require("path");
 const Message = require("../model/messageModel");
 const Chat = require("../model/chatModel");
 const ExtraCredit = require("../model/extraCredit")
+const ContentType = require("../model/contentType")
+const ExpertLevel = require("../model/expertLevel")
+
 
 module.exports.checkLogin = (req, res, next) => {
   if (req.cookies.userLoginToken === undefined) {
@@ -805,8 +808,9 @@ module.exports.chats = async (req, res) => {
 
 module.exports.adminWalletTransactionHistory = async (req, res) => {
   try {
-    const creditHistory = await Wallet.find({ pay_type: "credited" });
-    const debitHistory = await Wallet.find({ pay_type: "debited" });
+    const creditHistory = await Wallet.find({ pay_transaction: "credited" });
+    const debitHistory = await Wallet.find({ pay_transaction: "debited" });
+   // console.log(creditHistory)
     res.render("wallethistory.ejs", { creditHistory, debitHistory });
   } catch (error) {
     res.status(500).json({
@@ -934,6 +938,75 @@ module.exports.getOrderDetailsInChat = async (req, res) => {
   
   const OrderData= await Order.findById(ChatData.orderId)
    res.status(200).json({message:OrderData})
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+module.exports.contentType = async (req, res) => {
+  try {
+  const contentTypeData= await ContentType.find()
+  res.render("content-type.ejs",{contentTypeData})
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.AddContentType = async (req, res) => {
+  try {
+  
+  res.render("content-type-add.ejs")
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+module.exports.AddContentTypeSubmit = async (req, res) => {
+  try {
+   // console.log(req.body)
+    const ContentName=req.body.ContentName
+    const contentTypeData= new ContentType({contentType:ContentName})
+    await contentTypeData.save()
+   res.redirect("/contentType")
+ 
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.expertLevel = async (req, res) => {
+  try {
+  const ExpertLevelData= await ExpertLevel.find()
+  res.render("expert-level.ejs",{ExpertLevelData})
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.AddExpertLevel = async (req, res) => {
+  try {
+  res.render("expert-level-add.ejs")
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.AddExpertLevelSubmit = async (req, res) => {
+  try {
+   const expertLevel=req.body.expertLevel
+   const expertlevelData= new ExpertLevel({expertLevel:expertLevel})
+   await expertlevelData.save()
+  res.redirect("/expertLevel")
   } catch (error) {
     res.status(500).json({
       error: error.message,

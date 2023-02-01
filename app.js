@@ -88,6 +88,8 @@ const stripeSubscriptionRouter = require("./router/stripeSubscriptionRouter");
 const razorpaySubscriptionRouter = require("./router/razorpaySubscriptionRouter");
 const withoutPaymentOrderRouter = require("./router/withoutPaymentOrderRouter");
 const countryCodeRouter = require("./router/countryCodeRouter");
+const contentTypeRouter = require("./router/contentTypeRouter");
+const expertLevelRouter = require("./router/expertLevelRouter");
 
 const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
@@ -140,6 +142,8 @@ app.use(stripeSubscriptionRouter)
 app.use(razorpaySubscriptionRouter)
 app.use(withoutPaymentOrderRouter)
 app.use(countryCodeRouter)
+app.use(contentTypeRouter)
+app.use(expertLevelRouter)
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);
 });

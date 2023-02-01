@@ -161,6 +161,24 @@ adminRouter
 adminRouter
     .route('/getOrderDetailsInChat/:id')
     .get(adminController.checkLogin, adminController.getOrderDetailsInChat)
+adminRouter
+    .route('/contentType')
+    .get(adminController.checkLogin, adminController.contentType)
+adminRouter
+    .route('/addcontentType')
+    .get(adminController.checkLogin, adminController.AddContentType)
+adminRouter
+    .route('/addContentTypeSubmit')
+    .post(adminController.checkLogin, adminController.AddContentTypeSubmit)
+adminRouter
+    .route('/expertLevel')
+    .get(adminController.checkLogin, adminController.expertLevel)
+adminRouter
+    .route('/addexpertLevel')
+    .get(adminController.checkLogin, adminController.AddExpertLevel)
+adminRouter
+    .route('/addexpertLevelSubmit')
+    .post(adminController.checkLogin, adminController.AddExpertLevelSubmit)
 
 
 
