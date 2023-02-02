@@ -14,7 +14,7 @@ const orderScema = mongoose.Schema({
   deadline:String,
   products: [
     {
-      id:{type: mongoose.Schema.Types.ObjectId,
+      productId:{type: mongoose.Schema.Types.ObjectId,
         ref: "services"},
       p_quantity: Number,
     },
