@@ -9,6 +9,9 @@ const orderScema = mongoose.Schema({
   totalAmount: Number,
   CouponName: String,
   couponAmount: Number,
+  contentType:String,
+  expertLevel:String,
+  deadline:String,
   products: [
     {
       id:String,
