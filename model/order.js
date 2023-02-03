@@ -9,19 +9,22 @@ const orderScema = mongoose.Schema({
   totalAmount: Number,
   CouponName: String,
   couponAmount: Number,
-  contentType:String,
-  expertLevel:String,
-  deadline:String,
+  contentType: String,
+  expertLevel: String,
+  deadline: String,
   products: [
+
     {
-      productId:{type: mongoose.Schema.Types.ObjectId,
-        ref: "services"},
+      productId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "services"
+      },
       p_quantity: Number,
-    },
+    }
   ],
   type: String,
   status: String,
-  sub_status:String
+  sub_status: String
 });
 
 module.exports = mongoose.model("order", orderScema);
