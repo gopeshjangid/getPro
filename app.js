@@ -20,7 +20,7 @@ const io = new require("socket.io")(server, {
 });
 app.set("socketIo", io);
 var corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5000/chats"],
+  origin: ["http://localhost:3000", "=https://getprowriter.onrender.com/chats"],
   credentials: true,
 };
 
