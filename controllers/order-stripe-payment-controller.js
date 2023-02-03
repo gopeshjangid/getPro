@@ -80,7 +80,11 @@ module.exports.orderStripeSuccess = async (req, res) => {
           const element = CartData[i];
           const FindProduct = await Services.findById(element.productId);
           let obj = {
-            productId: FindProduct.id,
+            id: FindProduct.id,
+            p_title: FindProduct.title,
+            p_shortTitle: FindProduct.shortTitle,
+            p_dec: FindProduct.dec,
+            p_price: FindProduct.price,
             p_quantity: element.quantity,
           };
 

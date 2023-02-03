@@ -15,11 +15,13 @@ const orderScema = mongoose.Schema({
   products: [
 
     {
-      productId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "services"
-      },
+      id: String,
+      p_title: String,
+      p_shortTitle: String,
+      p_dec: String,
+      p_price: String,
       p_quantity: Number,
+      
     }
   ],
   type: String,
