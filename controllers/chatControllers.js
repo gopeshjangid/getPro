@@ -13,7 +13,7 @@ const accessChat = asyncHandler(async (req, res) => {
         orderId: orderId,
         $and: [
           { users: { $elemMatch: { $eq: req.user._id } } },
-          { users: { $elemMatch: { $eq: "63a9b35d91b9d03d5748361c" } } },
+          { users: { $elemMatch: { $eq: "63ddf9c0ea629f9c47462af6"} } },
         ],
       })
         .populate("users", "-password")
@@ -32,7 +32,7 @@ const accessChat = asyncHandler(async (req, res) => {
           chatName: "sender",
           isGroupChat: false,
           orderId: orderId,
-          users: [req.user._id, "63a9b35d91b9d03d5748361c"],
+          users: [req.user._id, "63ddf9c0ea629f9c47462af6"],
         };
         const createdChat = await Chat.create(chatData);
         const FullChat = await Chat.findOne({ _id: createdChat._id });
