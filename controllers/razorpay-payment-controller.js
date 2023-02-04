@@ -36,22 +36,26 @@ module.exports.razorpayPayment = async (req, res) => {
 module.exports.razorpay_is_completed = async (req, res) => {
   try {
     console.log("bodyyyyyy", req.body);
-    const payId= req.body.razorpay_payment_id
-    const orderId= req.body.razorpay_order_id
-    const signature= req.body.razorpay_signature
-   const  generated_signature = hmac_sha256(orderId + "|" + payId, process.env.RAZORPAY_SECRET);
-   console.log("ssssss", generated_signature)
-    // let checkPayment = await instance.payments.fetch(
-    //   req.body.razorpay_payment_id
-    // );
-   // console.log("*****", checkPayment);
-    if (generated_signature === signature) {
+    const payId = req.body.razorpay_payment_id;
+    const orderId = req.body.razorpay_order_id;
+    const signature = req.body.razorpay_signature;
+    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
+
+    const data = hmac.update(orderId + "|" + payId);
+    let generatedSignature = data.digest("hex");
+
+    console.log("ssssss", generatedSignature);
+    if (generatedSignature == signature) {
+      console.log("true");
+      let checkPayment = await instance.payments.fetch(
+        req.body.razorpay_payment_id
+      );
+      console.log("*****", checkPayment);
       let extraCredit = await ExtraCredit.findOne();
       const token = req.headers.authorization;
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
       const UserDetails = await User.findById(verifyTokenId.userId);
       const wallet = checkPayment.amount / 100;
-      const pay_id = checkPayment.id;
       let WallettransactionId = otpGenerator.generate(25, {
         upperCaseAlphabets: false,
         specialChars: false,
@@ -65,7 +69,7 @@ module.exports.razorpay_is_completed = async (req, res) => {
           wallet: wallet + extraCredit.extraCredit,
           datetime: new Date(),
           pay_type: "RazorPay",
-          pay_id: pay_id,
+          pay_id: payId,
           pay_transaction: "credited",
           transactionId: WallettransactionId,
         });
@@ -82,7 +86,7 @@ module.exports.razorpay_is_completed = async (req, res) => {
           wallet: wallet,
           datetime: new Date(),
           pay_type: "RazorPay",
-          pay_id: pay_id,
+          pay_id: payId,
           pay_transaction: "credited",
           transactionId: WallettransactionId,
         });

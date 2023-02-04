@@ -7,6 +7,7 @@ const otpGenerator = require("otp-generator");
 const Services = require("../model/services");
 const dotenv = require("dotenv");
 const Razorpay = require("razorpay");
+const crypto = require("crypto");
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_ID,
   key_secret: process.env.RAZORPAY_SECRET,
@@ -35,11 +36,19 @@ module.exports.orderRazorpayPayment = async (req, res) => {
 
 module.exports.orderRazorpaySuccess = async (req, res) => {
   try {
-    let checkPayment = await instance.payments.fetch(
-      req.body.razorpay_payment_id
-    );
-    console.log("*****", checkPayment);
-    if (checkPayment.status === "captured") {
+    console.log("boodddyyy", req.body);
+    const payId = req.body.razorpay_payment_id;
+    const orderId = req.body.razorpay_order_id;
+    const signature = req.body.razorpay_signature;
+    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
+
+    const data = hmac.update(orderId + "|" + payId);
+    let generatedSignature = data.digest("hex");
+
+    console.log("ssssss", generatedSignature);
+
+    if (generatedSignature == signature) {
+      let checkPayment = await instance.payments.fetch(payId);
       const token = req.headers.authorization;
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
       const totalAmount = checkPayment.amount / 100;
@@ -56,7 +65,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
         user: UserDetails.email,
         wallet: totalAmount,
         datetime: new Date(),
-        pay_id: req.body.razorpay_payment_id,
+        pay_id: payId,
         pay_type: "Razorpay",
         pay_transaction: "debited",
         transactionId: WallettransactionId,
@@ -82,7 +91,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
       console.log("arrrr", arr);
       const orderPlaced = new Order({
         transactionId: WallettransactionId,
-        pay_id: req.body.razorpay_payment_id,
+        pay_id: payId,
         pay_method: "RazorPay",
         type: "Ordered",
         email: UserDetails.email,
@@ -138,40 +147,42 @@ module.exports.PendingPaymentRazorpay = async (req, res) => {
 
 module.exports.PendingPaymentRazorpaySuccess = async (req, res) => {
   try {
-    console.log("PendingPaymentSuccess======", req.body);
+    const payId = req.body.razorpay_payment_id;
+    const orderId = req.body.razorpay_order_id;
+    const signature = req.body.razorpay_signature;
+    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
+    console.log("booddd", req.body);
+    const data = hmac.update(orderId + "|" + payId);
+    let generatedSignature = data.digest("hex");
 
-    if (req.body.pay_id && req.body.orderId) {
-      let checkPayment = await instance.payments.fetch(req.body.pay_id);
-      console.log("sessionCheck", checkPayment);
+    console.log("ssssss", generatedSignature);
 
-      if (checkPayment.status === "captured") {
-        const updateOrderDetails = await Order.findByIdAndUpdate(
-          req.body.orderId,
-          {
-            pay_id: req.body.pay_id,
-            pay_method: "Razorpay",
-            status: "success",
-          }
-        );
-        console.log("updateOrderDetails", updateOrderDetails);
-        const findWalletTransaction = await Wallet.findOne({
-          transactionId: updateOrderDetails.transactionId,
-        });
-        console.log("ffiffff", findWalletTransaction);
-        await Wallet.findByIdAndUpdate(findWalletTransaction._id, {
-          pay_id: req.body.pay_id,
-          pay_type: "Razorpay",
-        });
-        res.status(200).json({
-          message: "payment Successfull",
-        });
-      } else {
-        res.status(200).json({
-          message: "Payment failed",
-        });
-      }
+    if (generatedSignature == signature) {
+      let checkPayment = await instance.payments.fetch(payId);
+      const updateOrderDetails = await Order.findByIdAndUpdate(
+        req.body.orderId,
+        {
+          pay_id: payId,
+          pay_method: "Razorpay",
+          status: "success",
+        }
+      );
+      console.log("updateOrderDetails", updateOrderDetails);
+      const findWalletTransaction = await Wallet.findOne({
+        transactionId: updateOrderDetails.transactionId,
+      });
+      console.log("ffiffff", findWalletTransaction);
+      await Wallet.findByIdAndUpdate(findWalletTransaction._id, {
+        pay_id: payId,
+        pay_type: "Razorpay",
+      });
+      res.status(200).json({
+        message: "payment Successfull",
+      });
     } else {
-      res.status(200).json({ message: "please send pay_id and order id" });
+      res.status(200).json({
+        message: "Payment failed",
+      });
     }
   } catch (error) {
     res.status(500).json({

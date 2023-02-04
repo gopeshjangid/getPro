@@ -98,7 +98,6 @@ module.exports.verifySubscriptionPayment = async (req, res) => {
         upperCaseAlphabets: false,
         specialChars: false,
       });
-     
 
       const walletData = new Wallet({
         user: UserDetails.email,

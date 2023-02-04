@@ -5,27 +5,35 @@ var instance = new Razorpay({
 });
 const Wallet = require("../model/wallet");
 const otpGenerator = require("otp-generator");
+const crypto = require("crypto");
 
 module.exports.razorpayGuestPaymentSuccess = async (req, res) => {
   try {
     console.log("bodyyyyyy", req.body);
-    let checkPayment = await instance.payments.fetch(
-      req.body.razorpay_payment_id
-    );
+    const payId = req.body.razorpay_payment_id;
+    const orderId = req.body.razorpay_order_id;
+    const signature = req.body.razorpay_signature;
+    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_SECRET);
 
-    console.log("*****", checkPayment);
-    const pay_id = checkPayment.id;
-    let WallettransactionId = otpGenerator.generate(25, {
-      upperCaseAlphabets: false,
-      specialChars: false,
-    });
-    if (checkPayment.status === "captured") {
+    const data = hmac.update(orderId + "|" + payId);
+    let generatedSignature = data.digest("hex");
+
+    console.log("ssssss", generatedSignature);
+
+    if (generatedSignature == signature) {
+      let checkPayment = await instance.payments.fetch(
+        req.body.razorpay_payment_id
+      );
+      let WallettransactionId = otpGenerator.generate(25, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+      });
       const walletData = new Wallet({
         user: req.body.email,
         wallet: checkPayment.amount / 100,
         datetime: new Date(),
         pay_type: "RazorPay",
-        pay_id: pay_id,
+        pay_id: payId,
         pay_transaction: "debited",
         transactionId: WallettransactionId,
       });
