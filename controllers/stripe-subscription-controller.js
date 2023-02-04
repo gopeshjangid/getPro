@@ -42,6 +42,7 @@ module.exports.stripeSubscription = async (req, res) => {
 
     // create price
 
+    
     const price = await stripe.prices.create({
       unit_amount: FindProduct.price * 100,
       currency: "INR",

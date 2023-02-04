@@ -36,11 +36,16 @@ module.exports.razorpayPayment = async (req, res) => {
 module.exports.razorpay_is_completed = async (req, res) => {
   try {
     console.log("bodyyyyyy", req.body);
-    let checkPayment = await instance.payments.fetch(
-      req.body.razorpay_payment_id
-    );
-    console.log("*****", checkPayment);
-    if (checkPayment.status === "captured") {
+    const payId= req.body.razorpay_payment_id
+    const orderId= req.body.razorpay_order_id
+    const signature= req.body.razorpay_signature
+   const  generated_signature = hmac_sha256(orderId + "|" + payId, process.env.RAZORPAY_SECRET);
+   console.log("ssssss", generated_signature)
+    // let checkPayment = await instance.payments.fetch(
+    //   req.body.razorpay_payment_id
+    // );
+   // console.log("*****", checkPayment);
+    if (generated_signature === signature) {
       let extraCredit = await ExtraCredit.findOne();
       const token = req.headers.authorization;
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
