@@ -13,14 +13,14 @@ const server = http.createServer(app);
 // app.use(cors(corsOptions));
 const io = new require("socket.io")(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://getprowriter.netlify.app/",
     methods: ["GET", "POST"],
     credentials: true,
   },
 });
 app.set("socketIo", io);
 var corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5000/chats"],
+  origin: ["https://getprowriter.netlify.app/", "https://getprowriter.onrender.com/chats"],
   credentials: true,
 };
 
