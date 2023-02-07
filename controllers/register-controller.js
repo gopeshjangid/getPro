@@ -2,6 +2,8 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
+const nodemailer = require('nodemailer');
+
 
 module.exports.register = async (req, res) => {
   let username = req.body.username;
@@ -38,6 +40,46 @@ module.exports.register = async (req, res) => {
                 logintype: "register",
               });
               await userData.save();
+              const mailTransporter = nodemailer.createTransport({
+                host: `smtp.gmail.com`,
+                port: 465,
+                secure: true,
+                auth: {
+                    "user": "bablusaini90310@gmail.com",
+                    "pass": "zeczopkmiqbvbffc"
+                }
+            })
+            let mailDetails = {
+                from: 'bablusaini90310@gmail.com',
+                to: req.body.email,
+                subject: 'Test mail',
+                html: `
+                <div>
+                    <div class="bg-light text-center p-4">
+                        <h3>
+                          Registration Successfull
+                        </h3>
+                        <p>please check user details</p>
+                    </div>
+                    <label class="form-control text-light" style="background: rgb(91 163 98)">
+                          username :<b style="margin-left:40px">${username}</b>
+                          email :<b style="margin-left:40px">${email}</b>
+                    </label>
+                </div> `
+            };
+
+            mailTransporter.sendMail(mailDetails, function (err, data) {
+                if (err) {
+                    console.log(err)
+                } else {
+
+                    console.log(otp)
+
+                    res.status(200).json({
+                        message: "mail have sent successfully"
+                    })
+                }
+            });
             })
             .catch((error) => {
               console.log(error);
