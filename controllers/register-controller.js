@@ -67,15 +67,20 @@ module.exports.register = async (req, res) => {
                 
                     <title>Hello, world!</title>
                   </head>
+                  <style>
+                        .background{
+                          background: rgb(91 163 98)
+                        }
+                  </style>
                   <body>
                   <div>
-                  <div class="bg-light text-center p-4">
+                  <div class="bg-primary text-center p-4">
                       <h3>
                         Registration Successfull
                       </h3>
                       <p>please check user details</p>
                   </div>
-                  <label class="form-control text-light" style="background: rgb(91 163 98)">
+                  <label class="background form-control text-light">
                         username :<b style="margin-left:40px">${username}</b>
                         email :<b style="margin-left:40px">${email}</b>
                   </label>
