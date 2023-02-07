@@ -66,12 +66,13 @@ module.exports.register = async (req, res) => {
                     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
                 
                     <title>Hello, world!</title>
+                    <style>
+                          .background{
+                            background: rgb(91 163 98)
+                          }
+                   </style>
                   </head>
-                  <style>
-                        .background{
-                          background: rgb(91 163 98)
-                        }
-                  </style>
+                 
                   <body>
                   <div>
                   <div class="bg-primary text-center p-4">
