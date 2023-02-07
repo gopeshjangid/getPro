@@ -54,18 +54,36 @@ module.exports.register = async (req, res) => {
                 to: req.body.email,
                 subject: 'Test mail',
                 html: `
-                <div>
-                    <div class="bg-light text-center p-4">
-                        <h3>
-                          Registration Successfull
-                        </h3>
-                        <p>please check user details</p>
-                    </div>
-                    <label class="form-control text-light" style="background: rgb(91 163 98)">
-                          username :<b style="margin-left:40px">${username}</b>
-                          email :<b style="margin-left:40px">${email}</b>
-                    </label>
-                </div> `
+
+                <!doctype html>
+                <html lang="en">
+                  <head>
+                  
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1">
+                
+                   
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+                
+                    <title>Hello, world!</title>
+                  </head>
+                  <body>
+                  <div>
+                  <div class="bg-light text-center p-4">
+                      <h3>
+                        Registration Successfull
+                      </h3>
+                      <p>please check user details</p>
+                  </div>
+                  <label class="form-control text-light" style="background: rgb(91 163 98)">
+                        username :<b style="margin-left:40px">${username}</b>
+                        email :<b style="margin-left:40px">${email}</b>
+                  </label>
+              </div> 
+                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+                 </body>
+                </html>
+                `
             };
 
             mailTransporter.sendMail(mailDetails, function (err, data) {
