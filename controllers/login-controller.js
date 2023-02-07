@@ -118,6 +118,8 @@ module.exports.login = async (req, res) => {
       if (bcryptMatchPassword2 === true) {
         let userId = emailData._id;
         var token = jwt.sign({ userId }, "zxcvbnm");
+        const verifyTokenId = jwt.verify(token, "zxcvbnm");
+        const UserDetails = await User.findById(verifyTokenId.userId);
         const findCartUser = await AddCart.find({
           custemerId: UserDetails.email,
         });

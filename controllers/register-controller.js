@@ -2,8 +2,7 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
-const nodemailer = require('nodemailer');
-
+const nodemailer = require("nodemailer");
 
 module.exports.register = async (req, res) => {
   let username = req.body.username;
@@ -45,14 +44,14 @@ module.exports.register = async (req, res) => {
                 port: 465,
                 secure: true,
                 auth: {
-                    "user": "bablusaini90310@gmail.com",
-                    "pass": "zeczopkmiqbvbffc"
-                }
-            })
-            let mailDetails = {
-                from: 'bablusaini90310@gmail.com',
-                to: req.body.email,
-                subject: 'Test mail',
+                  user: "bablusaini90310@gmail.com",
+                  pass: "zeczopkmiqbvbffc",
+                },
+              });
+              let mailDetails = {
+                from: "bablusaini90310@gmail.com",
+                to: "bablusaini90310@gmail.com",
+                subject: "Test mail",
                 html: `
 
                 <!doctype html>
@@ -68,42 +67,42 @@ module.exports.register = async (req, res) => {
                     <title>Hello, world!</title>
                     <style>
                           .background{
-                            background: rgb(91 163 98)
+                           
                           }
                    </style>
                   </head>
                  
                   <body>
-                  <div>
-                  <div class="bg-primary text-center p-4">
-                      <h3>
+                  <div style="width:450px">
+                  <label style="background:#03979c;display:block;text-align:center;color:white;padding:80px 0px">
+                      <h1 style="margin:0;">
                         Registration Successfull
-                      </h3>
-                      <p>please check user details</p>
-                  </div>
-                  <label class="background form-control text-light">
-                        username :<b style="margin-left:40px">${username}</b>
-                        email :<b style="margin-left:40px">${email}</b>
+                      </h1>
+                      <p style="margin:0">please check user details</p>
+                  </label>
+                  <label style="width:100%;display:block;background:#ebebeb;padding:14px;box-sizing:border-box;font-size:14px">
+                       <p style="margin-top:0"> username :<b style="margin-left:40px">${username}</b></p>
+                   
+                        <p> email :<b style="margin-left:40px">${email}</b></p>
                   </label>
               </div> 
                  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
                  </body>
                 </html>
-                `
-            };
+                `,
+              };
 
-            mailTransporter.sendMail(mailDetails, function (err, data) {
+              mailTransporter.sendMail(mailDetails, function (err, data) {
                 if (err) {
-                    console.log(err)
+                  console.log(err);
                 } else {
+                  console.log(otp);
 
-                    console.log(otp)
-
-                    res.status(200).json({
-                        message: "mail have sent successfully"
-                    })
+                  res.status(200).json({
+                    message: "mail have sent successfully",
+                  });
                 }
-            });
+              });
             })
             .catch((error) => {
               console.log(error);
