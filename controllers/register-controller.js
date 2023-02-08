@@ -78,7 +78,7 @@ module.exports.register = async (req, res) => {
                       <h1 style="margin:0;">
                         Registration Successfull
                       </h1>
-                      <p style="margin:0">please check user details</p>
+                      <p style="margin:0;font-size:14px;">User Details</p>
                   </label>
                   <label style="width:100%;display:block;background:#ebebeb;padding:14px;box-sizing:border-box;font-size:14px">
                        <p style="margin-top:0"> username :<b style="margin-left:40px">${username}</b></p>

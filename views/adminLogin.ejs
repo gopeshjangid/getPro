@@ -120,7 +120,7 @@
               let email = $("#InputEmail").val();
               let password = $("#InputPassword").val();
               $.ajax({
-                url: "https://getprowriter.onrender.com/adminLogin",
+                url: "http://localhost:5000/adminLogin",
                 method: "post",
                 contentType: "application/x-www-form-urlencoded",
                 data: {
@@ -130,7 +130,7 @@
                 success: function (res) {
                   console.log(res);
                   localStorage.setItem("token", res.token);
-                  window.location = "https://getprowriter.onrender.com/dashboard"
+                  window.location = "http://localhost:5000/dashboard"
                 },
                 error: function (error) {
                   console.log(error);

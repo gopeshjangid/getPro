@@ -124,7 +124,7 @@
     const token = localStorage.getItem("token");
     var theChatId
     var userData
-    const ENDPOINT = "https://getprowriter.onrender.com";
+    const ENDPOINT = "http://localhost:5000";
     var socket = io()
     console.log("socket", socket)
     socket.on('receive-user', function (data) {
@@ -137,7 +137,7 @@
 
 
     $.ajax({
-      url: `https://getprowriter.onrender.com/viewProfile`,
+      url: `http://localhost:5000/viewProfile`,
       method: "get",
       mode: "cors",
       contentType: "application/x-www-form-urlencoded",
@@ -162,7 +162,7 @@
     const sendPaymentLink = () => {
       console.log("chat id", theChatId)
       var settings = {
-        "url": `https://getprowriter.onrender.com/getOrderDetailsInChat/${theChatId}`,
+        "url": `http://localhost:5000/getOrderDetailsInChat/${theChatId}`,
         "method": "get",
         "headers": {
           "Content-Type": "application/json"
@@ -231,7 +231,7 @@
       // }
 
       var settings = {
-        "url": "https://getprowriter.onrender.com/message",
+        "url": "http://localhost:5000/message",
         "method": "POST",
         "timeout": 0,
         "headers": {
@@ -374,7 +374,7 @@
       document.getElementById("chatBox").innerHTML = "";
 
       $.ajax({
-        url: `https://getprowriter.onrender.com/message/${e.target.id}`,
+        url: `http://localhost:5000/message/${e.target.id}`,
         method: "get",
         contentType: "application/x-www-form-urlencoded",
         headers: {
@@ -483,7 +483,7 @@
             else if (response.type === "link") {
               console.log("link")
               //         var settings = {
-              //               "url": await `https://getprowriter.onrender.com/getOrderDetailsInChat/${theChatId}`,
+              //               "url": await `http://localhost:5000/getOrderDetailsInChat/${theChatId}`,
               //               "method": "get",
               //               "headers": {
               //                 "Content-Type": "application/json"
@@ -566,7 +566,7 @@
       let updateForm = document.getElementById("updateForm")
       let ChatId;
       $.ajax({
-        url: `https://getprowriter.onrender.com/findupdatemessage/${id}`,
+        url: `http://localhost:5000/findupdatemessage/${id}`,
         method: "get",
         contentType: "application/x-www-form-urlencoded",
         success: function (res) {
@@ -583,7 +583,7 @@
         let newMessage = $("#updateForminput").val();
         console.log("new", newMessage)
         $.ajax({
-          url: `https://getprowriter.onrender.com/edit-message/${id}`,
+          url: `http://localhost:5000/edit-message/${id}`,
           method: "post",
           contentType: "application/x-www-form-urlencoded",
           data: {
@@ -616,7 +616,7 @@
 
     function getChatList() {
       $.ajax({
-        url: "https://getprowriter.onrender.com/chat",
+        url: "http://localhost:5000/chat",
         method: "get",
         contentType: "application/x-www-form-urlencoded",
         headers: {
@@ -624,12 +624,17 @@
         },
         success: function (res) {
           console.log("***********************", res);
+
           // setChatId(response.data[0]._id);
 
           let chatsList = document.querySelector("#chatsList");
           chatsList.innerHTML = null;
           console.log(chatsList);
           res.forEach((response) => {
+           const ab = response.users.filter(
+              (user) => user.email !== "getproadmin000@gmail.com"
+            )
+            console.log("abb",ab)
             let tr = document.createElement("tr");
             tr.classList.add("addClass")
             tr.setAttribute("id", response._id);
