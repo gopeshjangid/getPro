@@ -169,6 +169,7 @@ module.exports.PendingPaymentStripeSuccess = async (req, res) => {
     console.log("PendingPaymentStripeSuccess======", req.body);
     if (req.body.pay_id && req.body.orderId) {
       const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
+      const wallet = session.amount_total / 100;
       console.log("sessionCheck", session);
       if (session.status === "complete") {
         const updateOrderDetails = await Order.findByIdAndUpdate(
@@ -177,6 +178,7 @@ module.exports.PendingPaymentStripeSuccess = async (req, res) => {
             pay_id: req.body.pay_id,
             pay_method: "Stripe",
             status: "success",
+            totalAmount:wallet
           }
         );
         const findWalletTransaction = await Wallet.findOne({
@@ -186,6 +188,7 @@ module.exports.PendingPaymentStripeSuccess = async (req, res) => {
         await Wallet.findByIdAndUpdate(findWalletTransaction._id, {
           pay_id: req.body.pay_id,
           pay_type: "Stripe",
+          wallet:wallet
         });
         res.status(200).json({
           message: "payment Successfull",

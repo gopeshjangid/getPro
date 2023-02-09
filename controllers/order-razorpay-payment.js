@@ -159,22 +159,26 @@ module.exports.PendingPaymentRazorpaySuccess = async (req, res) => {
 
     if (generatedSignature == signature) {
       let checkPayment = await instance.payments.fetch(payId);
+      const wallet = checkPayment.amount / 100
       const updateOrderDetails = await Order.findByIdAndUpdate(
         req.body.orderId,
         {
           pay_id: payId,
           pay_method: "Razorpay",
           status: "success",
+          totalAmount:wallet
         }
       );
       console.log("updateOrderDetails", updateOrderDetails);
       const findWalletTransaction = await Wallet.findOne({
         transactionId: updateOrderDetails.transactionId,
       });
+
       console.log("ffiffff", findWalletTransaction);
       await Wallet.findByIdAndUpdate(findWalletTransaction._id, {
         pay_id: payId,
         pay_type: "Razorpay",
+        wallet:wallet
       });
       res.status(200).json({
         message: "payment Successfull",

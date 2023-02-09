@@ -107,11 +107,45 @@
               Send
             </button>
             <a style="background: #d44848" class="btn py-1 px-4 mt-3 text-light" href="/dashboard">Back</a>
-            <input id="fileInput" type="file" style="background: #d44848" class="btn py-1 px-4 mt-3 text-light"
-              name="img">
+            <div style="position: relative;overflow: hidden;background: rgb(164, 216, 118)" class="btn mt-3">
+              <i class="bi bi-send"></i>
+              <input id="fileInput" type="file"
+                style="background: #d44848 ;position: absolute;opacity: 0;top: 0;left: 0;"
+                class="btn py-1 px-4  text-light" name="img">
+            </div>
             <button onclick="sendPaymentLink()" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
               Send Payment Link
             </button>
+            <!-- Button trigger modal -->
+            <button style="background: rgb(164, 216, 118)" class="mt-3 btn text-dark" data-bs-toggle="modal" data-bs-target="#staticBackdrop1">
+             Customize payment
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false"
+              tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Enter Costomize Price</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form action="" id="custmizeForm" method="post">
+                    <div class="modal-body">
+                      <input type="text" id="customizePrice" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" style="background: rgb(164, 216, 118)"
+                        class="btn py-1 px-4 mt-3">
+                        Send
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -171,16 +205,58 @@
 
       $.ajax(settings).done(function (response) {
         console.log("amount status", response)
-        if (response.message.status !== "success") {
-          
-          sendMessage("link", "null", response.message.totalAmount)
+        if (response.message.type === "Ordered") {
+
+          if (response.message.status !== "success") {
+
+            sendMessage("link", "null", response.message.totalAmount)
+          } else {
+            alert("your order amount is already paid")
+          }
         } else {
-          alert("your order amount is already paid")
+          alert(`you can't send payment link because this order is ${response.message.type}  so you can use custmize payment link`)
         }
 
       })
 
     }
+
+  
+      let custmizeForm = document.getElementById("custmizeForm")
+      custmizeForm.addEventListener("submit", (e) => {
+        e.preventDefault();
+        let CustomizePrice = $("#customizePrice").val();
+        console.log("CustomizePrice", CustomizePrice)
+        console.log("chat id", theChatId)
+      if(CustomizePrice){
+        var settings = {
+          "url": `http://localhost:5000/getOrderDetailsInChat/${theChatId}`,
+          "method": "get",
+          "headers": {
+            "Content-Type": "application/json"
+          },
+        };
+
+        $.ajax(settings).done(function (response) {
+          console.log("amount status", response)
+          if (response.message.type === "Customize") {
+
+            if (response.message.status !== "success") {
+              alert("send customize payment link")
+               sendMessage("link", "null",CustomizePrice)
+            } else {
+              alert("your order amount is already paid")
+            }
+          } else {
+            alert(`you can't send customize payment link because this order is ${response.message.type}  so you can use send payment link`)
+          }
+
+        })
+      }else{
+        alert("please enter customize price")
+        e.preventDefault()
+      }  
+  })
     const loopsendmsg = () => {
       let arr = []
       let text = document.getElementById("textfield").value;
@@ -361,9 +437,6 @@
         // console.log("00000",response);
         // const a=document.getElementById("fileInput").files
         // console.log("aaaaaa",a)
-
-
-
       })
     }
 
@@ -625,49 +698,49 @@
         },
         success: function (res) {
           console.log("***********************", res);
-      
+
           // setChatId(response.data[0]._id);
 
           let chatsList = document.querySelector("#chatsList");
           chatsList.innerHTML = null;
           console.log(chatsList);
-         
-          res.forEach((response,index) => {
-         
-          $.ajax({
-          url: `http://localhost:5000/message/${response._id}`,
-          method: "get",
-          contentType: "application/x-www-form-urlencoded",
-          headers: {
-            authorization: token,
-          },
-          success: function (res) { 
-          console.log("sdfggcdsfgdgfsdf",res )
-          if(res.length>0){
-           let tr = document.createElement("tr");
-            tr.classList.add("addClass")
-            tr.setAttribute("id", response._id);
-            let content = `
+
+          res.forEach((response, index) => {
+
+            $.ajax({
+              url: `http://localhost:5000/message/${response._id}`,
+              method: "get",
+              contentType: "application/x-www-form-urlencoded",
+              headers: {
+                authorization: token,
+              },
+              success: function (res) {
+                console.log("sdfggcdsfgdgfsdf", res)
+                if (res.length > 0) {
+                  let tr = document.createElement("tr");
+                  tr.classList.add("addClass")
+                  tr.setAttribute("id", response._id);
+                  let content = `
                     <td id=${response._id} class="" style="padding :10px;width:15%">
                         <h4 id=${response._id} class="mb-0"><i id=${response._id} class="bi bi-person-circle"></i></h4>
                     </td>
                     <td id=${response._id}>${response.users.filter(
-              (user) => user.email !== "getproadmin000@gmail.com"
-            )[0].username + " (" + response.orderId?.products.map((product) => product.p_title + " ") + ")"
-              }
+                    (user) => user.email !== "getproadmin000@gmail.com"
+                  )[0].username + " (" + response.orderId?.products.map((product) => product.p_title + " ") + ")"
+                    }
                     </td>`;
-            tr.innerHTML = content;
+                  tr.innerHTML = content;
 
 
-            tr.onclick = trClicked;
-            chatsList.appendChild(tr);
-         } 
-           },
-          error: function (error) {
-            console.log(error);
-          }, 
-         });
-           
+                  tr.onclick = trClicked;
+                  chatsList.appendChild(tr);
+                }
+              },
+              error: function (error) {
+                console.log(error);
+              },
+            });
+
           });
           const chat = res[0].chatName;
           console.log(chat);
@@ -686,12 +759,12 @@
       //   }
       // });
 
-        if (chatId.type === "message") {
-          let chatBox = document.querySelector("#chatBox");
-          let div = document.createElement("div");
-          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
-          div.setAttribute("id", chatId._id);
-          let content = `<div style="position: relative"><h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
+      if (chatId.type === "message") {
+        let chatBox = document.querySelector("#chatBox");
+        let div = document.createElement("div");
+        div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+        div.setAttribute("id", chatId._id);
+        let content = `<div style="position: relative"><h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
           <p>${chatId.content}</p>
          
           <button id="babluuu" onclick= clickId("${chatId._id}") type="button" class="bg-transparent border-0 position-absolute top-0 end-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -717,26 +790,26 @@
                                     </div>
                                   </div>
                               <div>`;
-          div.innerHTML = content;
-          chatBox.appendChild(div);
-        }
-        else if (chatId.type === "image") {
-          let div = document.createElement("div");
-          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
-          div.setAttribute("id", chatId._id);
-          let content = `
+        div.innerHTML = content;
+        chatBox.appendChild(div);
+      }
+      else if (chatId.type === "image") {
+        let div = document.createElement("div");
+        div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+        div.setAttribute("id", chatId._id);
+        let content = `
               <div>
                 <h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
                 <img style="width:230px" src="${chatId.content}" />
               <div>`;
-          div.innerHTML = content;
-          chatBox.appendChild(div);
-        }
-        else if (chatId.type === "pdf") {
-          let div = document.createElement("div");
-          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
-          div.setAttribute("id", chatId._id);
-          let content = `<div><h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
+        div.innerHTML = content;
+        chatBox.appendChild(div);
+      }
+      else if (chatId.type === "pdf") {
+        let div = document.createElement("div");
+        div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+        div.setAttribute("id", chatId._id);
+        let content = `<div><h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
                                       <div>
                                           <img class="pdf-icon"  src="/image/pdf.png"/>
                                           <span style="margin-left:20px">${chatId.name}</span>
@@ -751,14 +824,14 @@
                                       </div>
                 
                               <div>`;
-          div.innerHTML = content;
-          chatBox.appendChild(div);
-        }
-        else if (chatId.type === "docx") {
-          let div = document.createElement("div");
-          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
-          div.setAttribute("id", chatId._id);
-          let content = `<div><h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
+        div.innerHTML = content;
+        chatBox.appendChild(div);
+      }
+      else if (chatId.type === "docx") {
+        let div = document.createElement("div");
+        div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+        div.setAttribute("id", chatId._id);
+        let content = `<div><h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
                                       <div>
                                           <img class="pdf-icon"  src="/image/docx.png"/>
                                           <span style="margin-left:20px">${chatId.name}</span>
@@ -773,13 +846,13 @@
                                       </div>
                 
                               <div>`;
-          div.innerHTML = content;
-          chatBox.appendChild(div);
-        } else if (chatId.type === "link") {
-          let div = document.createElement("div");
-          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
-          div.setAttribute("id", chatId._id);
-          let content = `
+        div.innerHTML = content;
+        chatBox.appendChild(div);
+      } else if (chatId.type === "link") {
+        let div = document.createElement("div");
+        div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+        div.setAttribute("id", chatId._id);
+        let content = `
           <div>
               <div class="bg-light text-center p-4">
                   <h3>
@@ -791,10 +864,10 @@
                       Pay<b style="float: right">${chatId.content}</b>
                 </label>
           </div>`;
-          div.innerHTML = content;
-          chatBox.appendChild(div);
-        }
-     // getChatList();
+        div.innerHTML = content;
+        chatBox.appendChild(div);
+      }
+      // getChatList();
       console.log("chatId", chatId);
     })
 
