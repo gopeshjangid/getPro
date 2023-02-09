@@ -625,18 +625,26 @@
         },
         success: function (res) {
           console.log("***********************", res);
-
+      
           // setChatId(response.data[0]._id);
 
           let chatsList = document.querySelector("#chatsList");
           chatsList.innerHTML = null;
           console.log(chatsList);
-          res.forEach((response) => {
-           const ab = response.users.filter(
-              (user) => user.email !== "getproadmin000@gmail.com"
-            )
-            console.log("abb",ab)
-            let tr = document.createElement("tr");
+         
+          res.forEach((response,index) => {
+         
+          $.ajax({
+          url: `http://localhost:5000/message/${response._id}`,
+          method: "get",
+          contentType: "application/x-www-form-urlencoded",
+          headers: {
+            authorization: token,
+          },
+          success: function (res) { 
+          console.log("sdfggcdsfgdgfsdf",res )
+          if(res.length>0){
+           let tr = document.createElement("tr");
             tr.classList.add("addClass")
             tr.setAttribute("id", response._id);
             let content = `
@@ -653,6 +661,13 @@
 
             tr.onclick = trClicked;
             chatsList.appendChild(tr);
+         } 
+           },
+          error: function (error) {
+            console.log(error);
+          }, 
+         });
+           
           });
           const chat = res[0].chatName;
           console.log(chat);
@@ -670,7 +685,116 @@
       //     id: chatId.chat._id
       //   }
       // });
-      getChatList();
+
+        if (chatId.type === "message") {
+          let chatBox = document.querySelector("#chatBox");
+          let div = document.createElement("div");
+          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+          div.setAttribute("id", chatId._id);
+          let content = `<div style="position: relative"><h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
+          <p>${chatId.content}</p>
+         
+          <button id="babluuu" onclick= clickId("${chatId._id}") type="button" class="bg-transparent border-0 position-absolute top-0 end-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                                    <i class="bi bi-pencil-square"></i>
+                                  </button>
+                                  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                      <div class="modal-content">
+                                        <div class="modal-header">
+                                          <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                         <form action="/edit-message" method="post" id="updateForm">
+                                          <input type="text" placeholder="Enter New Message...." id="updateForminput" class="form-control">
+                                          <div class="modal-footer">
+                                           <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Update</button>
+                                          </div>
+                                          </form>
+                                        </div>
+                                       
+                                      </div>
+                                    </div>
+                                  </div>
+                              <div>`;
+          div.innerHTML = content;
+          chatBox.appendChild(div);
+        }
+        else if (chatId.type === "image") {
+          let div = document.createElement("div");
+          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+          div.setAttribute("id", chatId._id);
+          let content = `
+              <div>
+                <h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
+                <img style="width:230px" src="${chatId.content}" />
+              <div>`;
+          div.innerHTML = content;
+          chatBox.appendChild(div);
+        }
+        else if (chatId.type === "pdf") {
+          let div = document.createElement("div");
+          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+          div.setAttribute("id", chatId._id);
+          let content = `<div><h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
+                                      <div>
+                                          <img class="pdf-icon"  src="/image/pdf.png"/>
+                                          <span style="margin-left:20px">${chatId.name}</span>
+                                            <a style="
+                                            float: right;
+                                            margin-right: 32px;
+                                            font-size: 20px;
+                                            color: #000;
+                                            "href="${chatId.content}" target="_blank"/>
+                                                  <i class="bi bi-eye-fill"></i>
+                                            </a>
+                                      </div>
+                
+                              <div>`;
+          div.innerHTML = content;
+          chatBox.appendChild(div);
+        }
+        else if (chatId.type === "docx") {
+          let div = document.createElement("div");
+          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+          div.setAttribute("id", chatId._id);
+          let content = `<div><h6 id="scrollspyHeading1">${chatId.sender.username}</h6>
+                                      <div>
+                                          <img class="pdf-icon"  src="/image/docx.png"/>
+                                          <span style="margin-left:20px">${chatId.name}</span>
+                                            <a style="
+                                            float: right;
+                                            margin-right: 32px;
+                                            font-size: 20px;
+                                            color: #000;
+                                            "href="${chatId.content}" target="_blank"/>
+                                                  <i class="bi bi-eye-fill"></i>
+                                            </a>
+                                      </div>
+                
+                              <div>`;
+          div.innerHTML = content;
+          chatBox.appendChild(div);
+        } else if (chatId.type === "link") {
+          let div = document.createElement("div");
+          div.classList.add(chatId.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
+          div.setAttribute("id", chatId._id);
+          let content = `
+          <div>
+              <div class="bg-light text-center p-4">
+                  <h3>
+                    Payment
+                  </h3>
+                  <p>please make payment</p>
+              </div>
+                <label class="form-control text-light" style="background: rgb(91 163 98)">
+                      Pay<b style="float: right">${chatId.content}</b>
+                </label>
+          </div>`;
+          div.innerHTML = content;
+          chatBox.appendChild(div);
+        }
+     // getChatList();
       console.log("chatId", chatId);
     })
 
