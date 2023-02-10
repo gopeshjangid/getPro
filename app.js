@@ -20,7 +20,7 @@ const io = new require("socket.io")(server, {
 });
 app.set("socketIo", io);
 var corsOptions = {
-  origin: ["https://getprowriter.netlify.app/", "https://getprowriter.onrender.com/chats"],
+  origin: ["https://getprowriter.netlify.app/", "https://81.0.246.73:5000/chats"],
   credentials: true,
 };
 
