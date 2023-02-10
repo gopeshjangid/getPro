@@ -159,7 +159,7 @@
     const token = localStorage.getItem("token");
     var theChatId
     var userData
-    const ENDPOINT = "https://81.0.246.73:5000";
+    const ENDPOINT = "http://localhost:5000";
     var socket = io()
     console.log("socket", socket)
     socket.on('receive-user', function (data) {
