@@ -19,7 +19,7 @@ module.exports.orderRazorpayPayment = async (req, res) => {
 
     var options = {
       amount: TotalAmount * 100,
-      currency: "INR",
+      currency: "USD",
     };
     instance.orders.create(options, function (err, order) {
       res.status(200).json({
@@ -130,7 +130,7 @@ module.exports.PendingPaymentRazorpay = async (req, res) => {
 
     var options = {
       amount: TotalAmount * 100,
-      currency: "INR",
+      currency: "USD",
     };
     instance.orders.create(options, function (err, order) {
       console.log(order);

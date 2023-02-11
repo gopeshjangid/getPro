@@ -18,7 +18,7 @@ module.exports.razorpayPayment = async (req, res) => {
     console.log("-------", amount);
     var options = {
       amount: amount * 100,
-      currency: "INR",
+      currency: "USD",
     };
     instance.orders.create(options, function (err, order) {
       res.status(200).json({

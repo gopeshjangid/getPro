@@ -18,7 +18,7 @@ module.exports.orderStripe = async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "inr",
+            currency: "usd",
             product_data: {
               name: "Total Amount",
             },
@@ -141,7 +141,7 @@ module.exports.PendingPaymentStripe = async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "inr",
+            currency: "usd",
             product_data: {
               name: "Total Amount",
             },
@@ -178,7 +178,7 @@ module.exports.PendingPaymentStripeSuccess = async (req, res) => {
             pay_id: req.body.pay_id,
             pay_method: "Stripe",
             status: "success",
-            totalAmount:wallet
+            totalAmount: wallet,
           }
         );
         const findWalletTransaction = await Wallet.findOne({
@@ -188,7 +188,7 @@ module.exports.PendingPaymentStripeSuccess = async (req, res) => {
         await Wallet.findByIdAndUpdate(findWalletTransaction._id, {
           pay_id: req.body.pay_id,
           pay_type: "Stripe",
-          wallet:wallet
+          wallet: wallet,
         });
         res.status(200).json({
           message: "payment Successfull",
@@ -207,5 +207,3 @@ module.exports.PendingPaymentStripeSuccess = async (req, res) => {
     });
   }
 };
-
-

@@ -21,8 +21,9 @@ module.exports.getWalletTransactionHistory = async (req, res) => {
     }
     for (var i = 0; i < debitHistory.length; i++) {
       totalDebit += debitHistory[i].wallet;
+      console.log(debitHistory[i].wallet);
     }
-
+    console.log("totalDebit", totalDebit);
     res.status(200).json({
       credit: creditHistory,
       totalCredit: totalCredit,

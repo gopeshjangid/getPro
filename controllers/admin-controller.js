@@ -17,10 +17,9 @@ const jwt = require("jsonwebtoken");
 const path = require("path");
 const Message = require("../model/messageModel");
 const Chat = require("../model/chatModel");
-const ExtraCredit = require("../model/extraCredit")
-const ContentType = require("../model/contentType")
-const ExpertLevel = require("../model/expertLevel")
-
+const ExtraCredit = require("../model/extraCredit");
+const ContentType = require("../model/contentType");
+const ExpertLevel = require("../model/expertLevel");
 
 module.exports.checkLogin = (req, res, next) => {
   if (req.cookies.userLoginToken === undefined) {
@@ -255,7 +254,6 @@ module.exports.updateworksampleSubmit = async (req, res) => {
       await Worksample.findByIdAndUpdate(id, {
         title: newTitle,
         dec: newDec,
-       
       });
       res.redirect("/workSample");
     }
@@ -810,7 +808,7 @@ module.exports.adminWalletTransactionHistory = async (req, res) => {
   try {
     const creditHistory = await Wallet.find({ pay_transaction: "credited" });
     const debitHistory = await Wallet.find({ pay_transaction: "debited" });
-   // console.log(creditHistory)
+    // console.log(creditHistory)
     res.render("wallethistory.ejs", { creditHistory, debitHistory });
   } catch (error) {
     res.status(500).json({
@@ -847,8 +845,8 @@ module.exports.findupdatemessage = async (req, res) => {
   try {
     const id = req.params.id;
     let messageData = await Message.findById(id);
-   //s console.log(messageData);
-   res.status(200).json({message:messageData})
+    //s console.log(messageData);
+    res.status(200).json({ message: messageData });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -859,9 +857,11 @@ module.exports.findupdatemessage = async (req, res) => {
 module.exports.findupdatemessagesubmit = async (req, res) => {
   try {
     const id = req.params.id;
-    const new_message=req.body.newMessage
-    let messageData = await Message.findByIdAndUpdate(id,{content:new_message});
-    res.status(200).json({message:messageData})
+    const new_message = req.body.newMessage;
+    let messageData = await Message.findByIdAndUpdate(id, {
+      content: new_message,
+    });
+    res.status(200).json({ message: messageData });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -871,8 +871,8 @@ module.exports.findupdatemessagesubmit = async (req, res) => {
 
 module.exports.extraCredit = async (req, res) => {
   try {
-    let extraCreditData= await ExtraCredit.find()
-   res.render("extraCredit.ejs",{extraCreditData})
+    let extraCreditData = await ExtraCredit.find();
+    res.render("extraCredit.ejs", { extraCreditData });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -881,7 +881,7 @@ module.exports.extraCredit = async (req, res) => {
 };
 module.exports.AddextraCredit = async (req, res) => {
   try {
-  res.render("extra-credit-add.ejs")
+    res.render("extra-credit-add.ejs");
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -891,11 +891,14 @@ module.exports.AddextraCredit = async (req, res) => {
 
 module.exports.AddextraCreditSubmit = async (req, res) => {
   try {
-  const message = req.body.message
-  const credit = req.body.credit
-  let extraCredit=  new ExtraCredit({message:message,extraCredit:credit})
-  await extraCredit.save()
-  res.redirect("/extraCredit")
+    const message = req.body.message;
+    const credit = req.body.credit;
+    let extraCredit = new ExtraCredit({
+      message: message,
+      extraCredit: credit,
+    });
+    await extraCredit.save();
+    res.redirect("/extraCredit");
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -905,9 +908,9 @@ module.exports.AddextraCreditSubmit = async (req, res) => {
 
 module.exports.editExtraCredit = async (req, res) => {
   try {
-    const id= req.params.id
-  let CreditData= await ExtraCredit.findById(id)
-  res.render("extra-credit-edit.ejs",{CreditData})
+    const id = req.params.id;
+    let CreditData = await ExtraCredit.findById(id);
+    res.render("extra-credit-edit.ejs", { CreditData });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -916,12 +919,15 @@ module.exports.editExtraCredit = async (req, res) => {
 };
 module.exports.editExtraCreditSubmit = async (req, res) => {
   try {
-    const id= req.params.id
-    const NewMessage=req.body.message
-    const credit=req.body.credit
-    console.log(req.body)
-    let CreditData= await ExtraCredit.findByIdAndUpdate(id,{message:NewMessage,extraCredit:credit})
-    res.redirect("/extraCredit")
+    const id = req.params.id;
+    const NewMessage = req.body.message;
+    const credit = req.body.credit;
+    console.log(req.body);
+    let CreditData = await ExtraCredit.findByIdAndUpdate(id, {
+      message: NewMessage,
+      extraCredit: credit,
+    });
+    res.redirect("/extraCredit");
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -929,15 +935,14 @@ module.exports.editExtraCreditSubmit = async (req, res) => {
   }
 };
 
-
 module.exports.getOrderDetailsInChat = async (req, res) => {
   try {
-    const id= req.params.id
-    console.log(id)
-  const ChatData=  await Chat.findById(id)
-  
-  const OrderData= await Order.findById(ChatData.orderId)
-   res.status(200).json({message:OrderData})
+    const id = req.params.id;
+    console.log(id);
+    const ChatData = await Chat.findById(id);
+
+    const OrderData = await Order.findById(ChatData.orderId);
+    res.status(200).json({ message: OrderData });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -946,8 +951,8 @@ module.exports.getOrderDetailsInChat = async (req, res) => {
 };
 module.exports.contentType = async (req, res) => {
   try {
-  const contentTypeData= await ContentType.find()
-  res.render("content-type.ejs",{contentTypeData})
+    const contentTypeData = await ContentType.find();
+    res.render("content-type.ejs", { contentTypeData });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -957,8 +962,7 @@ module.exports.contentType = async (req, res) => {
 
 module.exports.AddContentType = async (req, res) => {
   try {
-  
-  res.render("content-type-add.ejs")
+    res.render("content-type-add.ejs");
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -967,12 +971,11 @@ module.exports.AddContentType = async (req, res) => {
 };
 module.exports.AddContentTypeSubmit = async (req, res) => {
   try {
-   // console.log(req.body)
-    const ContentName=req.body.ContentName
-    const contentTypeData= new ContentType({contentType:ContentName})
-    await contentTypeData.save()
-   res.redirect("/contentType")
- 
+    // console.log(req.body)
+    const ContentName = req.body.ContentName;
+    const contentTypeData = new ContentType({ contentType: ContentName });
+    await contentTypeData.save();
+    res.redirect("/contentType");
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -982,8 +985,8 @@ module.exports.AddContentTypeSubmit = async (req, res) => {
 
 module.exports.expertLevel = async (req, res) => {
   try {
-  const ExpertLevelData= await ExpertLevel.find()
-  res.render("expert-level.ejs",{ExpertLevelData})
+    const ExpertLevelData = await ExpertLevel.find();
+    res.render("expert-level.ejs", { ExpertLevelData });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -993,7 +996,7 @@ module.exports.expertLevel = async (req, res) => {
 
 module.exports.AddExpertLevel = async (req, res) => {
   try {
-  res.render("expert-level-add.ejs")
+    res.render("expert-level-add.ejs");
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -1003,10 +1006,10 @@ module.exports.AddExpertLevel = async (req, res) => {
 
 module.exports.AddExpertLevelSubmit = async (req, res) => {
   try {
-   const expertLevel=req.body.expertLevel
-   const expertlevelData= new ExpertLevel({expertLevel:expertLevel})
-   await expertlevelData.save()
-  res.redirect("/expertLevel")
+    const expertLevel = req.body.expertLevel;
+    const expertlevelData = new ExpertLevel({ expertLevel: expertLevel });
+    await expertlevelData.save();
+    res.redirect("/expertLevel");
   } catch (error) {
     res.status(500).json({
       error: error.message,
