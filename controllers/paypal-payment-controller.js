@@ -4,17 +4,18 @@ const paypal = require("paypal-rest-sdk");
 const Wallet = require("../model/wallet");
 const jwt = require("jsonwebtoken");
 const User = require("../model/user");
-const otpGenerator = require('otp-generator')
-
+const otpGenerator = require("otp-generator");
+const ExtraCredit = require("../model/extraCredit");
 paypal.configure({
   mode: "sandbox",
-  client_id:process.env.PAYPALCLIENTID,
-  client_secret:process.env.PAYPALCLIENTSECRET,
+  client_id: process.env.PAYPALCLIENTID,
+  client_secret: process.env.PAYPALCLIENTSECRET,
 });
 
 module.exports.PaypalPayment = async (req, res) => {
   const wallet = req.body.wallet;
   try {
+    console.log("paypal", req.body);
     const create_payment_json = {
       intent: "sale",
       payer: {
@@ -66,45 +67,83 @@ module.exports.PaypalPayment = async (req, res) => {
 };
 
 module.exports.PaypalPaymentSuccess = async (req, res) => {
- 
   try {
-  //   const payerId = req.query.PayerID;
-  //   const paymentId = req.query.paymentId;
-  //   const execute_payment_json = {
-  //     "payer_id": payerId,
-  //     "transactions": [{
-  //         "amount": {
-  //             "currency": "USD",
-  //             "total": "5"
-  //         }
-  //     }]
-  //   };
-  //   paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
-  //   if (error) {
-  //       console.log(error.response);
-  //       throw error;
-  //   } else {
-  //     console.log(payment)
-  //       res.json(payment);
-  //   }
-  // })
-         // console.log("====",req.query)
-          const token = req.headers.authorization;
-          const verifyTokenId = jwt.verify(token, "zxcvbnm");
-          const UserDetails = await User.findById(verifyTokenId.userId);
-          const wallet = req.body.wallet;
-          const pay_id = req.body.pay_id;
-          let WallettransactionId = otpGenerator.generate(25, { upperCaseAlphabets: false, specialChars: false });
-          const updateWallet = await User.findByIdAndUpdate(UserDetails._id, { wallet: UserDetails.wallet + wallet, })
-          const walletData = new Wallet({ user: UserDetails.email, wallet: wallet, datetime: new Date(), pay_id: pay_id, pay_type: "credited", transactionId: WallettransactionId });
-          await walletData.save();
-          res.status(200).json({
-              data: walletData,
-          });
-  } catch (error) {
-      res.status(500).json({
-          error: error
-      })
-  }
+    //   const payerId = req.query.PayerID;
+    //   const paymentId = req.query.paymentId;
+    //   const execute_payment_json = {
+    //     "payer_id": payerId,
+    //     "transactions": [{
+    //         "amount": {
+    //             "currency": "USD",
+    //             "total": "5"
+    //         }
+    //     }]
+    //   };
+    //   paypal.payment.execute(paymentId, execute_payment_json, function (error, payment) {
+    //   if (error) {
+    //       console.log(error.response);
+    //       throw error;
+    //   } else {
+    //     console.log(payment)
+    //       res.json(payment);c
+    //   }
+    // })
+    // console.log("====",req.query)
 
-}
+    console.log(req.body);
+    if (req.body.pay_id) {
+      const token = req.headers.authorization;
+      const verifyTokenId = jwt.verify(token, "zxcvbnm");
+      const UserDetails = await User.findById(verifyTokenId.userId);
+      const wallet = req.body.wallet;
+      const pay_id = req.body.pay_id;
+      let extraCredit = await ExtraCredit.findOne();
+      let WallettransactionId = otpGenerator.generate(25, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+      });
+
+      if (wallet >= 500) {
+        const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
+          wallet: UserDetails.wallet + wallet + extraCredit.extraCredit,
+        });
+        const walletData = new Wallet({
+          user: UserDetails.email,
+          wallet: wallet + extraCredit.extraCredit,
+          datetime: new Date(),
+          pay_type: "Paypal",
+          pay_id: pay_id,
+          pay_transaction: "credited",
+          transactionId: WallettransactionId,
+        });
+        await walletData.save();
+        res.status(200).json({
+          data: walletData,
+        });
+      } else {
+        const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
+          wallet: UserDetails.wallet + wallet,
+        });
+        const walletData = new Wallet({
+          user: UserDetails.email,
+          wallet: wallet,
+          datetime: new Date(),
+          pay_type: "Paypal",
+          pay_id: pay_id,
+          pay_transaction: "credited",
+          transactionId: WallettransactionId,
+        });
+        await walletData.save();
+        res.status(200).json({
+          data: walletData,
+        });
+      }
+    } else {
+      res.json({ message: "please send pay id" });
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: error,
+    });
+  }
+};

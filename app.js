@@ -20,7 +20,11 @@ const io = new require("socket.io")(server, {
 });
 app.set("socketIo", io);
 var corsOptions = {
-  origin: ["http://localhost:3000", "http://localhost:5000/chats"],
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:5000/chats",
+    "https://81.0.246.73:3000",
+  ],
   credentials: true,
 };
 
@@ -91,6 +95,7 @@ const countryCodeRouter = require("./router/countryCodeRouter");
 const contentTypeRouter = require("./router/contentTypeRouter");
 const expertLevelRouter = require("./router/expertLevelRouter");
 const getInTouchRouter = require("./router/getInTouchRouter");
+const orderPaypalRouter = require("./router/orderPaypalRouter");
 
 const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
@@ -139,13 +144,14 @@ app.use(orderRazorpayPayment);
 app.use(extraCreditRouter);
 app.use(stripeGuestPaymentRouter);
 app.use(razorPayGuestPaymentRouter);
-app.use(stripeSubscriptionRouter)
-app.use(razorpaySubscriptionRouter)
-app.use(withoutPaymentOrderRouter)
-app.use(countryCodeRouter)
-app.use(contentTypeRouter)
-app.use(expertLevelRouter)
-app.use(getInTouchRouter)
+app.use(stripeSubscriptionRouter);
+app.use(razorpaySubscriptionRouter);
+app.use(withoutPaymentOrderRouter);
+app.use(countryCodeRouter);
+app.use(contentTypeRouter);
+app.use(expertLevelRouter);
+app.use(getInTouchRouter);
+app.use(orderPaypalRouter);
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);
