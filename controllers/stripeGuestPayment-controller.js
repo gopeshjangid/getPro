@@ -1,13 +1,7 @@
 const Stripe = require("stripe");
 const dotenv = require("dotenv");
 const Wallet = require("../model/wallet");
-const jwt = require("jsonwebtoken");
-const User = require("../model/user");
 const otpGenerator = require("otp-generator");
-const crypto = require("crypto");
-const Services = require("../model/services");
-const Order = require("../model/order");
-const ExtraCredit = require("../model/extraCredit");
 dotenv.config();
 const stripe = Stripe(process.env.SECRET);
 
@@ -25,7 +19,7 @@ module.exports.payment = async (req, res) => {
       line_items: [
         {
           price_data: {
-            currency: "inr",
+            currency: "usd",
             product_data: {
               name: "Wallet",
             },
