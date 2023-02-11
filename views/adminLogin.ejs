@@ -92,6 +92,7 @@
       let Labelemail = document.getElementById("emailLabel");
       let labelpassword = document.getElementById("passwordLabel");
       let form = document.getElementById("form");
+      let API_URL="http://localhost:5000"
 
       //  let form = document.getElementById('form');
       form.addEventListener("submit", (e) => {
@@ -120,7 +121,7 @@
               let email = $("#InputEmail").val();
               let password = $("#InputPassword").val();
               $.ajax({
-                url: "http://localhost:5000/adminLogin",
+                url: `${API_URL}/adminLogin`,
                 method: "post",
                 contentType: "application/x-www-form-urlencoded",
                 data: {
@@ -130,7 +131,7 @@
                 success: function (res) {
                   console.log(res);
                   localStorage.setItem("token", res.token);
-                  window.location = "http://localhost:5000/dashboard"
+                  window.location = `${API_URL}/dashboard`
                 },
                 error: function (error) {
                   console.log(error);

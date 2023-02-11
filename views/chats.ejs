@@ -155,6 +155,7 @@
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script>
+    
     const token = localStorage.getItem("token");
     var theChatId
     var userData
@@ -171,7 +172,7 @@
 
 
     $.ajax({
-      url: `http://localhost:5000/viewProfile`,
+      url: `${ENDPOINT}/viewProfile`,
       method: "get",
       mode: "cors",
       contentType: "application/x-www-form-urlencoded",
@@ -196,7 +197,7 @@
     const sendPaymentLink = () => {
       console.log("chat id", theChatId)
       var settings = {
-        "url": `http://localhost:5000/getOrderDetailsInChat/${theChatId}`,
+        "url": `${ENDPOINT}/getOrderDetailsInChat/${theChatId}`,
         "method": "get",
         "headers": {
           "Content-Type": "application/json"
@@ -230,7 +231,7 @@
         console.log("chat id", theChatId)
       if(CustomizePrice){
         var settings = {
-          "url": `http://localhost:5000/getOrderDetailsInChat/${theChatId}`,
+          "url": `${ENDPOINT}/getOrderDetailsInChat/${theChatId}`,
           "method": "get",
           "headers": {
             "Content-Type": "application/json"
@@ -308,7 +309,7 @@
       // }
 
       var settings = {
-        "url": "http://localhost:5000/message",
+        "url": `${ENDPOINT}/message`,
         "method": "POST",
         "timeout": 0,
         "headers": {
@@ -448,7 +449,7 @@
       document.getElementById("chatBox").innerHTML = "";
 
       $.ajax({
-        url: `http://localhost:5000/message/${e.target.id}`,
+        url: `${ENDPOINT}/message/${e.target.id}`,
         method: "get",
         contentType: "application/x-www-form-urlencoded",
         headers: {
@@ -557,7 +558,7 @@
             else if (response.type === "link") {
               console.log("link")
               //         var settings = {
-              //               "url": await `http://localhost:5000/getOrderDetailsInChat/${theChatId}`,
+              //               "url": await `ENDPOINT/getOrderDetailsInChat/${theChatId}`,
               //               "method": "get",
               //               "headers": {
               //                 "Content-Type": "application/json"
@@ -640,7 +641,7 @@
       let updateForm = document.getElementById("updateForm")
       let ChatId;
       $.ajax({
-        url: `http://localhost:5000/findupdatemessage/${id}`,
+        url: `${ENDPOINT}/findupdatemessage/${id}`,
         method: "get",
         contentType: "application/x-www-form-urlencoded",
         success: function (res) {
@@ -657,7 +658,7 @@
         let newMessage = $("#updateForminput").val();
         console.log("new", newMessage)
         $.ajax({
-          url: `http://localhost:5000/edit-message/${id}`,
+          url: `${ENDPOINT}/edit-message/${id}`,
           method: "post",
           contentType: "application/x-www-form-urlencoded",
           data: {
@@ -690,7 +691,7 @@
 
     function getChatList() {
       $.ajax({
-        url: "http://localhost:5000/chat",
+        url: `${ENDPOINT}/chat`,
         method: "get",
         contentType: "application/x-www-form-urlencoded",
         headers: {
@@ -708,7 +709,7 @@
           res.forEach((response, index) => {
 
             $.ajax({
-              url: `http://localhost:5000/message/${response._id}`,
+              url: `${ENDPOINT}/message/${response._id}`,
               method: "get",
               contentType: "application/x-www-form-urlencoded",
               headers: {
