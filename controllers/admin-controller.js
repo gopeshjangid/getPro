@@ -983,6 +983,19 @@ module.exports.AddContentTypeSubmit = async (req, res) => {
   }
 };
 
+module.exports.DeleteContentType = async (req, res) => {
+  try {
+    const Contentid = req.params.id;
+    console.log(Contentid)
+    const contentTypeData = await ContentType.findByIdAndDelete(Contentid);
+    res.redirect("/contentType");
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 module.exports.expertLevel = async (req, res) => {
   try {
     const ExpertLevelData = await ExpertLevel.find();

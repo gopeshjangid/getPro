@@ -171,6 +171,9 @@ adminRouter
     .route('/addContentTypeSubmit')
     .post(adminController.checkLogin, adminController.AddContentTypeSubmit)
 adminRouter
+    .route('/deleteContentType/:id')
+    .get(adminController.checkLogin, adminController.DeleteContentType)
+adminRouter
     .route('/expertLevel')
     .get(adminController.checkLogin, adminController.expertLevel)
 adminRouter
