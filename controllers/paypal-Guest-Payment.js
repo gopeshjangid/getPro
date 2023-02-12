@@ -63,31 +63,30 @@ module.exports.PaypalGuestPayment = async (req, res) => {
   }
 };
 
-
 module.exports.PaypalGuestPaymentSuccess = async (req, res) => {
-    if (req.body.pay_id && req.body.email) {
-          const pay_id = req.body.pay_id;
-          const amount = req.body.amount
-          let WallettransactionId = otpGenerator.generate(25, {
-            upperCaseAlphabets: false,
-            specialChars: false,
-          });
-  
-          const walletData = new Wallet({
-            user: req.body.email,
-            wallet: amount,
-            datetime: new Date(),
-            pay_type: "Paypal",
-            pay_id: pay_id,
-            pay_transaction: "debited",
-            transactionId: WallettransactionId,
-          });
-          await walletData.save();
-          res.status(200).json({
-            data: walletData,
-          });
-        
-      } else {
-        res.status(200).json({ message: "please send pay_Id" });
-      }
-}
+  console.log(req.body);
+  if (req.body.pay_id && req.body.email) {
+    const pay_id = req.body.pay_id;
+    const amount = req.body.amount;
+    let WallettransactionId = otpGenerator.generate(25, {
+      upperCaseAlphabets: false,
+      specialChars: false,
+    });
+
+    const walletData = new Wallet({
+      user: req.body.email,
+      wallet: amount,
+      datetime: new Date(),
+      pay_type: "Paypal",
+      pay_id: pay_id,
+      pay_transaction: "debited",
+      transactionId: WallettransactionId,
+    });
+    await walletData.save();
+    res.status(200).json({
+      data: walletData,
+    });
+  } else {
+    res.status(200).json({ message: "please send pay_Id" });
+  }
+};
