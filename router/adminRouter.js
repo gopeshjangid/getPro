@@ -68,6 +68,10 @@ adminRouter
     .route('/updateFaqs/:id')
     .get(adminController.checkLogin, adminController.updateFaqs)
     .post(adminController.updateFaqsSubmit)
+ adminRouter
+    .route('/deleteFaqs/:id')
+    .get(adminController.checkLogin, adminController.deleteFaqs)
+
 adminRouter
     .route('/blog')
     .get(adminController.checkLogin, adminController.blog)
@@ -97,6 +101,10 @@ adminRouter
     .route('/updateservices/:id')
     .get(adminController.checkLogin, adminController.updateServices)
     .post(adminController.updateServicesSubmit)
+adminRouter
+    .route('/deleteServices/:id')
+    .get(adminController.checkLogin, adminController.deleteServices)
+   
 adminRouter
     .route('/coupon')
     .get(adminController.checkLogin, adminController.coupon)

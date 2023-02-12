@@ -440,6 +440,18 @@ module.exports.updateFaqsSubmit = async (req, res) => {
   }
 };
 
+module.exports.deleteFaqs = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Faqs.findByIdAndDelete(id)
+    res.redirect("/faqs");
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 module.exports.blog = async (req, res) => {
   try {
     const BlogData = await Blog.find();
@@ -620,6 +632,19 @@ module.exports.updateServicesSubmit = async (req, res) => {
     });
   }
 };
+
+module.exports.deleteServices = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await Services.findByIdAndDelete(id)
+    res.redirect("/services");
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 
 module.exports.logout = async (req, res) => {
   res.clearCookie("adminToken");
