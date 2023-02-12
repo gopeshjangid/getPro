@@ -1029,3 +1029,15 @@ module.exports.AddExpertLevelSubmit = async (req, res) => {
     });
   }
 };
+
+module.exports.DeleteExpertLevelSubmit = async (req, res) => {
+  try {
+   const id =req.params.id
+    const expertlevelData = await ExpertLevel.findByIdAndDelete(id)
+    res.redirect("/expertLevel");
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};

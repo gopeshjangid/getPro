@@ -182,6 +182,9 @@ adminRouter
 adminRouter
     .route('/addexpertLevelSubmit')
     .post(adminController.checkLogin, adminController.AddExpertLevelSubmit)
+adminRouter
+    .route('/deleteExpertLevel/:id')
+    .get(adminController.checkLogin, adminController.DeleteExpertLevelSubmit)
 
 
 
