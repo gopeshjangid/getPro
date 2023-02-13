@@ -105,7 +105,8 @@
                                                     <%=result.dec%>
                                                 </td>
                                                 <td>
-                                                    <%-result.longDec-%>
+                                                    <%-result.longDec.substring(0, 50)-%>....
+                                                </td>-%>
                                                 </td>
                                                 <td style="width: 150px;"><img style="width: 100%;"
                                                         src="../image/<%=result.image%>" alt="">
@@ -120,8 +121,11 @@
                                                         </button>
                                                         <div class="dropdown-menu">
                                                             <a class="dropdown-item"
-                                                                href="/updateAuthors/<%=result._id%>"><i
-                                                                    class="bx bx-edit-alt me-1"></i> Edit</a>
+                                                                href="/authoreReadMore/<%=result._id%>"><i
+                                                                    class="bx bx-edit-alt me-1"></i> Read More</a>
+                                                                    <a class="dropdown-item"
+                                                                    href="/authoreReadMore/<%=result._id%>"><i
+                                                                        class="bx bx-edit-alt me-1"></i> Edit</a>
                                                             <a onclick="return confirmDelete()" class="dropdown-item" href="/deleteAuthors/<%=result._id%>"><i
                                                                     class="bx bx-trash me-1"></i>Delete</a>
                                                         </div>

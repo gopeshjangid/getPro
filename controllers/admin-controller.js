@@ -183,7 +183,23 @@ module.exports.worksample = async (req, res) => {
   try {
     const data = await Worksample.find().sort();
     const workSampleData= data.reverse()
+    // for (let i = 0; i < workSampleData.length; i++) {
+    //   const element = workSampleData[i].dec;
+    //   console.log(element.substr(5,10))
+    //  }
     res.render("workSample.ejs", { workSampleData });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.workSampleReadMore = async (req, res) => {
+  try {
+   const id = req.params.id
+    const data = await Worksample.findById(id)
+    res.render("workSampleReadMore.ejs", { data });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -296,6 +312,18 @@ module.exports.authors = async (req, res) => {
   }
 };
 
+module.exports.AuthorReadMore = async (req, res) => {
+  try {
+   const id = req.params.id
+    const data = await Authors.findById(id)
+    res.render("authorReadMore.ejs", { data });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 module.exports.addAuthors = async (req, res) => {
   try {
     res.render("authors-add.ejs");
@@ -401,6 +429,19 @@ module.exports.faqs = async (req, res) => {
     });
   }
 };
+
+module.exports.FaqReadMore = async (req, res) => {
+  try {
+   const id = req.params.id
+    const data = await Faqs.findById(id)
+    res.render("faqReadMore.ejs", { data });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
 module.exports.addFaqs = async (req, res) => {
   try {
     res.render("faq-add.ejs");
@@ -467,6 +508,18 @@ module.exports.blog = async (req, res) => {
     const data = await Blog.find().sort();
     const BlogData =data.reverse()
     res.render("blog.ejs", { BlogData });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.BlogReadMore = async (req, res) => {
+  try {
+   const id = req.params.id
+    const data = await Blog.findById(id)
+    res.render("blogReadMore.ejs", { data });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -574,6 +627,18 @@ module.exports.services = async (req, res) => {
     const data = await Services.find().sort();
     const servicesData =data.reverse()
     res.render("services.ejs", { servicesData });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.servicesReadMore = async (req, res) => {
+  try {
+   const id = req.params.id
+    const data = await Services.findById(id)
+    res.render("servicesReadMore.ejs", { data });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -691,6 +756,7 @@ module.exports.addCouponSubmit = async (req, res) => {
     const couponType = req.body.couponType;
     const couponAmount = req.body.couponAmount;
     const couponStatus = req.body.couponStatus;
+    console.log(req.body)
     const CouponData = await Coupon.findOne({ couponName: couponName });
     if (CouponData == null) {
       const couponData = new Coupon({

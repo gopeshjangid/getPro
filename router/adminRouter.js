@@ -33,6 +33,9 @@ adminRouter
     .route('/workSample')
     .get(adminController.checkLogin, adminController.worksample);
 adminRouter
+    .route('/workSampleReadMore/:id')
+    .get(adminController.checkLogin, adminController.workSampleReadMore);
+adminRouter
     .route('/addworksample')
     .get(adminController.checkLogin, adminController.addworksample)
     .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.addworksampleSubmit)
@@ -46,6 +49,9 @@ adminRouter
 adminRouter
     .route('/authors')
     .get(adminController.checkLogin, adminController.authors)
+adminRouter
+    .route('/authoreReadMore/:id')
+    .get(adminController.checkLogin, adminController.AuthorReadMore)
 adminRouter
     .route('/addAuthors')
     .get(adminController.checkLogin, adminController.addAuthors)
@@ -61,6 +67,9 @@ adminRouter
     .route('/faqs')
     .get(adminController.checkLogin, adminController.faqs)
 adminRouter
+    .route('/faqReadMore/:id')
+    .get(adminController.checkLogin, adminController.FaqReadMore)
+adminRouter
     .route('/addFaqs')
     .get(adminController.checkLogin, adminController.addFaqs)
     .post(adminController.addFaqsSubmit)
@@ -75,6 +84,9 @@ adminRouter
 adminRouter
     .route('/blog')
     .get(adminController.checkLogin, adminController.blog)
+adminRouter
+    .route('/blogReadMore/:id')
+    .get(adminController.checkLogin, adminController.BlogReadMore)
 adminRouter
     .route('/addblog')
     .get(adminController.checkLogin, adminController.addblog)
@@ -93,6 +105,9 @@ adminRouter
 adminRouter
     .route('/services')
     .get(adminController.checkLogin, adminController.services)
+adminRouter
+    .route('/servicesReadMore/:id')
+    .get(adminController.checkLogin, adminController.servicesReadMore)
 adminRouter
     .route('/addservices')
     .get(adminController.checkLogin, adminController.addServices)

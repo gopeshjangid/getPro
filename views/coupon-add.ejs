@@ -205,14 +205,14 @@
               console.log("couponType====",couponType)
               console.log("couponStatus====",couponStatus)
                $.ajax({
-                        url: "https://getprowriter.onrender.com/addcoupon",
+                        url: "http://localhost:5000/addcoupon",
                         method: "post",
                         contentType: "application/x-www-form-urlencoded",
                         data: {
                             couponName, couponType, couponStatus,couponAmount
                         },
                         success: function (res) {
-                            window.location = "https://getprowriter.onrender.com/coupon"
+                            window.location = "http://localhost:5000/coupon"
                         },
                         error: function (error) {
                             console.log(error)

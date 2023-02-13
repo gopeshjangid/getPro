@@ -101,7 +101,7 @@
                             <%=result.title%>
                           </td>
                           <td>
-                            <%-result.dec-%>
+                            <%-result.dec.substring(0, 50)-%><span>...</span>
                           </td>
                           <td style="width: 150px;"><img style="width: 100%;" src="../image/<%=result.image%>" alt="">
                           </td>
@@ -116,6 +116,8 @@
                               <div class="dropdown-menu">
                                 <a class="dropdown-item" href="/updateworksample/<%=result._id%>"><i
                                     class="bx bx-edit-alt me-1"></i> Edit</a>
+                                <a class="dropdown-item" href="/workSampleReadMore/<%=result._id%>"><i
+                                      class="bx bx-trash me-1"></i> Read More</a>
                                 <a class="dropdown-item" href="../upload-pdf/<%=result.pdf%>"><i
                                     class="bx bx-trash me-1"></i> View Pdf</a>
                                 <a onclick="return confirmDelete()" class="dropdown-item" href="/deleteworksample/<%=result._id%>"><i
