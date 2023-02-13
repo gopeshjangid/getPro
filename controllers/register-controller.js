@@ -29,7 +29,7 @@ module.exports.register = async (req, res) => {
                 status: "active",
                 wallet: 0,
                 IP_Address: response.data.ip_address,
-                datetime: new Date(),
+                datetime: new Date().toLocaleString(),
                 location:
                   response.data.city +
                   " " +

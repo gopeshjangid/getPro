@@ -94,7 +94,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
         const walletData = new Wallet({
           user: UserDetails.email,
           wallet: session.amount_total / 100,
-          datetime: new Date(),
+          datetime: new Date().toLocaleString(),
           pay_type: "Stripe",
           pay_id: req.body.pay_id,
           sub_id: session.subscription,
@@ -121,7 +121,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           type: "subscription",
           email: UserDetails.email,
           totalAmount: session.amount_total / 100,
-          datetime: new Date(),
+          datetime: new Date().toLocaleString(),
           products: obj,
           status: "success",
           sub_status: "Active",

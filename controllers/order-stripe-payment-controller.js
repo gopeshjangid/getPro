@@ -66,7 +66,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
         const walletData = new Wallet({
           user: UserDetails.email,
           wallet: totalAmount,
-          datetime: new Date(),
+          datetime: new Date().toLocaleString(),
           pay_type: "Stripe",
           pay_id: pay_id,
           pay_transaction: "debited",
@@ -97,7 +97,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
           pay_method: "Stripe",
           type: "Ordered",
           email: UserDetails.email,
-          datetime: new Date(),
+          datetime: new Date().toLocaleString(),
           totalAmount: totalAmount,
           CouponName: couponName,
           couponAmount: couponAmount,

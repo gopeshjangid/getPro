@@ -88,7 +88,7 @@ module.exports.PaypalOrderSuccess = async (req, res) => {
       const walletData = new Wallet({
         user: UserDetails.email,
         wallet: totalAmount,
-        datetime: new Date(),
+        datetime: new Date().toLocaleString(),
         pay_id: payId,
         pay_type: "Paypal",
         pay_transaction: "debited",
@@ -119,7 +119,7 @@ module.exports.PaypalOrderSuccess = async (req, res) => {
         pay_method: "Paypal",
         type: "Ordered",
         email: UserDetails.email,
-        datetime: new Date(),
+        datetime: new Date().toLocaleString(),
         totalAmount: totalAmount,
         CouponName: couponName,
         couponAmount: couponAmount,

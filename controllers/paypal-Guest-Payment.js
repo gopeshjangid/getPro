@@ -76,7 +76,7 @@ module.exports.PaypalGuestPaymentSuccess = async (req, res) => {
     const walletData = new Wallet({
       user: req.body.email,
       wallet: amount,
-      datetime: new Date(),
+      datetime: new Date().toLocaleString(),
       pay_type: "Paypal",
       pay_id: pay_id,
       pay_transaction: "debited",

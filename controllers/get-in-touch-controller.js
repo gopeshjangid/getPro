@@ -35,7 +35,7 @@ module.exports.getInTouch = async (req, res) => {
             status: "active",
             wallet: 0,
             IP_Address: response.data.ip_address,
-            datetime: new Date(),
+            datetime: new Date().toLocaleString(),
             location:
               response.data.city +
               " " +
@@ -59,7 +59,7 @@ module.exports.getInTouch = async (req, res) => {
   
           const walletData = new Wallet({
             user: UserDetails.email,
-            datetime: new Date(),
+            datetime: new Date().toLocaleString(),
             pay_type: "Pending",
             pay_id: "Pending",
             pay_transaction: "debited",
@@ -75,7 +75,7 @@ module.exports.getInTouch = async (req, res) => {
             pay_method: "Pending",
             type: "Customize",
             email: UserDetails.email,
-            datetime: new Date(),
+            datetime: new Date().toLocaleString(),
   
             contentType: contentType,
             expertLevel: expertLevel,

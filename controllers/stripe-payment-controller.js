@@ -102,7 +102,7 @@ module.exports.rechargeWallet = async (req, res) => {
           const walletData = new Wallet({
             user: UserDetails.email,
             wallet: wallet + extraCredit.extraCredit,
-            datetime: new Date(),
+            datetime: new Date().toLocaleString(),
             pay_type: "Stripe",
             pay_id: pay_id,
             pay_transaction: "credited",
@@ -119,7 +119,7 @@ module.exports.rechargeWallet = async (req, res) => {
           const walletData = new Wallet({
             user: UserDetails.email,
             wallet: wallet,
-            datetime: new Date(),
+            datetime: new Date().toLocaleString(),
             pay_type: "Stripe",
             pay_id: pay_id,
             pay_transaction: "credited",
@@ -160,7 +160,7 @@ module.exports.stripeGuestPaymentSuccess = async (req, res) => {
         const walletData = new Wallet({
           user: req.body.email,
           wallet: wallet,
-          datetime: new Date(),
+          datetime: new Date().toLocaleString(),
           pay_type: "Stripe",
           pay_id: pay_id,
           pay_transaction: "credited",

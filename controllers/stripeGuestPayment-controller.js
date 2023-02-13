@@ -57,7 +57,7 @@ module.exports.stripeGuestPaymentSuccess = async (req, res) => {
         const walletData = new Wallet({
           user: req.body.email,
           wallet: wallet,
-          datetime: new Date(),
+          datetime: new Date().toLocaleString(),
           pay_type: "Stripe",
           pay_id: pay_id,
           pay_transaction: "debited",

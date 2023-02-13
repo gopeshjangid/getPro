@@ -102,7 +102,7 @@ module.exports.verifySubscriptionPayment = async (req, res) => {
       const walletData = new Wallet({
         user: UserDetails.email,
         wallet: planDetails.item.amount / 100,
-        datetime: new Date(),
+        datetime: new Date().toLocaleString(),
         pay_type: "Razorpay",
         pay_id: razorpay_payment_id,
         sub_id: subscription_id,
@@ -130,7 +130,7 @@ module.exports.verifySubscriptionPayment = async (req, res) => {
         type: "subscription",
         email: UserDetails.email,
         totalAmount: FindProduct.price,
-        datetime: new Date(),
+        datetime: new Date().toLocaleString(),
         products: obj,
         status: "success",
         sub_status: "Active",

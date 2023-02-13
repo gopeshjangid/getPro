@@ -27,7 +27,7 @@ module.exports.useWallet = async (req, res) => {
       const walletData = new Wallet({
         user: UserDetails.email,
         wallet: totalAmount,
-        datetime: new Date(),
+        datetime: new Date().toLocaleString(),
         pay_type: "Wallet",
         pay_transaction: "debited",
         transactionId: WallettransactionId,
@@ -62,7 +62,7 @@ module.exports.useWallet = async (req, res) => {
         pay_method: "Wallet",
         type: "Ordered",
         email: UserDetails.email,
-        datetime: new Date(),
+        datetime: new Date().toLocaleString(),
         totalAmount: totalAmount,
         CouponName: couponName,
         couponAmount: couponAmount,

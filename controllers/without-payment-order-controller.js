@@ -25,7 +25,7 @@ module.exports.withoutPaymentOrder = async (req, res) => {
     const walletData = new Wallet({
       user: UserDetails.email,
       wallet: totalAmount,
-      datetime: new Date(),
+      datetime: new Date().toLocaleString(),
       pay_type: "Pending",
       pay_id: "Pending",
       pay_transaction: "debited",
@@ -56,7 +56,7 @@ module.exports.withoutPaymentOrder = async (req, res) => {
       pay_method: "Pending",
       type: "Ordered",
       email: UserDetails.email,
-      datetime: new Date(),
+      datetime: new Date().toLocaleString(),
       totalAmount: totalAmount,
       CouponName: couponName,
       couponAmount: couponAmount,

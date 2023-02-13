@@ -67,7 +67,7 @@ module.exports.razorpay_is_completed = async (req, res) => {
         const walletData = new Wallet({
           user: UserDetails.email,
           wallet: wallet + extraCredit.extraCredit,
-          datetime: new Date(),
+          datetime: new Date().toLocaleString(),
           pay_type: "RazorPay",
           pay_id: payId,
           pay_transaction: "credited",
@@ -84,7 +84,7 @@ module.exports.razorpay_is_completed = async (req, res) => {
         const walletData = new Wallet({
           user: UserDetails.email,
           wallet: wallet,
-          datetime: new Date(),
+          datetime: new Date().toLocaleString(),
           pay_type: "RazorPay",
           pay_id: payId,
           pay_transaction: "credited",

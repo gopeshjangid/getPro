@@ -31,7 +31,7 @@ module.exports.razorpayGuestPaymentSuccess = async (req, res) => {
       const walletData = new Wallet({
         user: req.body.email,
         wallet: checkPayment.amount / 100,
-        datetime: new Date(),
+        datetime: new Date().toLocaleString(),
         pay_type: "RazorPay",
         pay_id: payId,
         pay_transaction: "debited",

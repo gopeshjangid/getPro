@@ -64,7 +64,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
       const walletData = new Wallet({
         user: UserDetails.email,
         wallet: totalAmount,
-        datetime: new Date(),
+        datetime: new Date().toLocaleString(),
         pay_id: payId,
         pay_type: "Razorpay",
         pay_transaction: "debited",
@@ -95,7 +95,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
         pay_method: "RazorPay",
         type: "Ordered",
         email: UserDetails.email,
-        datetime: new Date(),
+        datetime: new Date().toLocaleString(),
         totalAmount: totalAmount,
         CouponName: couponName,
         couponAmount: couponAmount,
