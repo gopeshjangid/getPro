@@ -43,6 +43,7 @@ module.exports.getInTouch = async (req, res) => {
               " " +
               response.data.country,
             logintype: "login",
+            
           });
           await userData.save();
   
