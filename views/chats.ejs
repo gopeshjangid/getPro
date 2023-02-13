@@ -30,7 +30,6 @@
       width: 63%;
       float: left;
       text-align: left;
-      padding-left: 10px;
       background: #e8ffff;
       border-radius: 12px;
       margin-bottom: 12px;
@@ -211,6 +210,7 @@
           if (response.message.status !== "success") {
 
             sendMessage("link", "null", response.message.totalAmount)
+
           } else {
             alert("your order amount is already paid")
           }
@@ -275,6 +275,8 @@
       for (let i = 0; i < arr.length; i++) {
         if (arr[i].text !== undefined) {
           sendMessage("message", null, arr[i].text)
+        let ab=  document.getElementById("textfield").value=""
+       
         } else {
           // console.log("hiiii")
           extension = arr[i].selectfile.name.substring(arr[i].selectfile.name.lastIndexOf('.') + 1);
@@ -332,7 +334,7 @@
           let div = document.createElement("div");
           div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
           div.setAttribute("id", response._id);
-          let content = `<div style="position: relative"><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+          let content = `<div style="position: relative; padding: 0px 13px"><h6 id="scrollspyHeading1">${response.sender.username}</h6>
           <p>${response.content}</p>
          
           <button id="babluuu" onclick= clickId("${response._id}") type="button" class="bg-transparent border-0 position-absolute top-0 end-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -357,7 +359,8 @@
                                       </div>
                                     </div>
                                   </div>
-                              <div>`;
+                              <div>
+                                <span style="float:right">${response.datetime}</span>`;
           div.innerHTML = content;
           chatBox.appendChild(div);
         }
@@ -366,10 +369,11 @@
           div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
           div.setAttribute("id", response._id);
           let content = `
-              <div>
+              <div style="padding: 0px 13px;">
                 <h6 id="scrollspyHeading1">${response.sender.username}</h6>
                 <img style="width:230px" src="${response.content}" />
-              <div>`;
+              <div>
+                <span style="float:right">${response.datetime}</span>`;
           div.innerHTML = content;
           chatBox.appendChild(div);
         }
@@ -377,7 +381,7 @@
           let div = document.createElement("div");
           div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
           div.setAttribute("id", response._id);
-          let content = `<div><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+          let content = `<div style="padding: 0px 13px;"><h6 id="scrollspyHeading1">${response.sender.username}</h6>
                                       <div>
                                           <img class="pdf-icon"  src="/image/pdf.png"/>
                                           <span style="margin-left:20px">${response.name}</span>
@@ -391,7 +395,8 @@
                                             </a>
                                       </div>
                 
-                              <div>`;
+                              <div>
+                                <span style="float:right">${response.datetime}</span>`;
           div.innerHTML = content;
           chatBox.appendChild(div);
         }
@@ -399,7 +404,7 @@
           let div = document.createElement("div");
           div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
           div.setAttribute("id", response._id);
-          let content = `<div><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+          let content = `<div style="padding: 0px 13px;"><h6 id="scrollspyHeading1">${response.sender.username}</h6>
                                       <div>
                                           <img class="pdf-icon"  src="/image/docx.png"/>
                                           <span style="margin-left:20px">${response.name}</span>
@@ -413,7 +418,8 @@
                                             </a>
                                       </div>
                 
-                              <div>`;
+                              <div>
+                                <span style="float:right">${response.datetime}</span>`;
           div.innerHTML = content;
           chatBox.appendChild(div);
         } else if (response.type === "link") {
@@ -421,7 +427,7 @@
           div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
           div.setAttribute("id", response._id);
           let content = `
-          <div>
+          <div style="padding: 0px 13px;">
               <div class="bg-light text-center p-4">
                   <h3>
                     Payment
@@ -431,7 +437,8 @@
                 <label class="form-control text-light" style="background: rgb(91 163 98)">
                       Pay<b style="float: right">${response.content}</b>
                 </label>
-          </div>`;
+          </div>
+          <span style="float:right">${response.datetime}</span>`;
           div.innerHTML = content;
           chatBox.appendChild(div);
         }
@@ -469,7 +476,7 @@
               let div = document.createElement("div");
               div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
               div.setAttribute("id", response._id);
-              let content = `<div style="position: relative">
+              let content = `<div style="position: relative;padding: 0px 13px;">
                                   <h6 id="scrollspyHeading1">${response.sender.username}</h6>
                                   <p>${response.content}</p>
                                   <button id="babluuu" onclick= clickId("${response._id}") type="button" class="bg-transparent border-0 position-absolute top-0 end-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -494,7 +501,9 @@
                                       </div>
                                     </div>
                                   </div>
-                              <div>`;
+                              <div>
+                             <span style="float:right">${response.datetime}</span>
+                                `;
               div.innerHTML = content;
               chatBox.appendChild(div);
             }
@@ -504,10 +513,12 @@
               div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
               div.setAttribute("id", response._id);
               let content = `
-              <div>
+              <div  style="padding: 0px 13px;">
                 <h6 id="scrollspyHeading1">${response.sender.username}</h6>
                 <img style="width:230px" src="${response.content}" />
-              <div>`;
+              <div>
+                <span style="float:right">${response.datetime}</span>
+                `;
               div.innerHTML = content;
               chatBox.appendChild(div);
             }
@@ -515,7 +526,7 @@
               let div = document.createElement("div");
               div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
               div.setAttribute("id", response._id);
-              let content = `<div><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+              let content = `<div style="padding: 0px 13px;"><h6 id="scrollspyHeading1">${response.sender.username}</h6>
                                       <div>
                                           <img class="pdf-icon"  src="/image/pdf.png"/>
                                           <span style="margin-left:20px">${response.name}</span>
@@ -529,7 +540,8 @@
                                             </a>
                                       </div>
                 
-                              <div>`;
+                              <div>
+                                <span style="float:right">${response.datetime}</span>`;
               div.innerHTML = content;
               chatBox.appendChild(div);
             }
@@ -537,7 +549,7 @@
               let div = document.createElement("div");
               div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
               div.setAttribute("id", response._id);
-              let content = `<div><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+              let content = `<div style="padding: 0px 13px;><h6 id="scrollspyHeading1">${response.sender.username}</h6>
                                       <div>
                                           <img class="pdf-icon"  src="/image/docx.png"/>
                                           <span style="margin-left:20px">${response.name}</span>
@@ -551,7 +563,8 @@
                                             </a>
                                       </div>
                 
-                              <div>`;
+                              <div>
+                                <span style="float:right">${response.datetime}</span>`;
               div.innerHTML = content;
               chatBox.appendChild(div);
             }
@@ -573,7 +586,7 @@
               div.classList.add(response.sender.email === 'getproadmin000@gmail.com' ? 'outgoing' : 'incoming');
               div.setAttribute("id", response._id);
               let content = `
-              <div>
+              <div  style="padding: 0px 13px;>
                 <div class="bg-light text-center p-4">
                   <h3>
                     Payment
@@ -584,7 +597,7 @@
                 Pay<b style="float: right">${response.content}</b>
                 </label>
                 </div>
-                
+                <span style="float:right">${response.datetime}</span>
               `;
               div.innerHTML = content;
               chatBox.appendChild(div);

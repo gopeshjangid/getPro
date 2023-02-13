@@ -29,7 +29,8 @@ const sendMessage = asyncHandler(async (req, res) => {
     content: content,
     chat: chatId,
     type:type,
-    name:name
+    name:name,
+    datetime:new Date().toLocaleString()
   };
 
   try {
