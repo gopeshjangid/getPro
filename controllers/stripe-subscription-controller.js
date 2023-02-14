@@ -42,7 +42,7 @@ module.exports.stripeSubscription = async (req, res) => {
 
     // create price
 
-    
+
     const price = await stripe.prices.create({
       unit_amount: FindProduct.price * 100,
       currency: "USD",
@@ -89,7 +89,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           upperCaseAlphabets: false,
           specialChars: false,
         });
-        
+
 
         const walletData = new Wallet({
           user: UserDetails.email,
@@ -127,6 +127,17 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           sub_status: "Active",
         });
         await orderPlaced.save();
+
+        // UPDATE SUBSCRIPTION
+        const price = await stripe.prices.create({
+          unit_amount: session.amount_total / 100 - 50,
+          currency: "USD",
+          recurring: { interval: "day" },
+        });
+        const subscriptionItem = await stripe.subscriptionItems.update(
+          session.subscription,
+          { metadata: { order_id: price.id } }
+        );
         res.json({ message: "subscriptiion successfull" });
       } else {
         res.json({ message: "payment failed" });
