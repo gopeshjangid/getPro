@@ -205,6 +205,18 @@ adminRouter
 adminRouter
     .route('/addexpertLevelSubmit')
     .post(adminController.checkLogin, adminController.AddExpertLevelSubmit)
+    adminRouter
+    .route('/updateExpertLevel/:id')
+    .get(adminController.checkLogin, adminController.updateExpertLevel)
+adminRouter
+    .route('/updateExpertLevelSubmit/:id')
+    .post(adminController.checkLogin, adminController.updateExpertLevelSubmit)
+adminRouter
+    .route('/updateContentType/:id')
+    .get(adminController.checkLogin, adminController.updateContentType)
+adminRouter
+    .route('/updateContentTypeSubmit/:id')
+    .post(adminController.checkLogin, adminController.updateContentTypeSubmit)
 adminRouter
     .route('/deleteExpertLevel/:id')
     .get(adminController.checkLogin, adminController.DeleteExpertLevelSubmit)

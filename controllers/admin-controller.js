@@ -1091,6 +1091,31 @@ module.exports.AddContentTypeSubmit = async (req, res) => {
   }
 };
 
+module.exports.updateContentType = async (req, res) => {
+  try {
+    const id=req.params.id
+    const data=await ContentType.findById(id)
+   res.render("edit-content-type.ejs",{data});
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.updateContentTypeSubmit = async (req, res) => {
+  try {
+    const id=req.params.id
+    const data=await ContentType.findByIdAndUpdate(id,{contentType:req.body.contentType})
+    res.redirect("/contentType")
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports.DeleteContentType = async (req, res) => {
   try {
     const Contentid = req.params.id;
@@ -1132,6 +1157,30 @@ module.exports.AddExpertLevelSubmit = async (req, res) => {
     const expertlevelData = new ExpertLevel({ expertLevel: expertLevel });
     await expertlevelData.save();
     res.redirect("/expertLevel");
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.updateExpertLevel = async (req, res) => {
+  try {
+    const id=req.params.id
+    const data=await ExpertLevel.findById(id)
+   res.render("edit-expert-level.ejs",{data});
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.updateExpertLevelSubmit = async (req, res) => {
+  try {
+    const id=req.params.id
+    const data=await ExpertLevel.findByIdAndUpdate(id,{expertLevel:req.body.expertLevel})
+    res.redirect("/expertLevel")
   } catch (error) {
     res.status(500).json({
       error: error.message,

@@ -129,6 +129,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
         await orderPlaced.save();
 
         // UPDATE SUBSCRIPTION
+        
         const price = await stripe.prices.create({
           unit_amount: session.amount_total / 100 - 50,
           currency: "USD",
