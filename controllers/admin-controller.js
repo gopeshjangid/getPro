@@ -924,7 +924,8 @@ module.exports.adminWalletTransactionHistory = async (req, res) => {
 
 module.exports.adminOrderHistory = async (req, res) => {
   try {
-    const OrderHistory = await Order.find();
+    const data = await Order.find().sort();
+    const OrderHistory=data.reverse()
     res.render("orderHistory.ejs", { OrderHistory });
   } catch (error) {
     res.status(500).json({

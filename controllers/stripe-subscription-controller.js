@@ -45,7 +45,7 @@ module.exports.stripeSubscription = async (req, res) => {
     
     const price = await stripe.prices.create({
       unit_amount: FindProduct.price * 100,
-      currency: "INR",
+      currency: "USD",
       recurring: { interval: "day" },
 
       product: product.id,
