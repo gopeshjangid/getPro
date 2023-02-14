@@ -42,7 +42,6 @@ module.exports.stripeSubscription = async (req, res) => {
 
     // create price
 
-
     const price = await stripe.prices.create({
       unit_amount: FindProduct.price * 100,
       currency: "USD",
@@ -90,7 +89,6 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           specialChars: false,
         });
 
-
         const walletData = new Wallet({
           user: UserDetails.email,
           wallet: session.amount_total / 100,
@@ -129,16 +127,32 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
         await orderPlaced.save();
 
         // UPDATE SUBSCRIPTION
-        
+        const product = await stripe.products.create({
+          name: "test_product",
+        });
         const price = await stripe.prices.create({
-          unit_amount: session.amount_total / 100 - 50,
+          unit_amount: session.amount_total - (session.amount_total / 100) * 20,
           currency: "USD",
           recurring: { interval: "day" },
+          product: product.id,
         });
-        const subscriptionItem = await stripe.subscriptionItems.update(
-          session.subscription,
-          { metadata: { order_id: price.id } }
+        // const subscriptionItem = await stripe.subscriptionItems.update(
+        //   "sub_1MbJK0SEjSbQ2eSg56pmdvXC",
+        //   { metadata: { order_id: price.id } }
+        // );
+        const subscriptiionDetaiils = await stripe.subscriptions.retrieve(
+          session.subscription
         );
+        console.log("subscriptiondtails", subscriptiionDetaiils);
+        stripe.subscriptions.update(session.subscription, {
+          items: [
+            {
+              id: subscriptiionDetaiils.items.data[0].id,
+              price: price.id,
+            },
+          ],
+          proration_behavior: "none", // we do not want to bill or prorate users on toggle
+        });
         res.json({ message: "subscriptiion successfull" });
       } else {
         res.json({ message: "payment failed" });
