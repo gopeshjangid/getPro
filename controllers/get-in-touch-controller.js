@@ -20,93 +20,93 @@ module.exports.getInTouch = async (req, res) => {
 
     //   CREATE USER
     let existUsername = await User.findOne({ username: username });
-    let existEmail = await User.findOne({ email:email });
-    if(existUsername===null){
-      if(existEmail===null){
+    let existEmail = await User.findOne({ email: email });
+    if (existUsername === null) {
+      if (existEmail === null) {
         axios
-        .get(
-          "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
-        )
-        .then(async (response) => {
-          console.log("thissssss", response.data);
- 
-        //  CREATE USER
+          .get(
+            "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
+          )
+          .then(async (response) => {
+            console.log("thissssss", response.data);
+
+            //  CREATE USER
 
             const userData = new User({
-            username: username,
-            email: email,
-            password: password,
-            status: "active",
-            wallet: 0,
-            IP_Address: response.data.ip_address,
-            datetime: new Date(),
-            location:
-              response.data.city +
-              " " +
-              response.data.region +
-              " " +
-              response.data.country,
-            logintype: "login",
-          
-          });
-          await userData.save();
-  
-          // CREATE WALLET HISTORY
-  
-          const userId = userData._id;
-          var token = jwt.sign({ userId }, "zxcvbnm");
-          const verifyTokenId = jwt.verify(token, "zxcvbnm");
-          const UserDetails = await User.findById(verifyTokenId.userId);
-          let WallettransactionId = otpGenerator.generate(25, {
-            upperCaseAlphabets: false,
-            specialChars: false,
-          });
-  
-          const walletData = new Wallet({
-            user: UserDetails.email,
-            datetime: new Date().toLocaleString(),
-            pay_type: "Pending",
-            pay_id: "Pending",
-            pay_transaction: "debited",
-            transactionId: WallettransactionId,
-          });
-          await walletData.save();
-  
-          // CREATE ORDER
-  
-          const orderPlaced = new Order({
-            transactionId: WallettransactionId,
-            pay_id: "Pending",
-            pay_method: "Pending",
-            type: "Customize",
-            email: UserDetails.email,
-            datetime: new Date().toLocaleString(),
-  
-            contentType: contentType,
-            expertLevel: expertLevel,
-            deadline: deadline,
-            status: "Pending",
-          });
-          await orderPlaced.save();
+              username: username,
+              email: email,
+              password: password,
+              status: "active",
+              wallet: 0,
+              IP_Address: response.data.ip_address,
+              datetime: new Date(),
+              location:
+                response.data.city +
+                " " +
+                response.data.region +
+                " " +
+                response.data.country,
+              logintype: "login",
+
+            });
+            await userData.save();
+
+            // CREATE WALLET HISTORY
+
+            const userId = userData._id;
+            var token = jwt.sign({ userId }, "zxcvbnm");
+            const verifyTokenId = jwt.verify(token, "zxcvbnm");
+            const UserDetails = await User.findById(verifyTokenId.userId);
+            let WallettransactionId = otpGenerator.generate(25, {
+              upperCaseAlphabets: false,
+              specialChars: false,
+            });
+
+            const walletData = new Wallet({
+              user: UserDetails.email,
+              datetime: new Date().toLocaleString(),
+              pay_type: "Pending",
+              pay_id: "Pending",
+              pay_transaction: "debited",
+              transactionId: WallettransactionId,
+            });
+            await walletData.save();
+
+            // CREATE ORDER
+
+            const orderPlaced = new Order({
+              transactionId: WallettransactionId,
+              pay_id: "Pending",
+              pay_method: "Pending",
+              type: "Customize",
+              email: UserDetails.email,
+              datetime: new Date().toLocaleString(),
+
+              contentType: contentType,
+              expertLevel: expertLevel,
+              deadline: deadline,
+              status: "Pending",
+            });
+            await orderPlaced.save();
 
 
-      //  SEND EMAIL FOR ADMIN
+            //  SEND EMAIL FOR ADMIN
 
-      
-      const mailTransporter = nodemailer.createTransport({
-        host: `smtp.gmail.com`,
-        port: 465,
-        secure: true,
-        auth: {
-          user: "nianseotime@gmail.com",
-          pass: "dgugdwwiuzbloypq",
-        },
-      });
-      let mailDetails = {
-        from: "nianseotime@gmail.com",
-        to: "bablusaini90310@gmail.com",
-        subject: "Test mail",
-        html: `
+
+            const mailTransporter = nodemailer.createTransport({
+              host: `smtp.gmail.com`,
+              port: 465,
+              secure: true,
+              auth: {
+                user: "bablusaini90310@gmail.com",
+                pass: "zeczopkmiqbvbffc",
+              },
+            });
+            let mailDetails = {
+              from: "bablusaini90310@gmail.com",
+              to: "bablusaini90310@gmail.com",
+              subject: "Test mail",
+              html: `
 
         <!doctype html>
         <html lang="en">
@@ -144,39 +144,39 @@ module.exports.getInTouch = async (req, res) => {
          </body>
         </html>
         `,
-      };
+            };
 
-      mailTransporter.sendMail(mailDetails, function (err, data) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(otp);
+            mailTransporter.sendMail(mailDetails, function (err, data) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(otp);
 
-          res.status(200).json({
-            message: "mail have sent successfully",
-          });
-        }
-      });
-
-
-
-       //  EMAIL SENT TO USER
+                res.status(200).json({
+                  message: "mail have sent successfully",
+                });
+              }
+            });
 
 
-       const usermailTransporter = nodemailer.createTransport({
-        host: `smtp.gmail.com`,
-        port: 465,
-        secure: true,
-        auth: {
-          user: "nianseotime@gmail.com",
-          pass: "dgugdwwiuzbloypq",
-        },
-      });
-      let usermailDetails = {
-        from: "nianseotime@gmail.com",
-        to: `${email}`,
-        subject: "Test mail",
-        html: `
+
+            //  EMAIL SENT TO USER
+
+
+            const usermailTransporter = nodemailer.createTransport({
+              host: `smtp.gmail.com`,
+              port: 465,
+              secure: true,
+              auth: {
+                user: "bablusaini90310@gmail.com",
+                pass: "zeczopkmiqbvbffc",
+              },
+            });
+            let usermailDetails = {
+              from: "bablusaini90310@gmail.com",
+              to: `${email}`,
+              subject: "Test mail",
+              html: `
 
         <!doctype html>
         <html lang="en">
@@ -200,7 +200,7 @@ module.exports.getInTouch = async (req, res) => {
           <div style="width:450px">
           <label style="background:#03979c;display:block;text-align:center;color:white;padding:80px 0px">
               <h1 style="margin:0;">
-                Thank You
+               Thank You
               </h1>
               <p style="margin:0;font-size:14px;">User Details</p>
           </label>
@@ -212,44 +212,44 @@ module.exports.getInTouch = async (req, res) => {
             <h5>Order details</h5>
                 <p style="margin-top:0"> content type :<b style="margin-left:40px">${contentType}</b></p>
             
-                 <p> expert level :<b style="margin-left:40px">${expertLevel}</b></p>
+                 <p> expert :<b style="margin-left:40px">${expertLevel}</b></p>
           </label>
       </div> 
          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
          </body>
         </html>
         `,
-      };
+            };
 
-      usermailTransporter.sendMail(usermailDetails, function (err, data) {
-        if (err) {
-          console.log(err);
-        } else {
-          console.log(otp);
+            usermailTransporter.sendMail(usermailDetails, function (err, data) {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log(otp);
 
-          res.status(200).json({
-            message: "mail have sent successfully",
+                res.status(200).json({
+                  message: "mail have sent successfully",
+                });
+              }
+            });
+
+            res.status(201).json({
+              message: "successfully login and order",
+              token: token,
+            });
+          }
+          )
+          .catch((error) => {
+            console.log(error);
           });
-        }
-      });
-
-          res.status(201).json({
-            message: "successfully login and order",
-            token: token,
-          });
-        }
-        )
-        .catch((error) => {
-          console.log(error);
-        });
-      }else{
-        res.json({message:"your email is already exist"})
+      } else {
+        res.json({ message: "your email is already exist" })
       }
-      
-    }else{
-      res.json({message:"your useranem is already exist"})
+
+    } else {
+      res.json({ message: "your useranem is already exist" })
     }
-   
+
   } catch (error) {
     res.status(500).json({
       error: error.message,
