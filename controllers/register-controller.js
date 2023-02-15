@@ -149,7 +149,7 @@ module.exports.register = async (req, res) => {
                   <div style="width:450px">
                   <label style="background:#03979c;display:block;text-align:center;color:white;padding:80px 0px">
                       <h1 style="margin:0;">
-                        Registration Successfull
+                        Thank You
                       </h1>
                       <p style="margin:0;font-size:14px;">User Details</p>
                   </label>
