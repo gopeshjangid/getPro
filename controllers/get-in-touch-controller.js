@@ -22,26 +22,26 @@ module.exports.getInTouch = async (req, res) => {
     let existEmail = await User.findOne({ email:email });
     if(existUsername===null){
       if(existEmail===null){
-        axios
-        .get(
-          "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
-        )
-        .then(async (response) => {
-          console.log("thissssss", response.data);
+        // axios
+        // .get(
+        //   "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
+        // )
+        // .then(async (response) => {
+        //  console.log("thissssss", response.data);
           const userData = new User({
             username: username,
             email: email,
             password: password,
             status: "active",
             wallet: 0,
-            IP_Address: response.data.ip_address,
+          //  IP_Address: response.data.ip_address,
             datetime: new Date().toLocaleString(),
-            location:
-              response.data.city +
-              " " +
-              response.data.region +
-              " " +
-              response.data.country,
+            // location:
+            //   response.data.city +
+            //   " " +
+            //   response.data.region +
+            //   " " +
+            //   response.data.country,
             logintype: "login",
             
           });
@@ -87,12 +87,12 @@ module.exports.getInTouch = async (req, res) => {
           res.status(201).json({
             message: "successfully login and order",
             token: token,
-          });
+          // });
         }
         )
-        .catch((error) => {
-          console.log(error);
-        });
+        // .catch((error) => {
+        //   console.log(error);
+        // });
       }else{
         res.json({message:"your email is already exist"})
       }

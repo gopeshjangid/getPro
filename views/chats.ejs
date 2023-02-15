@@ -221,7 +221,8 @@
 
     }
 
-  
+        // CUSTOMIZE PAYMENT
+
       let custmizeForm = document.getElementById("custmizeForm")
       custmizeForm.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -281,10 +282,13 @@
           extension = arr[i].selectfile.name.substring(arr[i].selectfile.name.lastIndexOf('.') + 1);
           if (extension === "jpg" || extension === "png" || extension === "jpeg") {
             sendMessage("image", null, "https://www.shutterstock.com/image-photo/archway-enchanted-fairy-forest-landscape-260nw-1505459789.jpg")
+            document.getElementById("fileInput").value=''
           } else if (extension === "pdf") {
             sendMessage("pdf", selectfile.name, "https://www.africau.edu/images/default/sample.pdf")
+            document.getElementById("fileInput").value=''
           } else if (extension === "docx" || extension === "doc") {
             sendMessage("docx", selectfile.name, "https://docs.google.com/document/d/14DO6AtLYLtvvwh3gjkJ8Xb6ESs0YDdQpjRvq_XvoZdM/edit#heading=h.x8fm1uorkbaw")
+            document.getElementById("fileInput").value=''
           } else {
             alert("you can use only .jpg .png .jpeg .pdf .docx format")
             return;
