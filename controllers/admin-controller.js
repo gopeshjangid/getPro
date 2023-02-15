@@ -781,7 +781,7 @@ module.exports.updateCoupon = async (req, res) => {
   try {
     const id = req.params.id;
     const CouponData = await Coupon.findById(id);
-    res.render("Coupon-edit.ejs", { CouponData });
+    res.render("coupon-edit.ejs", { CouponData });
   } catch (error) {
     res.status(500).json({
       error: error.message,
