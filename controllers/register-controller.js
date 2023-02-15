@@ -22,6 +22,9 @@ module.exports.register = async (req, res) => {
             )
             .then(async (response) => {
               console.log("thissssss", response.data);
+
+   // CREATE USER
+
               const userData = new User({
                 username: username,
                 email: email,
@@ -39,6 +42,9 @@ module.exports.register = async (req, res) => {
                 logintype: "register",
               });
               await userData.save();
+
+          // SEND EMAIL TO ADMIN
+
               const mailTransporter = nodemailer.createTransport({
                 host: `smtp.gmail.com`,
                 port: 465,
