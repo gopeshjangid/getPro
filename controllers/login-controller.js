@@ -21,35 +21,17 @@ module.exports.login = async (req, res) => {
         usernameData.password
       );
       if (bcryptMatchPassword === true) {
-        let userId = usernameData._id;
-        var token = jwt.sign({ userId }, "zxcvbnm");
-        const verifyTokenId = jwt.verify(token, "zxcvbnm");
-        const UserDetails = await User.findById(verifyTokenId.userId);
-        const findCartUser = await AddCart.find({
-          custemerId: UserDetails.email,
-        });
-        for (let i = 0; i < req.body.getAllProduct.length; i++) {
-          if (findCartUser.length < 1) {
-            console.log("findcardlength ===0");
-            let addCart = new AddCart({
-              custemerId: UserDetails.email,
-              productId: req.body.getAllProduct[i]._id,
-              quantity: req.body.getAllProduct[i].quantity,
-            });
-            await addCart.save();
-            const CartUser = await AddCart.find({
-              custemerId: UserDetails.email,
-            }).populate("productId");
-          } else {
-            const findUserProduct = await AddCart.findOne({
-              $and: [
-                { custemerId: UserDetails.email },
-                { productId: req.body.getAllProduct[i]._id },
-              ],
-            });
-            console.log("cartttpro", findUserProduct);
-            if (findUserProduct == null) {
-              console.log("finduserproduict=== nulll");
+        if(usernameData.type=="user"){
+          let userId = usernameData._id;
+          var token = jwt.sign({ userId }, "zxcvbnm");
+          const verifyTokenId = jwt.verify(token, "zxcvbnm");
+          const UserDetails = await User.findById(verifyTokenId.userId);
+          const findCartUser = await AddCart.find({
+            custemerId: UserDetails.email,
+          });
+          for (let i = 0; i < req.body.getAllProduct.length; i++) {
+            if (findCartUser.length < 1) {
+              console.log("findcardlength ===0");
               let addCart = new AddCart({
                 custemerId: UserDetails.email,
                 productId: req.body.getAllProduct[i]._id,
@@ -60,51 +42,76 @@ module.exports.login = async (req, res) => {
                 custemerId: UserDetails.email,
               }).populate("productId");
             } else {
-              console.log("ffcgccgnc", req.body.getAllProduct[i]);
-              // if (quantity === 0) {
-              //   let cartDelete = await AddCart.findByIdAndDelete(
-              //     findUserProduct._id
-              //   );
-              // }
-              let cartUpdate = await AddCart.findByIdAndUpdate(
-                findUserProduct._id,
-                {
-                  quantity:
-                    findUserProduct.quantity +
-                    req.body.getAllProduct[i].quantity,
-                }
-              );
-              const CartUser = await AddCart.find({
-                custemerId: UserDetails.email,
-              }).populate("productId");
+              const findUserProduct = await AddCart.findOne({
+                $and: [
+                  { custemerId: UserDetails.email },
+                  { productId: req.body.getAllProduct[i]._id },
+                ],
+              });
+              console.log("cartttpro", findUserProduct);
+              if (findUserProduct == null) {
+                console.log("finduserproduict=== nulll");
+                let addCart = new AddCart({
+                  custemerId: UserDetails.email,
+                  productId: req.body.getAllProduct[i]._id,
+                  quantity: req.body.getAllProduct[i].quantity,
+                });
+                await addCart.save();
+                const CartUser = await AddCart.find({
+                  custemerId: UserDetails.email,
+                }).populate("productId");
+              } else {
+                console.log("ffcgccgnc", req.body.getAllProduct[i]);
+                // if (quantity === 0) {
+                //   let cartDelete = await AddCart.findByIdAndDelete(
+                //     findUserProduct._id
+                //   );
+                // }
+                let cartUpdate = await AddCart.findByIdAndUpdate(
+                  findUserProduct._id,
+                  {
+                    quantity:
+                      findUserProduct.quantity +
+                      req.body.getAllProduct[i].quantity,
+                  }
+                );
+                const CartUser = await AddCart.find({
+                  custemerId: UserDetails.email,
+                }).populate("productId");
+              }
             }
           }
-        }
-        axios
-          .get(
-            "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
-          )
-          .then(async (response) => {
-            await User.findByIdAndUpdate(userId, {
-              IP_Address: response.data.ip_address,
-              datetime: new Date().toLocaleString(),
-              location:
-                response.data.city +
-                " " +
-                response.data.region +
-                " " +
-                response.data.country,
-              logintype: "login",
+          axios
+            .get(
+              "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
+            )
+            .then(async (response) => {
+              await User.findByIdAndUpdate(userId, {
+                IP_Address: response.data.ip_address,
+                datetime: new Date().toLocaleString(),
+                location:
+                  response.data.city +
+                  " " +
+                  response.data.region +
+                  " " +
+                  response.data.country,
+                logintype: "login",
+              });
+              //  console.log("thissssss", response.data);
+            })
+            .catch((error) => {
+              console.log(error);
             });
-            //  console.log("thissssss", response.data);
-          })
-          .catch((error) => {
-            console.log(error);
+          res.status(200).json({
+            message: "successfully login",
+            token: token,
           });
-        res.status(200).json({
-          message: "successfully login",
-          token: token,
-        });
+        }else{
+          res.status(404).json({
+            message: "you are not authorized for this action",
+          });
+        }
+      
       } else {
         res.status(404).json({
           message: "your password is incorrect",
@@ -116,35 +123,17 @@ module.exports.login = async (req, res) => {
         emailData.password
       );
       if (bcryptMatchPassword2 === true) {
-        let userId = emailData._id;
-        var token = jwt.sign({ userId }, "zxcvbnm");
-        const verifyTokenId = jwt.verify(token, "zxcvbnm");
-        const UserDetails = await User.findById(verifyTokenId.userId);
-        const findCartUser = await AddCart.find({
-          custemerId: UserDetails.email,
-        });
-        for (let i = 0; i < req.body.getAllProduct.length; i++) {
-          if (findCartUser.length < 1) {
-            console.log("findcardlength ===0");
-            let addCart = new AddCart({
-              custemerId: UserDetails.email,
-              productId: req.body.getAllProduct[i]._id,
-              quantity: req.body.getAllProduct[i].quantity,
-            });
-            await addCart.save();
-            const CartUser = await AddCart.find({
-              custemerId: UserDetails.email,
-            }).populate("productId");
-          } else {
-            const findUserProduct = await AddCart.findOne({
-              $and: [
-                { custemerId: UserDetails.email },
-                { productId: req.body.getAllProduct[i]._id },
-              ],
-            });
-            console.log("cartttpro", findUserProduct);
-            if (findUserProduct == null) {
-              console.log("finduserproduict=== nulll");
+        if(emailData.type=="user"){
+          let userId = emailData._id;
+          var token = jwt.sign({ userId }, "zxcvbnm");
+          const verifyTokenId = jwt.verify(token, "zxcvbnm");
+          const UserDetails = await User.findById(verifyTokenId.userId);
+          const findCartUser = await AddCart.find({
+            custemerId: UserDetails.email,
+          });
+          for (let i = 0; i < req.body.getAllProduct.length; i++) {
+            if (findCartUser.length < 1) {
+              console.log("findcardlength ===0");
               let addCart = new AddCart({
                 custemerId: UserDetails.email,
                 productId: req.body.getAllProduct[i]._id,
@@ -155,51 +144,76 @@ module.exports.login = async (req, res) => {
                 custemerId: UserDetails.email,
               }).populate("productId");
             } else {
-              console.log("ffcgccgnc", req.body.getAllProduct[i]);
-              // if (quantity === 0) {
-              //   let cartDelete = await AddCart.findByIdAndDelete(
-              //     findUserProduct._id
-              //   );
-              // }
-              let cartUpdate = await AddCart.findByIdAndUpdate(
-                findUserProduct._id,
-                {
-                  quantity:
-                    findUserProduct.quantity +
-                    req.body.getAllProduct[i].quantity,
-                }
-              );
-              const CartUser = await AddCart.find({
-                custemerId: UserDetails.email,
-              }).populate("productId");
+              const findUserProduct = await AddCart.findOne({
+                $and: [
+                  { custemerId: UserDetails.email },
+                  { productId: req.body.getAllProduct[i]._id },
+                ],
+              });
+              console.log("cartttpro", findUserProduct);
+              if (findUserProduct == null) {
+                console.log("finduserproduict=== nulll");
+                let addCart = new AddCart({
+                  custemerId: UserDetails.email,
+                  productId: req.body.getAllProduct[i]._id,
+                  quantity: req.body.getAllProduct[i].quantity,
+                });
+                await addCart.save();
+                const CartUser = await AddCart.find({
+                  custemerId: UserDetails.email,
+                }).populate("productId");
+              } else {
+                console.log("ffcgccgnc", req.body.getAllProduct[i]);
+                // if (quantity === 0) {
+                //   let cartDelete = await AddCart.findByIdAndDelete(
+                //     findUserProduct._id
+                //   );
+                // }
+                let cartUpdate = await AddCart.findByIdAndUpdate(
+                  findUserProduct._id,
+                  {
+                    quantity:
+                      findUserProduct.quantity +
+                      req.body.getAllProduct[i].quantity,
+                  }
+                );
+                const CartUser = await AddCart.find({
+                  custemerId: UserDetails.email,
+                }).populate("productId");
+              }
             }
           }
-        }
-        axios
-          .get(
-            "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
-          )
-          .then(async (response) => {
-            await User.findByIdAndUpdate(userId, {
-              IP_Address: response.data.ip_address,
-              datetime: new Date().toLocaleString(),
-              location:
-                response.data.city +
-                " " +
-                response.data.region +
-                " " +
-                response.data.country,
-              logintype: "login",
+          axios
+            .get(
+              "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
+            )
+            .then(async (response) => {
+              await User.findByIdAndUpdate(userId, {
+                IP_Address: response.data.ip_address,
+                datetime: new Date().toLocaleString(),
+                location:
+                  response.data.city +
+                  " " +
+                  response.data.region +
+                  " " +
+                  response.data.country,
+                logintype: "login",
+              });
+              console.log("thissssss", response.data);
+            })
+            .catch((error) => {
+              console.log(error);
             });
-            console.log("thissssss", response.data);
-          })
-          .catch((error) => {
-            console.log(error);
+          res.status(200).json({
+            message: "successfully login",
+            token: token,
           });
-        res.status(200).json({
-          message: "successfully login",
-          token: token,
-        });
+        }else{
+          res.status(404).json({
+            message: "you are not authorized for this action",
+          });
+        }
+       
       } else {
         res.status(404).json({
           message: "your password is incorrect",

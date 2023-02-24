@@ -220,6 +220,22 @@ adminRouter
 adminRouter
     .route('/deleteExpertLevel/:id')
     .get(adminController.checkLogin, adminController.DeleteExpertLevelSubmit)
+adminRouter
+    .route('/addPermission')
+    .get(adminController.checkLogin, adminController.AddPermission)
+adminRouter
+    .route('/addPermissionSubmit')
+    .post(adminController.checkLogin, adminController.AddPermissionSubmit)
+adminRouter
+    .route('/role')
+    .get(adminController.checkLogin, adminController.role)
+adminRouter
+    .route('/addRole')
+    .get(adminController.checkLogin, adminController.addRole)
+adminRouter
+    .route('/addRoleSubmit')
+    .post(adminController.checkLogin, adminController.addRoleSubmit)
+
 
 
 

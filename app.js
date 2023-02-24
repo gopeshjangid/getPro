@@ -49,6 +49,7 @@ io.on("connection", (socket) => {
     console.log("dkjhdkjdhkdjh");
     console.log("rooom", room);
   });
+  
 
   socket.on("new message", (data) => {
     console.log("8888", data.chat._id);

@@ -147,6 +147,12 @@
                   ) {
                     labelpassword.style.display = "block";
                     labelpassword.innerHTML = "your password is inccorect";
+                  } else if (
+                    error.responseJSON.data ===
+                    "Internal error occured: you are user so you can't login"
+                  ) {
+                    Labelemail.style.display = "block";
+                    Labelemail.innerHTML = "you are user so you can't login";
                   }
                 },
               });
