@@ -22,23 +22,12 @@ const ContentType = require("../model/contentType");
 const ExpertLevel = require("../model/expertLevel");
 const Permission = require("../model/permission");
 const Role = require("../model/role");
+
 const moment = require("moment")
+const fs = require("fs");
+const json = require("../public/json.json");
 
-module.exports.checkLogin = async (req, res, next) => {
-  if (req.cookies.adminToken === undefined) {
-    res.redirect("/getproadmin");
-  } else {
-    let token = req.cookies.adminToken
-    const verifyTokenId = jwt.verify(token, "zxcvbnm");
-    const UserDetails = await User.findById(verifyTokenId.userId);
-    if (UserDetails.role === "admin") {
-      next();
-    } else {
-      res.send("you are not authrized")
-    }
 
-  }
-};
 
 
 module.exports.checkRole = async (req, res, next) => {
@@ -864,7 +853,7 @@ module.exports.deleteCoupon = async (req, res) => {
 
 module.exports.career = async (req, res) => {
   try {
-    const data = await Career.find().sort;
+    const data = await Career.find().sort();
     const CareerData = data.reverse()
     res.render("career.ejs", { CareerData });
   } catch (error) {
@@ -1238,6 +1227,7 @@ module.exports.DeleteExpertLevelSubmit = async (req, res) => {
 
 module.exports.AddPermission = async (req, res) => {
   try {
+
     res.render("permission-add.ejs")
   } catch (error) {
     res.status(500).json({
@@ -1247,6 +1237,7 @@ module.exports.AddPermission = async (req, res) => {
 };
 module.exports.AddPermissionSubmit = async (req, res) => {
   try {
+   
     const permission = req.body.permission
     const permissionData = new Permission({ permission: permission })
     await permissionData.save()
@@ -1273,8 +1264,7 @@ module.exports.role = async (req, res) => {
 
 module.exports.addRole = async (req, res) => {
   try {
-    const PermissionData = await Permission.find()
-    res.render("role-add.ejs", { PermissionData })
+    res.render("role-add.ejs", { PermissionData:json.pages })
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -1292,6 +1282,57 @@ module.exports.addRoleSubmit = async (req, res) => {
    await RoleData.save()
   res.redirect("/role")
  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+
+module.exports.SubAdmin = async (req, res) => {
+  try {
+   const adminData=await User.find({type:"admin"}).populate("role")
+    console.log(adminData)
+    const filterAdmin=await adminData.filter((item,index)=> item.email !=="getproadmin000@gmail.com")
+    res.render("subAdmin.ejs",{filterAdmin})
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.AddSubAdmin = async (req, res) => {
+  try {
+   const roleData=await Role.find()
+   console.log(roleData)
+    res.render("add-sub-admin.ejs",{roleData})
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.AddSubAdminSubmit = async (req, res) => {
+  try {
+ const username=req.body.username
+ const email=req.body.email
+ const password=req.body.password
+ const role=req.body.role
+ const bycrptPassword = await bcrypt.hash(password, 10);
+
+ const userData = new User({
+  username: username,
+  email: email,
+  password: bycrptPassword,
+  status: "active",
+  role:role,
+  type:"admin",
+});
+await userData.save();
+res.redirect("/subAdmin")
+  } catch (error) {
     res.status(500).json({
       error: error.message,
     });

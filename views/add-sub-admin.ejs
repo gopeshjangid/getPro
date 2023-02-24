@@ -72,12 +72,12 @@
                         <!-- / FAQ Start -->
 
                         <div class="container-xxl flex-grow-1 container-p-y">
-                            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> Add Role
-                            </h4>
+                            <h4 class="fw-bold py-3 mb-4"><span class="text-muted fw-light">Dashboard /</span> <span
+                                    class="text-muted fw-light">Sub Admin /</span>Create Sub Admin</h4>
 
                             <!-- Basic Bootstrap Table -->
                             <div class="card">
-                                <h5 class="card-header">Add Role</h5>
+                                <h5 class="card-header">Create Sub Admin</h5>
 
                                 <div class="col-xxl">
                                     <div class="card mb-4">
@@ -85,34 +85,52 @@
 
                                         </div>
                                         <div class="card-body">
-                                            <form action="/addRoleSubmit" method="post">
+                                            <form action="/addSubAdminSubmit" method="post">
                                                 <div class="row mb-3">
-                                                    <label class="col-sm-2 col-form-label"
-                                                        for="basic-default-name">Role</label>
+                                                    <label class="col-sm-2 col-form-label" for="basic-default-name">
+                                                        Username</label>
                                                     <div class="col-sm-10">
                                                         <input type="text" class="form-control" id="basic-default-name"
-                                                            placeholder="Enter role" name="role" required />
+                                                            placeholder="Enter Username" name="username" required />
                                                     </div>
                                                 </div>
-
-
                                                 <div class="row mb-3">
-                                                    <label class="col-sm-2 col-form-label"
-                                                        for="basic-default-name">Permissions</label>
+                                                    <label class="col-sm-2 col-form-label" for="basic-default-name">
+                                                        Email</label>
                                                     <div class="col-sm-10">
-                                                        <% PermissionData.forEach((result)=>{ %>
-                                                         <input type="checkbox" name="permission" value="<%=result%>">   <span><%=result%></span><br>
-        
-                                                            <% })%>
+                                                        <input type="text" class="form-control" id="basic-default-name"
+                                                            placeholder="Enter Email" name="email" required />
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-2 col-form-label" for="basic-default-name">
+                                                        Password</label>
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="basic-default-name"
+                                                            placeholder="Enter Password" name="password" required />
+                                                    </div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <label class="col-sm-2 col-form-label" for="basic-default-name">
+                                                        role</label>
+                                                    <div class="col-sm-10">
+                                                        <select name="role" id="">
+                                                            <% roleData.forEach((result)=>{ %>
+                                                                <option value="<%=result._id%>">
+                                                                    <%=result.role%>
+                                                                </option>
+                                                                <% })%>
+                                                        </select>
                                                     </div>
                                                 </div>
 
-                                                        <div class="row justify-content-end">
-                                                            <div class="col-sm-10">
-                                                                <button type="submit"
-                                                                    class="btn btn-primary">Add</button>
-                                                            </div>
-                                                        </div>
+
+
+                                                <div class="row justify-content-end">
+                                                    <div class="col-sm-10">
+                                                        <button type="submit" class="btn btn-primary">Add</button>
+                                                    </div>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>

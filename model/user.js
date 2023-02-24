@@ -8,7 +8,10 @@ const user = mongoose.Schema({
   IP_Address: String,
   datetime: String,
   location: String,
-  role:String,
+  role: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'role'
+  },
   logintype: String,
   type:String
 });
