@@ -99,6 +99,7 @@ const getInTouchRouter = require("./router/getInTouchRouter");
 const orderPaypalRouter = require("./router/orderPaypalRouter");
 const paypalGuestPaymentRouter = require("./router/paypalGuestPaymentRouter");
 const paypalsubscriptionRouter = require("./router/paypalsubscriptionRouter");
+const ratingRouter = require("./router/ratingRouter");
 
 const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
@@ -157,6 +158,7 @@ app.use(getInTouchRouter);
 app.use(orderPaypalRouter);
 app.use(paypalGuestPaymentRouter);
 app.use(paypalsubscriptionRouter);
+app.use(ratingRouter)
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);
