@@ -1288,6 +1288,36 @@ module.exports.addRoleSubmit = async (req, res) => {
   }
 };
 
+module.exports.editPermissions = async (req, res) => {
+  try {
+    const roleData=await Role.findById(req.params.id).populate("permissions")
+    console.log(roleData)
+  res.render("role-edit.ejs",{ PermissionData:json.pages,roleData:roleData})
+
+ } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+
+module.exports.editPermissionsSubmit = async (req, res) => {
+  try {
+   console.log("===================",req.body,req.params.id)
+   const id =req.params.id
+   const newPermissions=req.body.permissions
+  const UpdateNewPermission=await Role.findByIdAndUpdate(id,{permissions:newPermissions})
+  res.redirect("/role")
+
+ } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+
 
 module.exports.SubAdmin = async (req, res) => {
   try {

@@ -245,6 +245,11 @@ adminRouter
 adminRouter
     .route('/addSubAdminSubmit')
     .post(authController.checkLogin, adminController.AddSubAdminSubmit)
+adminRouter
+    .route('/editPermissions/:id')
+    .get(authController.checkLogin, adminController.editPermissions)
+    .post(authController.checkLogin, adminController.editPermissionsSubmit)
+
 
 
 
