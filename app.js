@@ -34,8 +34,12 @@ app.use(express.json());
 
 
 const RegisterRouter = require("./router/registerRouter");
+const loginRouter = require("./router/loginRouter");
+const getAllUserRouter = require("./router/getAllUserRouter");
 
 app.use(RegisterRouter)
+app.use(loginRouter)
+app.use(getAllUserRouter)
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);
