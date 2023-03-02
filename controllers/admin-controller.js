@@ -22,6 +22,7 @@ const ContentType = require("../model/contentType");
 const ExpertLevel = require("../model/expertLevel");
 const Permission = require("../model/permission");
 const Role = require("../model/role");
+const Rating = require("../model/rating");
 
 const moment = require("moment")
 const fs = require("fs");
@@ -84,7 +85,7 @@ module.exports.adminLoginSubmit = async (req, res) => {
       );
       console.log(bcryptMatchPassword);
       if (bcryptMatchPassword === true) {
-        if(adminData.type=="admin"){
+        if (adminData.type == "admin") {
           let userId = adminData._id;
           var token = jwt.sign({ userId }, "zxcvbnm");
           //console.log("token")
@@ -93,10 +94,10 @@ module.exports.adminLoginSubmit = async (req, res) => {
             message: "successfully login",
             token: token,
           });
-        }else{
+        } else {
           httpMsgs.send500(req, res, "you are user so you can't login");
         }
-      
+
       } else {
         httpMsgs.send500(req, res, "your password is inccorect");
       }
@@ -1237,7 +1238,7 @@ module.exports.AddPermission = async (req, res) => {
 };
 module.exports.AddPermissionSubmit = async (req, res) => {
   try {
-   
+
     const permission = req.body.permission
     const permissionData = new Permission({ permission: permission })
     await permissionData.save()
@@ -1252,9 +1253,9 @@ module.exports.AddPermissionSubmit = async (req, res) => {
 
 module.exports.role = async (req, res) => {
   try {
-    const roleData=await Role.find().populate("permissions")
+    const roleData = await Role.find().populate("permissions")
     console.log(roleData)
-    res.render("role.ejs",{roleData})
+    res.render("role.ejs", { roleData })
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -1264,7 +1265,7 @@ module.exports.role = async (req, res) => {
 
 module.exports.addRole = async (req, res) => {
   try {
-    res.render("role-add.ejs", { PermissionData:json.pages })
+    res.render("role-add.ejs", { PermissionData: json.pages })
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -1278,10 +1279,10 @@ module.exports.addRoleSubmit = async (req, res) => {
     const role = req.body.role
     const permission = req.body.permission
 
-    const RoleData = new Role({ role: role, permissions:permission })
-   await RoleData.save()
-  res.redirect("/role")
- } catch (error) {
+    const RoleData = new Role({ role: role, permissions: permission })
+    await RoleData.save()
+    res.redirect("/role")
+  } catch (error) {
     res.status(500).json({
       error: error.message,
     });
@@ -1290,11 +1291,11 @@ module.exports.addRoleSubmit = async (req, res) => {
 
 module.exports.editPermissions = async (req, res) => {
   try {
-    const roleData=await Role.findById(req.params.id).populate("permissions")
+    const roleData = await Role.findById(req.params.id).populate("permissions")
     console.log(roleData)
-  res.render("role-edit.ejs",{ PermissionData:json.pages,roleData:roleData})
+    res.render("role-edit.ejs", { PermissionData: json.pages, roleData: roleData })
 
- } catch (error) {
+  } catch (error) {
     res.status(500).json({
       error: error.message,
     });
@@ -1304,13 +1305,13 @@ module.exports.editPermissions = async (req, res) => {
 
 module.exports.editPermissionsSubmit = async (req, res) => {
   try {
-   console.log("===================",req.body,req.params.id)
-   const id =req.params.id
-   const newPermissions=req.body.permissions
-  const UpdateNewPermission=await Role.findByIdAndUpdate(id,{permissions:newPermissions})
-  res.redirect("/role")
+    console.log("===================", req.body, req.params.id)
+    const id = req.params.id
+    const newPermissions = req.body.permissions
+    const UpdateNewPermission = await Role.findByIdAndUpdate(id, { permissions: newPermissions })
+    res.redirect("/role")
 
- } catch (error) {
+  } catch (error) {
     res.status(500).json({
       error: error.message,
     });
@@ -1321,10 +1322,10 @@ module.exports.editPermissionsSubmit = async (req, res) => {
 
 module.exports.SubAdmin = async (req, res) => {
   try {
-   const adminData=await User.find({type:"admin"}).populate("role")
+    const adminData = await User.find({ type: "admin" }).populate("role")
     console.log(adminData)
-    const filterAdmin=await adminData.filter((item,index)=> item.email !=="getproadmin000@gmail.com")
-    res.render("subAdmin.ejs",{filterAdmin})
+    const filterAdmin = await adminData.filter((item, index) => item.email !== "getproadmin000@gmail.com")
+    res.render("subAdmin.ejs", { filterAdmin })
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -1334,9 +1335,9 @@ module.exports.SubAdmin = async (req, res) => {
 
 module.exports.AddSubAdmin = async (req, res) => {
   try {
-   const roleData=await Role.find()
-   console.log(roleData)
-    res.render("add-sub-admin.ejs",{roleData})
+    const roleData = await Role.find()
+    console.log(roleData)
+    res.render("add-sub-admin.ejs", { roleData })
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -1346,22 +1347,22 @@ module.exports.AddSubAdmin = async (req, res) => {
 
 module.exports.AddSubAdminSubmit = async (req, res) => {
   try {
- const username=req.body.username
- const email=req.body.email
- const password=req.body.password
- const role=req.body.role
- const bycrptPassword = await bcrypt.hash(password, 10);
+    const username = req.body.username
+    const email = req.body.email
+    const password = req.body.password
+    const role = req.body.role
+    const bycrptPassword = await bcrypt.hash(password, 10);
 
- const userData = new User({
-  username: username,
-  email: email,
-  password: bycrptPassword,
-  status: "active",
-  role:role,
-  type:"admin",
-});
-await userData.save();
-res.redirect("/subAdmin")
+    const userData = new User({
+      username: username,
+      email: email,
+      password: bycrptPassword,
+      status: "active",
+      role: role,
+      type: "admin",
+    });
+    await userData.save();
+    res.redirect("/subAdmin")
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -1369,3 +1370,67 @@ res.redirect("/subAdmin")
   }
 };
 
+
+
+module.exports.reviews = async (req, res) => {
+  try {
+    const data = await Rating.find().sort()
+    const reviewData = data.reverse()
+    console.log(reviewData)
+    res.render("review.ejs", { reviewData })
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.AcceptReviews = async (req, res) => {
+  try {
+    const id = req.params.id
+    const reviewUpdate = await Rating.findByIdAndUpdate(id, { status: "read" })
+    res.redirect("/reviews")
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.reviewDelete = async (req, res) => {
+  try {
+    const id = req.params.id
+    const reviewUpdate = await Rating.findByIdAndDelete(id)
+    res.redirect("/reviews")
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.reviewReadMore = async (req, res) => {
+  try {
+    const id = req.params.id
+    const data = await Rating.findById(id)
+    res.render("reviewReadMore.ejs", { data })
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.pageNotFound = async (req, res) => {
+  try {
+   res.render("page-not-found")
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};

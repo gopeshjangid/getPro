@@ -13,6 +13,11 @@
         "contentType",
         "expertLevel",
         "adminOrderHistory",
-        "adminWalletHistory"
+        "adminWalletHistory",
+        "addPermission",
+        "role",
+        "subAdmin",
+        "reviews"
+
     ]
 }

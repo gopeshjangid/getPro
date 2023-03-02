@@ -9,8 +9,7 @@ const addCart= mongoose.Schema({
         ref: "services"
     },
     quantity:Number
-
-      
+  
 })
 
 module.exports= mongoose.model('addCart',addCart)

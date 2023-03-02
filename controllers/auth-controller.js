@@ -38,7 +38,7 @@ module.exports.checkFaq = async (req, res, next) => {
           }
         }
         if(trueVer===false){
-          res.json({message: "Your are not authorized"});
+         res.redirect("/pageNotFound");
         }
       }
      

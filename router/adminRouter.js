@@ -223,13 +223,13 @@ adminRouter
     .get(authController.checkLogin, adminController.DeleteExpertLevelSubmit)
 adminRouter
     .route('/addPermission')
-    .get(authController.checkLogin, adminController.AddPermission)
+    .get(authController.checkLogin,authController.checkFaq, adminController.AddPermission)
 adminRouter
     .route('/addPermissionSubmit')
     .post(authController.checkLogin, adminController.AddPermissionSubmit)
 adminRouter
     .route('/role')
-    .get(authController.checkLogin, adminController.role)
+    .get(authController.checkLogin,authController.checkFaq, adminController.role)
 adminRouter
     .route('/addRole')
     .get(authController.checkLogin, adminController.addRole)
@@ -238,7 +238,7 @@ adminRouter
     .post(authController.checkLogin, adminController.addRoleSubmit)
 adminRouter
     .route('/subAdmin')
-    .get(authController.checkLogin, adminController.SubAdmin)
+    .get(authController.checkLogin,authController.checkFaq, adminController.SubAdmin)
 adminRouter
     .route('/addSubAdmin')
     .get(authController.checkLogin, adminController.AddSubAdmin)
@@ -249,6 +249,23 @@ adminRouter
     .route('/editPermissions/:id')
     .get(authController.checkLogin, adminController.editPermissions)
     .post(authController.checkLogin, adminController.editPermissionsSubmit)
+adminRouter
+    .route('/reviews')
+    .get(authController.checkLogin,authController.checkFaq, adminController.reviews)
+adminRouter
+    .route('/acceptReview/:id')
+    .get(authController.checkLogin, adminController.AcceptReviews)
+adminRouter
+    .route('/reviewDelete/:id')
+    .get(authController.checkLogin, adminController.reviewDelete)
+adminRouter
+    .route('/reviewReadMore/:id')
+    .get(authController.checkLogin, adminController.reviewReadMore)
+adminRouter
+    .route('/pageNotFound')
+    .get(authController.checkLogin, adminController.pageNotFound)
+
+  
 
 
 
