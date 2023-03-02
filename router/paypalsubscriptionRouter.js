@@ -4,8 +4,8 @@ const PaypalSubscriptionController = require("../controllers/paypal-subscription
 PaypalSubscriptioinRouter.route("/PaypalSubscription/:id").post(
   PaypalSubscriptionController.PaypalSubscription
 );
-// PaypalSubscriptioinRouter.route("/payplesubscriptionsuccess").post(
-//   PaypalSubscriptionController.PaypalPaymentSuccess
-// );
+PaypalSubscriptioinRouter.route("/payplesubscriptionsuccess").post(
+  PaypalSubscriptionController.paypalSubscriptionSuccess
+);
 
 module.exports = PaypalSubscriptioinRouter;

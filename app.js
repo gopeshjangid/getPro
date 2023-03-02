@@ -11,14 +11,9 @@ const server = http.createServer(app);
 //   optionsSuccessStatus: 200,
 // };
 // app.use(cors(corsOptions));
-const io = new require("socket.io")(server, {
-  cors: {
-    origin: "http://localhost:3000",
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
+const io = new require("socket.io")(server);
 app.set("socketIo", io);
+
 var corsOptions = {
   origin: [
     "http://localhost:3000",
@@ -30,26 +25,33 @@ var corsOptions = {
 
 app.use(cors(corsOptions));
 io.on("connection", (socket) => {
+  console.log("Connected: ");
+  const { roomId } = socket.handshake.query;
   console.log("connected to socket.io");
   socket.emit("receive-user", { name: "bablu saini" });
   socket.emit("user", socket.id);
 
-  // socket.on("chat-id", (data) => {
-  //   console.log("skhgsh", 'lkdkjddkjd');
-  // });
-  // var id;
-  // console.log("99999",socket)
-  socket.on("message", (data) => {
-    console.log("socket id >>>>>>>>>", data);
-    // socket.to(roomId).emit("message2", "message two is here 2222");
+  socket.join(roomId);
+  console.log("roomName: ", roomId);
+  socket.on("message", (msg) => {
+    io.to(roomId).emit("message", msg);
   });
 
-  socket.on("room", (room) => {
-    socket.join(room);
-    console.log("dkjhdkjdhkdjh");
-    console.log("rooom", room);
-  });
-  
+  // // socket.on("chat-id", (data) => {
+  // //   console.log("skhgsh", 'lkdkjddkjd');
+  // // });
+  // // var id;
+  // // console.log("99999",socket)
+  // socket.on("message", (data) => {
+  //   console.log("socket id >>>>>>>>>", data);
+  //   // socket.to(roomId).emit("message2", "message two is here 2222");
+  // });
+
+  // socket.on("room", (room) => {
+  //   socket.join(room);
+  //   console.log("dkjhdkjdhkdjh");
+  //   console.log("rooom", room);
+  // });
 
   socket.on("new message", (data) => {
     console.log("8888", data.chat._id);
@@ -158,7 +160,7 @@ app.use(getInTouchRouter);
 app.use(orderPaypalRouter);
 app.use(paypalGuestPaymentRouter);
 app.use(paypalsubscriptionRouter);
-app.use(ratingRouter)
+app.use(ratingRouter);
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);

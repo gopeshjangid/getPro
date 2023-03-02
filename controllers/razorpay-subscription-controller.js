@@ -23,7 +23,7 @@ module.exports.razorpayCreateSubscription = async (req, res) => {
       item: {
         name: ServicesData.title,
         amount: parseInt(ServicesData.price) * 100,
-        currency: "USD",
+        currency: "INR",
         description: ServicesData.dec,
       },
       notes: {
@@ -43,7 +43,7 @@ module.exports.razorpayCreateSubscription = async (req, res) => {
           item: {
             name: "Delivery charges",
             amount: 10 * 100,
-            currency: "USD",
+            currency: "INR",
           },
         },
       ],

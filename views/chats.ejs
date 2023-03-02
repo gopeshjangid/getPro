@@ -153,19 +153,19 @@
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script>
-    
+      var socket  = null;
     const token = localStorage.getItem("token");
     var theChatId
     var userData
     const ENDPOINT = "http://localhost:5000";
-    var socket = io()
-    console.log("socket", socket)
-    socket.on('receive-user', function (data) {
-      console.log(data)
-    })
-    socket.on("new-user-joined", (id) => {
-      console.log("user", id)
-    })
+    
+   
+    // socket.on('receive-user', function (data) {
+    //   console.log(data)
+    // })
+    // socket.on("new-user-joined", (id) => {
+    //   console.log("user", id)
+    // })
     //  var socket, selectedChatCompare;
 
 
@@ -180,16 +180,23 @@
       success: function (res) {
         console.log("***current user****", res.data);
         userData = res.data
-        socket.emit("setup", userData);
-        socket.on("connected", () => console.log('ljjfj'));
-        socket.on("typing", () => console.log('fkjf'));
-        socket.on("stop typing", () => console.log('dk'));
+        // socket.emit("setup", userData);
+        // socket.on("connected", () => console.log('ljjfj'));
+        // socket.on("typing", () => console.log('fkjf'));
+        // socket.on("stop typing", () => console.log('dk'));
+         socket = io("http://localhost:5000", {query: {roomId: userData?._id}})
+        console.log("socket: ", socket);
+        //connectSocket(socket);
       },
       error: function (error) {
         console.log(error);
       },
     });
 
+    function sendSocketMessage(response){
+      console.log("socket: ", socket)
+       socket.emit("message", response);
+    }
 
     console.log(userData);
     const sendPaymentLink = () => {
@@ -331,7 +338,7 @@
       };
 
       $.ajax(settings).done(function (response) {
-        socket.emit("new message", response);
+        sendSocketMessage(response)
         if (response.type === "message") {
           let chatBox = document.querySelector("#chatBox");
           let div = document.createElement("div");
@@ -775,7 +782,11 @@
     }
 
     getChatList();
-    socket.on("message2", (chatId) => {
+
+  function connectSocket(socket){
+
+
+  socket.on("message2", (chatId) => {
       // trClicked({
       //   target: {
       //     id: chatId.chat._id
@@ -894,6 +905,8 @@
       console.log("chatId", chatId);
     })
 
+  }
+  
 
     console.log(localStorage.getItem("token"));
   </script>

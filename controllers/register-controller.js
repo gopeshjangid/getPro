@@ -23,7 +23,7 @@ module.exports.register = async (req, res) => {
             .then(async (response) => {
               console.log("thissssss", response.data);
 
-   // CREATE USER
+              // CREATE USER
 
               const userData = new User({
                 username: username,
@@ -33,8 +33,7 @@ module.exports.register = async (req, res) => {
                 wallet: 0,
                 IP_Address: response.data.ip_address,
                 datetime: new Date().toLocaleString(),
-                role:"user",
-                type:"user",
+                type: "user",
                 location:
                   response.data.city +
                   " " +
@@ -45,7 +44,7 @@ module.exports.register = async (req, res) => {
               });
               await userData.save();
 
-          // SEND EMAIL TO ADMIN
+              // SEND EMAIL TO ADMIN
 
               const mailTransporter = nodemailer.createTransport({
                 host: `smtp.gmail.com`,
@@ -104,15 +103,13 @@ module.exports.register = async (req, res) => {
                 if (err) {
                   console.log(err);
                 } else {
-                 res.status(200).json({
+                  res.status(200).json({
                     message: "mail have sent successfully",
                   });
                 }
               });
 
-
-     //  EMAIL SENT TO USER
-
+              //  EMAIL SENT TO USER
 
               const usermailTransporter = nodemailer.createTransport({
                 host: `smtp.gmail.com`,
@@ -167,19 +164,20 @@ module.exports.register = async (req, res) => {
                 `,
               };
 
-              usermailTransporter.sendMail(usermailDetails, function (err, data) {
-                if (err) {
-                  console.log(err);
-                } else {
-                  console.log(otp);
+              usermailTransporter.sendMail(
+                usermailDetails,
+                function (err, data) {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log(otp);
 
-                  res.status(200).json({
-                    message: "mail have sent successfully",
-                  });
+                    res.status(200).json({
+                      message: "mail have sent successfully",
+                    });
+                  }
                 }
-              });
-
-              
+              );
             })
             .catch((error) => {
               console.log(error);
