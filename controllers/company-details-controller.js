@@ -1,6 +1,6 @@
 const User = require("../model/user");
 const CompanyDetails = require("../model/companyDetails");
-
+const jwt = require("jsonwebtoken");
 
 module.exports.companyDetails = async (req, res) => {
     try {
