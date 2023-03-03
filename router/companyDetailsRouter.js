@@ -5,7 +5,12 @@ const companyDetailsController = require("../controllers/company-details-control
 companyDetailsRouter
     .route('/companyDetails')
     .get(companyDetailsController.fetchCompanyDetails)
-    .post(companyDetailsController.companyDetails)
+    .post(companyDetailsController.InsertCompanyDetails)
+    
+companyDetailsRouter
+.route('/fetchAllompanyDetails')
+.get(companyDetailsController.fetchAllCompanyDetails)
+
    
     
 

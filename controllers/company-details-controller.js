@@ -2,9 +2,10 @@ const User = require("../model/user");
 const CompanyDetails = require("../model/companyDetails");
 const jwt = require("jsonwebtoken");
 
-module.exports.companyDetails = async (req, res) => {
+module.exports.InsertCompanyDetails = async (req, res) => {
     try {
         const token = req.headers.authorization;
+        console.log(req.body)
         if (token && req.body) {
             const verifyTokenId = jwt.verify(token, "zxcvbnm");
             const UserDetails = await User.findById(verifyTokenId.userId);
@@ -52,6 +53,19 @@ module.exports.fetchCompanyDetails = async (req, res) => {
         }
 
 
+    } catch (error) {
+        res.status(500).json({
+            error: error.message,
+        });
+    }
+};
+
+
+
+module.exports.fetchAllCompanyDetails = async (req, res) => {
+    try {
+        const companyDetails = await CompanyDetails.find()
+        res.status(200).json({ message: companyDetails })
     } catch (error) {
         res.status(500).json({
             error: error.message,
