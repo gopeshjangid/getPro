@@ -4,6 +4,9 @@ const companyDetailsController = require("../controllers/company-details-control
 
 companyDetailsRouter
     .route('/companyDetails')
-    .post(companyDetailsController.companyDetails);
+    .get(companyDetailsController.fetchCompanyDetails)
+    .post(companyDetailsController.companyDetails)
+   
+    
 
 module.exports=companyDetailsRouter
