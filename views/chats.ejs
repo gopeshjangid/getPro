@@ -153,12 +153,21 @@
   <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
   <script>
+ 
       var socket  = null;
     const token = localStorage.getItem("token");
     var theChatId
     var userData
     const ENDPOINT = "http://localhost:5000";
     
+  
+
+  //   if(socket){
+  // console.log("socket outside")
+  //     socket.on("message", (msg)=>{
+  //       console.log("Recieved msg", msg)
+  //     })
+  //   }
    
     // socket.on('receive-user', function (data) {
     //   console.log(data)
@@ -178,15 +187,14 @@
         authorization: token,
       },
       success: function (res) {
-        console.log("***current user****", res.data);
+       
         userData = res.data
         // socket.emit("setup", userData);
         // socket.on("connected", () => console.log('ljjfj'));
         // socket.on("typing", () => console.log('fkjf'));
         // socket.on("stop typing", () => console.log('dk'));
-         socket = io("http://localhost:5000", {query: {roomId: userData?._id}})
-        console.log("socket: ", socket);
-        //connectSocket(socket);
+        
+      
       },
       error: function (error) {
         console.log(error);
@@ -311,7 +319,7 @@
 
     const sendMessage = (type, name, content) => {
 
-
+console.log("socket: sendmessage", socket);
       // if (selectfile !== undefined) {
       //   var fd = new FormData()
       //   if (!selectfile.type.match('image.*')) {
@@ -458,7 +466,15 @@
       })
     }
 
+    // if(socket){
 
+    //     socket.on("message", (msg)=>{
+    //     console.log("Recieved msg", msg)
+    //   })
+
+    // }
+
+   
 
 
     const trClicked = async (e) => {
@@ -474,9 +490,23 @@
         },
         success: function (res) {
           const result = res;
-          console.log("***00000000000****", res);
+          
           let chatBox = document.querySelector("#chatBox");
+ socket = io("ws://localhost:5000", {query: {roomId:theChatId },  transports : ['websocket'],})
 
+socket.on('connect', function() {
+        console.log("connected:", socket.connected );
+    });
+
+      connectSocket(socket);
+
+    //  socket.on("message", (msg)=>{
+    //     console.log("Recieved msg", msg)
+    //   })
+//  io.on("connection", ()=>{
+//   console.log("admin connected")
+//  })
+        console.log("socket: ", socket);
           result.forEach(async (response) => {
 
 
@@ -786,7 +816,9 @@
   function connectSocket(socket){
 
 
-  socket.on("message2", (chatId) => {
+  socket.on("message", (chatId) => {
+
+    console.log("Recieved: ", )
       // trClicked({
       //   target: {
       //     id: chatId.chat._id

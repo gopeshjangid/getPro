@@ -27,14 +27,13 @@ app.use(cors(corsOptions));
 io.on("connection", (socket) => {
   console.log("Connected: ");
   const { roomId } = socket.handshake.query;
-  console.log("connected to socket.io");
-  socket.emit("receive-user", { name: "bablu saini" });
-  socket.emit("user", socket.id);
-
   socket.join(roomId);
+  console.log("connected to socket.io");
+  console.log("socket;", socket.id);
   console.log("roomName: ", roomId);
   socket.on("message", (msg) => {
-    io.to(roomId).emit("message", msg);
+    console.log("Recieveed msg: ", msg);
+    socket.broadcast.to(roomId).emit("message", msg);
   });
 
   // // socket.on("chat-id", (data) => {

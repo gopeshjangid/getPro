@@ -8,10 +8,9 @@ module.exports.checkLogin = async (req, res, next) => {
   if (req.cookies.adminToken === undefined) {
     res.redirect("/getproadmin");
   } else {
-    next()
+    next();
   }
 };
-
 
 module.exports.checkFaq = async (req, res, next) => {
   if (req.cookies.adminToken === undefined) {
@@ -19,31 +18,30 @@ module.exports.checkFaq = async (req, res, next) => {
   } else {
     const pagePermissionName = req.originalUrl;
     console.log("pagePermissionName", pagePermissionName);
-    let token = req.cookies.adminToken
-    console.log(token)
+    let token = req.cookies.adminToken;
+
     if (token) {
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
-      const UserDetails = await User.findById(verifyTokenId.userId).populate("role");
-      console.log("=====", UserDetails)
-      if(UserDetails.email=="getproadmin000@gmail.com"){
-       next()
-      }else{
-        let trueVer=false
+      const UserDetails = await User.findById(verifyTokenId.userId).populate(
+        "role"
+      );
+
+      if (UserDetails.email == "getproadmin000@gmail.com") {
+        next();
+      } else {
+        let trueVer = false;
         for (let i = 0; i < UserDetails.role.permissions.length; i++) {
-          const permissionNames = await UserDetails.role.permissions[i]
-          console.log("============================d======", permissionNames)
-          if ("/"+permissionNames === pagePermissionName) {
-            trueVer = true
-            next()
+          const permissionNames = await UserDetails.role.permissions[i];
+          console.log("============================d======", permissionNames);
+          if ("/" + permissionNames === pagePermissionName) {
+            trueVer = true;
+            next();
           }
         }
-        if(trueVer===false){
-         res.redirect("/pageNotFound");
+        if (trueVer === false) {
+          res.redirect("/pageNotFound");
         }
       }
-     
-     
-
     }
   }
 };
@@ -206,7 +204,3 @@ module.exports.checkFaq = async (req, res, next) => {
 //     }
 //   }
 // };
-
-
-
-

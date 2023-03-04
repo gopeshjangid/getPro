@@ -14,9 +14,9 @@ const protect = async (req, res, next) => {
   try {
     if (req.headers.authorization) {
       const token = req.headers.authorization;
-      console.log(token);
+     
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
-      console.log(verifyTokenId);
+    
       const UserDetails = await User.findById(verifyTokenId.userId);
       req.user = UserDetails;
       next();

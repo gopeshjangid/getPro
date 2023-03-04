@@ -177,7 +177,7 @@ module.exports.PaypalSubscription = async (req, res) => {
     // console.log(ServicesData);
 
     // CREATE ACCESS TOKEN
-
+    console.log("first");
     request.post(
       {
         uri: "https://api.sandbox.paypal.com/v1/oauth2/token",
@@ -230,9 +230,13 @@ module.exports.PaypalSubscription = async (req, res) => {
           console.log("error in creating subscriptions activity", e);
         }
 
+
+
+        
         // CREATE BILLING PLAN
       }
     );
+    console.log("third");
   } catch (error) {
     console.log(error);
   }
