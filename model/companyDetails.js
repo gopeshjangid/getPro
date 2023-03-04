@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const companyDetails = mongoose.Schema({
-  username: String,
   email: String,
   companyEmail:String,
   phone:Number,

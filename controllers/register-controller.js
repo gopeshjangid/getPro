@@ -28,7 +28,8 @@ module.exports.register = async (req, res) => {
           status: "active",
           type: "user",
           phoneNumber: phoneNumber,
-          accountType: accountType
+          accountType: accountType,
+          profileStatus:"pending"
         });
         await userData.save();
 

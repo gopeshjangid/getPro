@@ -8,7 +8,7 @@ module.exports.InsertCompanyDetails = async (req, res) => {
         console.log(req.body)
         if (token && req.body) {
             const verifyTokenId = jwt.verify(token, "zxcvbnm");
-            const UserDetails = await User.findById(verifyTokenId.userId);
+            const UserDetails = await User.findById(verifyTokenId.userId)
             const companyName = req.body.companyName
             const phone = req.body.phone
             const companyEmail = req.body.companyEmail
