@@ -201,9 +201,9 @@
       },
     });
 
-    function sendSocketMessage(response){
+  async  function sendSocketMessage(response){
       console.log("socket: ", socket)
-       socket.emit("message", response);
+      await  socket.emit("message", response);
     }
 
     console.log(userData);
@@ -345,8 +345,8 @@ console.log("socket: sendmessage", socket);
         }),
       };
 
-      $.ajax(settings).done(function (response) {
-        sendSocketMessage(response)
+      $.ajax(settings).done(async function (response) {
+      await  sendSocketMessage(response)
         if (response.type === "message") {
           let chatBox = document.querySelector("#chatBox");
           let div = document.createElement("div");
