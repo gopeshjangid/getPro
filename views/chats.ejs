@@ -201,9 +201,9 @@
       },
     });
 
-  async  function sendSocketMessage(response){
+    function sendSocketMessage(response){
       console.log("socket: ", socket)
-      await  socket.emit("message", response);
+        socket.emit("message", response);
     }
 
     console.log(userData);
