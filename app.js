@@ -38,6 +38,7 @@ const loginRouter = require("./router/loginRouter");
 const getAllUserRouter = require("./router/getAllUserRouter");
 const companyDetailsRouter = require("./router/companyDetailsRouter");
 const candidateDetailsRouter = require("./router/candidateDetailsRouter");
+const postjobRouter = require("./router/postjobRouter");
 
 
 app.use(RegisterRouter)
@@ -45,6 +46,7 @@ app.use(loginRouter)
 app.use(getAllUserRouter)
 app.use(companyDetailsRouter)
 app.use(candidateDetailsRouter)
+app.use(postjobRouter)
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);
