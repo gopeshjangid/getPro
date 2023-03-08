@@ -85,3 +85,14 @@ module.exports.getJob = async (req, res) => {
       });
     }
   };
+
+  module.exports.getAllJob = async (req, res) => {
+    try {   
+     const getAllJob=await PostJob.find()
+     res.status(200).json({message:getAllJob})
+    } catch (error) {
+      res.status(500).json({
+        error: error.message,
+      });
+    }
+  };
