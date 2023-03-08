@@ -5,4 +5,5 @@ postJobRouter.route("/postJob").post(postJobController.postJob);
 postJobRouter.route("/getJob").get(postJobController.getJob);
 postJobRouter.route("/getAllJob").get(postJobController.getAllJob);
 
+
 module.exports = postJobRouter;
