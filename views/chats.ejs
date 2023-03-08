@@ -345,8 +345,8 @@ console.log("socket: sendmessage", socket);
         }),
       };
 
-      $.ajax(settings).done(async function (response) {
-      await  sendSocketMessage(response)
+      $.ajax(settings).done( function (response) {
+        sendSocketMessage(response)
         if (response.type === "message") {
           let chatBox = document.querySelector("#chatBox");
           let div = document.createElement("div");
