@@ -28,7 +28,7 @@ io.on("connection", (socket) => {
   console.log("Connected: ");
   const { roomId } = socket.handshake.query;
   socket.join(roomId);
-  console.log("connected to socket.io");
+  console.log("connected to socket.io", socket.handshake.query);
   console.log("socket;", socket.id);
   console.log("roomName: ", roomId);
   socket.on("message", (msg) => {

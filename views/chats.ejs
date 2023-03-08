@@ -492,7 +492,7 @@ console.log("socket: sendmessage", socket);
           const result = res;
           
           let chatBox = document.querySelector("#chatBox");
- socket = io("ws://localhost:5000", {query: {roomId:theChatId },  transports : ['websocket'],})
+ socket = io("ws://81.0.246.73:5000", {query: {roomId:theChatId },  transports : ['websocket'],})
 
 socket.on('connect', function() {
         console.log("connected:", socket.connected );
@@ -813,12 +813,12 @@ socket.on('connect', function() {
 
     getChatList();
 
-  function connectSocket(socket){
+async  function connectSocket(socket){
 
 
-  socket.on("message", (chatId) => {
+ await socket.on("message", (chatId) => {
 
-    console.log("Recieved: ", )
+    console.log("Recieved: ", chatId)
       // trClicked({
       //   target: {
       //     id: chatId.chat._id
