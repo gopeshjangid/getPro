@@ -230,9 +230,6 @@ module.exports.PaypalSubscription = async (req, res) => {
           console.log("error in creating subscriptions activity", e);
         }
 
-
-
-        
         // CREATE BILLING PLAN
       }
     );
