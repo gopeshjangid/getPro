@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Chat = require("../model/chatModel");
 const User = require("../model/user");
 const Admin = require("../model/admin");
-
+const jwt = require("jsonwebtoken");
 const accessChat = asyncHandler(async (req, res) => {
   try {
     var orderId = req.body.orderId;
@@ -175,6 +175,47 @@ const addToGroup = asyncHandler(async (req, res) => {
   }
 });
 
+
+const chatAssign = async (req, res) =>{
+  try {
+   // console.log("reqqqqq",req.body)
+ 
+    const chatId= req.body.theChatId
+    const subAdminId=req.body.subAdminId
+    const ChatData=await Chat.findById(chatId)
+    console.log(ChatData.users[1])
+    let newUsers=[ChatData.users[0],subAdminId]
+    const updateUsers=await Chat.findByIdAndUpdate(chatId,{users:newUsers})
+    res.redirect("/chats")
+ } catch (error) {
+     res.status(500).json({
+         error: error.message
+     })
+ }
+}
+
+
+const checkChatAccess = async (req, res) =>{
+  try {
+    const adminToken=  req.cookies.adminToken
+    const verifyTokenId= jwt.verify(adminToken,"zxcvbnm")
+    console.log("verify",verifyTokenId)
+   const chatId=req.body.theChatId
+    const ChatData=await Chat.findById(chatId)
+   console.log("chatAssignAdmin",ChatData.users[1])
+   if(verifyTokenId.userId===ChatData.users[1]){
+   res.send("right")
+   }else{
+    res.send("wrong")
+   }
+ } catch (error) {
+     res.status(500).json({
+         error: error.message
+     })
+ }
+}
+
+
 module.exports = {
   accessChat,
   fetchChats,
@@ -182,4 +223,6 @@ module.exports = {
   renameGroup,
   removeFromGroup,
   addToGroup,
+  chatAssign,
+  checkChatAccess
 };

@@ -23,6 +23,7 @@ const ExpertLevel = require("../model/expertLevel");
 const Permission = require("../model/permission");
 const Role = require("../model/role");
 const Rating = require("../model/rating");
+const AddCard = require("../model/addCard");
 
 const moment = require("moment")
 const fs = require("fs");
@@ -926,7 +927,20 @@ module.exports.deleteCareer = async (req, res) => {
 
 module.exports.chats = async (req, res) => {
   try {
-    res.render("chats.ejs");
+    const SubAdmin=await User.aggregate([
+      {$match:{type:"admin" ,username :{$nin:["getproadmin"]} }},
+      {$lookup:{
+      
+          from: "roles",
+          localField: "role",
+          foreignField: "_id",
+          as: "roleData"
+        }
+     },
+     {$match:{$and:[{"roleData.permissions":"chats"}]}}
+    ])
+    console.log("ChatPermissionsSUbAdmin",SubAdmin)
+    res.render("chats.ejs",{SubAdmin:SubAdmin});
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -1427,6 +1441,34 @@ module.exports.reviewReadMore = async (req, res) => {
 module.exports.pageNotFound = async (req, res) => {
   try {
    res.render("page-not-found")
+
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+    });
+  }
+};
+
+module.exports.getChatSubAdmin = async (req, res) => {
+  try {
+  //  const getChatSubAdmin=await AddCard.aggregate([
+  //    {$group:{total:}}
+  //  ])
+  //  console.log(getChatSubAdmin)
+  const SubAdmin=await User.aggregate([
+    {$match:{type:"admin" ,username :{$nin:["getproadmin"]} }},
+    {$lookup:{
+    
+        from: "roles",
+        localField: "role",
+        foreignField: "_id",
+        as: "roleData"
+      }
+   },
+   {$match:{$and:[{"roleData.permissions":"chats"}]}}
+  ])
+
+ // console.log(SubAdmin)
 
   } catch (error) {
     res.status(500).json({

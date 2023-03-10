@@ -264,6 +264,9 @@ adminRouter
 adminRouter
     .route('/pageNotFound')
     .get(authController.checkLogin, adminController.pageNotFound)
+adminRouter
+    .route('/getChatSubAdmin')
+    .get(adminController.getChatSubAdmin)
 
   
 

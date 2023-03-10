@@ -7,7 +7,7 @@ const Chat = require("../model/chatModel");
 const allMessages = asyncHandler(async (req, res) => {
   try {
     const messages = await Message.find({ chat: req.params.chatId })
-      .populate("sender", "username email")
+      .populate("sender", "username email type")
       .populate("chat");
     res.json(messages);
   } catch (error) {
@@ -36,7 +36,7 @@ const sendMessage = asyncHandler(async (req, res) => {
   try {
     var message = await Message.create(newMessage);
 
-    message = await message.populate("sender", "username email");
+    message = await message.populate("sender", "username email type");
     message = await message.populate("chat");
     message = await User.populate(message, {
       path: "chat.users",
