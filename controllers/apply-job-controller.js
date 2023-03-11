@@ -1,6 +1,6 @@
 const User = require("../model/user");
 const jwt = require("jsonwebtoken");
-const Postjodfb = require("../model/applyjob");
+const Postjob = require("../model/postJob");
 
 module.exports.applyJob = async (req, res) => {
   try {
@@ -9,6 +9,7 @@ module.exports.applyJob = async (req, res) => {
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
       const UserDetails = await User.findById(verifyTokenId.userId);
       console.log(UserDetails);
+
     } else {
       res.status(200).json({ message: "please send token" });
     }

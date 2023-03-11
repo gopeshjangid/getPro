@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const postjob = mongoose.Schema({
+const mongoose = require("mongoose")
+const Postjob = mongoose.Schema({
   jobtitle: String,
   jobcategory: String,
   jobtype: String,
@@ -25,4 +25,4 @@ const postjob = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("postjob", postjob);
+module.exports = mongoose.model("Postjob", Postjob);
