@@ -102,7 +102,7 @@
           </div>
           <div>
             <textarea name="" id="textfield" class="form-control mt-4 border border-2" rows="3"></textarea>
-            <button onclick="loopsendmsg()" style="background:#0696a1 " class="btn py-1 px-4 mt-3 text-light">
+            <button id="sendButton" onclick="loopsendmsg()" style="background:#0696a1 " class="btn py-1 px-4 mt-3 text-light">
               Send
             </button>
             <a style="background: #0696a1" class="btn py-1 px-4 mt-3 text-light" href="/dashboard">Back</a>
@@ -118,77 +118,79 @@
               data-bs-target="#staticBackdrop1">
               Customize payment
             </button>
-            <% if(adminData.email==="getproadmin000@gmail.com"){ %>
+            <% if(adminData.email==="getproadmin000@gmail.com" ){ %>
               <button style="background: #0696a1;display: none;" class="mt-3 btn text-light" data-bs-toggle="modal"
-              data-bs-target="#staticBackdrop2" id="ChatAssignButton">
-              Chat Asign
-            </button>
-           <% } %>
-         
+                data-bs-target="#staticBackdrop2" id="ChatAssignButton">
+                Chat Asign
+              </button>
+              <% } %>
 
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false"
-              tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Enter Costomize Price</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+                <!-- Modal -->
+                <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false"
+                  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Enter Costomize Price</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form action="" id="custmizeForm" method="post">
+                        <div class="modal-body">
+                          <input type="text" id="customizePrice" class="form-control" required>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
+                            Send
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
-                  <form action="" id="custmizeForm" method="post">
-                    <div class="modal-body">
-                      <input type="text" id="customizePrice" class="form-control" required>
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
-                        Send
-                      </button>
-                    </div>
-                  </form>
                 </div>
-              </div>
-            </div>
 
 
-            <!-- SECONED MODAL -->
+                <!-- SECONED MODAL -->
 
-            <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false"
-              tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
-              <div class="modal-dialog modal-dialog-scrollable ">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="staticBackdropLabel1">Chat Assign</h1>
-                  
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false"
+                  tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-scrollable ">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="staticBackdropLabel1">Chat Assign</h1>
+
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <form action="/chatAssign" id="chatAssignForm" method="post">
+                        <div class="modal-body">
+
+
+                          <select name="chatAssign" id="subAdminId" class="form-control">
+                            <option value="" disabled selected hidden>please select sub admin</option>
+                            <% SubAdmin.forEach((result)=>{ %>
+
+                              <option value="<%=result._id%>">
+                                <%=result.username%>
+                              </option>
+
+                              <% })%>
+                          </select>
+
+
+
+
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          <button type="submit" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
+                            Send
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
-                  <form action="/chatAssign" id="chatAssignForm" method="post">
-                    <div class="modal-body">
-
-                     
-                        <select name="chatAssign" id="subAdminId" class="form-control">
-                          <option value="" disabled selected hidden>please select sub admin</option>
-                          <% SubAdmin.forEach((result)=>{ %>
-                          
-                          <option value="<%=result._id%>"><%=result.username%></option>
-                         
-                          <% })%>
-                        </select>
-                       
-
-                       
-
-                    </div>
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                      <button type="submit" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
-                        Send
-                      </button>
-                    </div>
-                  </form>
                 </div>
-              </div>
-            </div>
 
           </div>
         </div>
@@ -344,6 +346,15 @@
         e.preventDefault()
       }
     })
+
+    var input = document.getElementById("textfield");
+    input.addEventListener("keypress", function (event) {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        document.getElementById("sendButton").click();
+      }
+    });
+
     const loopsendmsg = () => {
       let arr = []
       let text = document.getElementById("textfield").value;
@@ -564,42 +575,42 @@
           console.log(res)
           document.getElementById("chatBox").innerHTML = "";
 
-$.ajax({
-  url: `${ENDPOINT}/message/${e.target.id}`,
-  method: "get",
-  contentType: "application/x-www-form-urlencoded",
-  headers: {
-    authorization: token,
-  },
-  success: function (res) {
-    const result = res;
+          $.ajax({
+            url: `${ENDPOINT}/message/${e.target.id}`,
+            method: "get",
+            contentType: "application/x-www-form-urlencoded",
+            headers: {
+              authorization: token,
+            },
+            success: function (res) {
+              const result = res;
 
-    let chatBox = document.querySelector("#chatBox");
-    socket = io("ws://localhost:5000", { query: { roomId: theChatId }, transports: ['websocket'], })
+              let chatBox = document.querySelector("#chatBox");
+              socket = io("ws://localhost:5000", { query: { roomId: theChatId }, transports: ['websocket'], })
 
-    socket.on('connect', function () {
-      console.log("connected:", socket.connected);
-    });
+              socket.on('connect', function () {
+                console.log("connected:", socket.connected);
+              });
 
-    connectSocket(socket);
+              connectSocket(socket);
 
-    //  socket.on("message", (msg)=>{
-    //     console.log("Recieved msg", msg)
-    //   })
-    //  io.on("connection", ()=>{
-    //   console.log("admin connected")
-    //  })
-    console.log("socket: ", socket);
-    result.forEach(async (response) => {
+              //  socket.on("message", (msg)=>{
+              //     console.log("Recieved msg", msg)
+              //   })
+              //  io.on("connection", ()=>{
+              //   console.log("admin connected")
+              //  })
+              console.log("socket: ", socket);
+              result.forEach(async (response) => {
 
-      console.log("rrrrrrrrr", response)
-      if (response.type === "message") {
-        console.log("message")
-        let chatBox = document.querySelector("#chatBox");
-        let div = document.createElement("div");
-        div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
-        div.setAttribute("id", response._id);
-        let content = `<div style="position: relative;padding: 0px 13px;">
+                console.log("rrrrrrrrr", response)
+                if (response.type === "message") {
+                  console.log("message")
+                  let chatBox = document.querySelector("#chatBox");
+                  let div = document.createElement("div");
+                  div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
+                  div.setAttribute("id", response._id);
+                  let content = `<div style="position: relative;padding: 0px 13px;">
                             <h6 id="scrollspyHeading1">${response.sender.username}</h6>
                             <p>${response.content}</p>
                             <button id="babluuu" onclick= clickId("${response._id}") type="button" class="bg-transparent border-0 position-absolute top-0 end-0" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -627,29 +638,29 @@ $.ajax({
                         <div>
                        <span style="float:right">${response.datetime}</span>
                           `;
-        div.innerHTML = content;
-        chatBox.appendChild(div);
-      }
+                  div.innerHTML = content;
+                  chatBox.appendChild(div);
+                }
 
-      else if (response.type === "image") {
-        let div = document.createElement("div");
-        div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
-        div.setAttribute("id", response._id);
-        let content = `
+                else if (response.type === "image") {
+                  let div = document.createElement("div");
+                  div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
+                  div.setAttribute("id", response._id);
+                  let content = `
         <div  style="padding: 0px 13px;">
           <h6 id="scrollspyHeading1">${response.sender.username}</h6>
           <img style="width:230px" src="${response.content}" />
         <div>
           <span style="float:right">${response.datetime}</span>
           `;
-        div.innerHTML = content;
-        chatBox.appendChild(div);
-      }
-      else if (response.type === "pdf") {
-        let div = document.createElement("div");
-        div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
-        div.setAttribute("id", response._id);
-        let content = `<div style="padding: 0px 13px;"><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+                  div.innerHTML = content;
+                  chatBox.appendChild(div);
+                }
+                else if (response.type === "pdf") {
+                  let div = document.createElement("div");
+                  div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
+                  div.setAttribute("id", response._id);
+                  let content = `<div style="padding: 0px 13px;"><h6 id="scrollspyHeading1">${response.sender.username}</h6>
                                 <div>
                                     <img class="pdf-icon"  src="/image/pdf.png"/>
                                     <span style="margin-left:20px">${response.name}</span>
@@ -665,14 +676,14 @@ $.ajax({
           
                         <div>
                           <span style="float:right">${response.datetime}</span>`;
-        div.innerHTML = content;
-        chatBox.appendChild(div);
-      }
-      else if (response.type === "docx") {
-        let div = document.createElement("div");
-        div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
-        div.setAttribute("id", response._id);
-        let content = `<div style="padding: 0px 13px;><h6 id="scrollspyHeading1">${response.sender.username}</h6>
+                  div.innerHTML = content;
+                  chatBox.appendChild(div);
+                }
+                else if (response.type === "docx") {
+                  let div = document.createElement("div");
+                  div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
+                  div.setAttribute("id", response._id);
+                  let content = `<div style="padding: 0px 13px;><h6 id="scrollspyHeading1">${response.sender.username}</h6>
                                 <div>
                                     <img class="pdf-icon"  src="/image/docx.png"/>
                                     <span style="margin-left:20px">${response.name}</span>
@@ -688,27 +699,27 @@ $.ajax({
           
                         <div>
                           <span style="float:right">${response.datetime}</span>`;
-        div.innerHTML = content;
-        chatBox.appendChild(div);
-      }
-      else if (response.type === "link") {
-        console.log("link")
-        //         var settings = {
-        //               "url": await `ENDPOINT/getOrderDetailsInChat/${theChatId}`,
-        //               "method": "get",
-        //               "headers": {
-        //                 "Content-Type": "application/json"
-        //               },
-        //             };
-        //             console.log(settings)
-        //            $.ajax(settings).done( function (result) {
-        // console.log("amount status",result)
-        // if(result.message.status !=="success"){
-        //    console.log("pendding")
-        let div = document.createElement("div");
-        div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
-        div.setAttribute("id", response._id);
-        let content = `
+                  div.innerHTML = content;
+                  chatBox.appendChild(div);
+                }
+                else if (response.type === "link") {
+                  console.log("link")
+                  //         var settings = {
+                  //               "url": await `ENDPOINT/getOrderDetailsInChat/${theChatId}`,
+                  //               "method": "get",
+                  //               "headers": {
+                  //                 "Content-Type": "application/json"
+                  //               },
+                  //             };
+                  //             console.log(settings)
+                  //            $.ajax(settings).done( function (result) {
+                  // console.log("amount status",result)
+                  // if(result.message.status !=="success"){
+                  //    console.log("pendding")
+                  let div = document.createElement("div");
+                  div.classList.add(response.sender.type === 'admin' ? 'outgoing' : 'incoming');
+                  div.setAttribute("id", response._id);
+                  let content = `
         <div">
         <div class="bg-light text-center p-4">
             <h3>
@@ -722,69 +733,70 @@ $.ajax({
     </div>
     <span style="float:right">${response.datetime}</span>;
         `;
-        div.innerHTML = content;
-        chatBox.appendChild(div);
-        //  }
-        //else{
-        //   console.log("success")
-        //     let div = document.createElement("div");
-        //           div.classList.add(response.sender.type==='admin' ? 'outgoing' : 'incoming');
-        //           div.setAttribute("id", response._id);
-        //           let content = `
-        //           <div>
-        //             <div class="bg-light text-center p-4">
-        //               <h3>
-        //                 Payment
-        //                 </h3>
-        //                 <p> Payment Successfull</p>
-        //               </div>
-        //               <label class="form-control text-light text-center" style="background:green">
-        //            Payment Successfull
-        //             </label>
-        //             </div>
+                  div.innerHTML = content;
+                  chatBox.appendChild(div);
+                  //  }
+                  //else{
+                  //   console.log("success")
+                  //     let div = document.createElement("div");
+                  //           div.classList.add(response.sender.type==='admin' ? 'outgoing' : 'incoming');
+                  //           div.setAttribute("id", response._id);
+                  //           let content = `
+                  //           <div>
+                  //             <div class="bg-light text-center p-4">
+                  //               <h3>
+                  //                 Payment
+                  //                 </h3>
+                  //                 <p> Payment Successfull</p>
+                  //               </div>
+                  //               <label class="form-control text-light text-center" style="background:green">
+                  //            Payment Successfull
+                  //             </label>
+                  //             </div>
 
-        //           `;
-        //           div.innerHTML = content;
-        //           chatBox.appendChild(div);
+                  //           `;
+                  //           div.innerHTML = content;
+                  //           chatBox.appendChild(div);
 
-        // }
-
-
-
-      }
-
-    });
-    socket.emit("room", res[0].chat._id);
-    const chat = res[0].chat.chatName;
-    console.log(chat);
+                  // }
 
 
-    var elements = document.querySelectorAll(".addClass");
-    for (var i = 0; i < elements.length; i++) {
-      elements[i].style.backgroundColor = "#ececec";
-    }
-    console.log("djhgdjhgdjdgjhg", e.target.id);
-    const item = document.getElementById(e.target.id).style.backgroundColor = "#eceece"
-    document.getElementById("ChatAssignButton").style.display="block"
-  },
-  error: function (error) {
-    console.log(error);
-  },
-});
+
+                }
+
+              });
+              socket.emit("room", res[0].chat._id);
+              const chat = res[0].chat.chatName;
+              console.log(chat);
+
+
+              var elements = document.querySelectorAll(".addClass");
+              for (var i = 0; i < elements.length; i++) {
+                elements[i].style.backgroundColor = "#ececec";
+              }
+              console.log("djhgdjhgdjdgjhg", e.target.id);
+              const item = document.getElementById(e.target.id).style.backgroundColor = "#eceece"
+              document.getElementById("ChatAssignButton").style.display = "block"
+            },
+            error: function (error) {
+              console.log(error);
+            },
+          });
         },
         error: function (error) {
 
           console.log(error)
           if (error.responseJSON.data ===
             "Internal error occured: you can't start chat because this chat is already assigned") {
-              alert("you can't start chat because this chat is already assigned")
-              document.getElementById("ChatAssignButton").style.display="none"
+            alert("you can't start chat because this chat is already assigned")
+            document.getElementById("ChatAssignButton").style.display = "none"
+            theChatId = ''
 
           }
         }
       })
 
-     
+
     };
 
 
