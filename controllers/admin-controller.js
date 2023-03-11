@@ -927,6 +927,11 @@ module.exports.deleteCareer = async (req, res) => {
 
 module.exports.chats = async (req, res) => {
   try {
+    const adminToken=  req.cookies.adminToken
+    const verifyTokenId= jwt.verify(adminToken,"zxcvbnm")
+    console.log("verify",verifyTokenId)
+    const adminData=await User.findById(verifyTokenId.userId)
+    console.log("admin------",adminData)
     const SubAdmin=await User.aggregate([
       {$match:{type:"admin" ,username :{$nin:["getproadmin"]} }},
       {$lookup:{
@@ -940,7 +945,7 @@ module.exports.chats = async (req, res) => {
      {$match:{$and:[{"roleData.permissions":"chats"}]}}
     ])
     console.log("ChatPermissionsSUbAdmin",SubAdmin)
-    res.render("chats.ejs",{SubAdmin:SubAdmin});
+    res.render("chats.ejs",{SubAdmin:SubAdmin,adminData:adminData});
   } catch (error) {
     res.status(500).json({
       error: error.message,

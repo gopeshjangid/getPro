@@ -3,6 +3,7 @@ const Chat = require("../model/chatModel");
 const User = require("../model/user");
 const Admin = require("../model/admin");
 const jwt = require("jsonwebtoken");
+const httpMsgs = require("http-msgs");
 const accessChat = asyncHandler(async (req, res) => {
   try {
     var orderId = req.body.orderId;
@@ -11,10 +12,6 @@ const accessChat = asyncHandler(async (req, res) => {
       var isChat = await Chat.find({
         isGroupChat: false,
         orderId: orderId,
-        $and: [
-          { users: { $elemMatch: { $eq: req.user._id } } },
-          { users: { $elemMatch: { $eq: "63ddf9c0ea629f9c47462af6"} } },
-        ],
       })
         .populate("users", "-password")
         .populate("latestMessage")
@@ -178,7 +175,7 @@ const addToGroup = asyncHandler(async (req, res) => {
 
 const chatAssign = async (req, res) =>{
   try {
-   // console.log("reqqqqq",req.body)
+   console.log("reqqqqq",req.body)
  
     const chatId= req.body.theChatId
     const subAdminId=req.body.subAdminId
@@ -206,7 +203,7 @@ const checkChatAccess = async (req, res) =>{
    if(verifyTokenId.userId===ChatData.users[1]){
    res.send("right")
    }else{
-    res.send("wrong")
+    httpMsgs.send500(req, res, "you can't start chat because this chat is already assigned");
    }
  } catch (error) {
      res.status(500).json({
