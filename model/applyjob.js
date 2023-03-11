@@ -5,7 +5,7 @@ const applyJob = mongoose.Schema({
   },
   jobId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "postjob",
+    ref: "Postjob",
   },
 });
 
