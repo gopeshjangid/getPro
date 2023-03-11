@@ -47,7 +47,8 @@ const createProduct = async (token) => {
   });
 };
 
-const createPlan = async (token, product_id) => {
+const createPlan = async (token, product_id, amount) => {
+  console.log(product_id);
   return new Promise((resolve, reject) => {
     axios
       .post(
@@ -64,7 +65,7 @@ const createPlan = async (token, product_id) => {
               sequence: 1,
               total_cycles: 2,
               pricing_scheme: {
-                fixed_price: { value: "3", currency_code: "USD" },
+                fixed_price: { value: `${amount}`, currency_code: "USD" },
               },
             },
             {
@@ -88,11 +89,10 @@ const createPlan = async (token, product_id) => {
           ],
           payment_preferences: {
             auto_bill_outstanding: true,
-            setup_fee: { value: "10", currency_code: "USD" },
+
             setup_fee_failure_action: "CONTINUE",
             payment_failure_threshold: 3,
           },
-          taxes: { percentage: "10", inclusive: false },
         },
         {
           headers: {
@@ -118,7 +118,7 @@ const createSubscription = async (token, plan_id) => {
         "https://api-m.sandbox.paypal.com/v1/billing/subscriptions",
         {
           plan_id: plan_id,
-          shipping_amount: { currency_code: "USD", value: "10.00" },
+
           subscriber: {
             name: { given_name: "John", surname: "Doe" },
             email_address: "customer@example.com",
@@ -168,13 +168,14 @@ const createSubscription = async (token, plan_id) => {
 
 module.exports.PaypalSubscription = async (req, res) => {
   try {
-    // const productId = req.params.id;
+    const productId = req.params.id;
+
     // const token = req.headers.authorization;
     // const verifyTokenId = jwt.verify(token, "zxcvbnm");
     // const UserDetails = await User.findById(verifyTokenId.userId);
     // console.log("token", UserDetails);
-    // const ServicesData = await Services.findById(productId);
-    // console.log(ServicesData);
+    const ServicesData = await Services.findById(productId);
+    console.log(ServicesData);
 
     // CREATE ACCESS TOKEN
     console.log("first");
@@ -203,7 +204,8 @@ module.exports.PaypalSubscription = async (req, res) => {
           console.log("productttt", product.data);
           const plan = await createPlan(
             jsonParse.access_token,
-            product.data.id
+            product.data.id,
+            ServicesData.price
           );
           console.log("plannnn", plan.data);
           // const ActivatePlan = await activatePlan(
@@ -223,6 +225,8 @@ module.exports.PaypalSubscription = async (req, res) => {
               res.status(200).send({
                 url: subscriptions.data.links[i].href,
                 id: subscriptions.data.id,
+                amount: ServicesData.price,
+                productId: productId,
               });
             }
           }
@@ -241,7 +245,7 @@ module.exports.PaypalSubscription = async (req, res) => {
 
 module.exports.paypalSubscriptionSuccess = async (req, res) => {
   try {
-    console.log(req.body.sub_id);
+    console.log(req.body);
     const sub_id = req.body.sub_id;
     // paypal.billingAgreement.get(sub_id, function (error, billingAgreement) {
     //   if (error) {
@@ -251,55 +255,104 @@ module.exports.paypalSubscriptionSuccess = async (req, res) => {
     //     console.log(billingAgreement);
     //   }
     // });
-    return new Promise((resolve, reject) => {
-      request.post(
-        {
-          uri: "https://api-m.sandbox.paypal.com/v1/oauth2/token",
-          auth: {
-            user: process.env.PAYPALCLIENTID,
-            pass: process.env.PAYPALCLIENTSECRET,
-          },
-          headers: {
-            Accept: "application/json",
-            // "Accept-Language": "en_US",
-            "content-type": "application/x-www-form-urlencoded",
-          },
+    // return new Promise((resolve, reject) => {
+    //   request.post(
+    //     {
+    //       uri: "https://api-m.sandbox.paypal.com/v1/oauth2/token",
+    //       auth: {
+    //         user: process.env.PAYPALCLIENTID,
+    //         pass: process.env.PAYPALCLIENTSECRET,
+    //       },
+    //       headers: {
+    //         Accept: "application/json",
+    //         // "Accept-Language": "en_US",
+    //         "content-type": "application/x-www-form-urlencoded",
+    //       },
 
-          form: {
-            grant_type: "client_credentials",
-          },
-        },
-        async function (error, response, body) {
-          try {
-            var jsonParse = JSON.parse(body);
-            console.log(jsonParse.access_token);
-            axios
-              .get(
-                `https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${sub_id}`,
-                {},
-                {
-                  headers: {
-                    Authorization: `Bearer ${jsonParse.access_token}`,
-                    "Content-Type": "application/json",
-                  },
-                }
-              )
-              .then((res) => {
-                resolve(res);
-                console.log("fetchSubscription: ", res);
-              })
-              .catch((e) => {
-                console.log("Error in PaypalSubscriptionSuccess: ", e);
-                reject(e);
-              });
-          } catch (e) {
-            console.log("error in successpaypalsubscription", e);
-          }
+    //       form: {
+    //         grant_type: "client_credentials",
+    //       },
+    //     },
+    //     async function (error, response, body) {
+    //       try {
+    //         var jsonParse = JSON.parse(body);
+    //         console.log(jsonParse.access_token);
+    //         axios
+    //           .get(
+    //             `https://api-m.sandbox.paypal.com/v1/billing/subscriptions/${sub_id}`,
+    //             {},
+    //             {
+    //               headers: {
+    //                 Authorization: `Bearer ${jsonParse.access_token}`,
+    //                 "Content-Type": "application/json",
+    //               },
+    //             }
+    //           )
+    //           .then((res) => {
+    //             resolve(res);
+    //             console.log("fetchSubscription: ", res);
+    //           })
+    //           .catch((e) => {
+    //             console.log("Error in PaypalSubscriptionSuccess: ", e);
+    //             reject(e);
+    //           });
+    //       } catch (e) {
+    //         console.log("error in successpaypalsubscription", e);
+    //       }
 
-          // CREATE BILLING PLAN
-        }
-      );
+    //       // CREATE BILLING PLAN
+    //     }
+    //   );
+    // });
+
+    const token = req.headers.authorization;
+    const verifyTokenId = jwt.verify(token, "zxcvbnm");
+    const UserDetails = await User.findById(verifyTokenId.userId);
+
+    console.log("token", token);
+    //    ORDER PLACED
+
+    let WallettransactionId = await otpGenerator.generate(25, {
+      upperCaseAlphabets: false,
+      specialChars: false,
     });
+    const FindProduct = await Services.findById(req.body.productId);
+
+    const walletData = new Wallet({
+      user: UserDetails.email,
+      wallet: FindProduct.price,
+      datetime: new Date().toLocaleString(),
+      pay_type: "Paypal",
+      pay_id: req.body.sub_id,
+      sub_id: req.body.sub_id,
+      pay_transaction: "debited",
+      transactionId: WallettransactionId,
+    });
+    await walletData.save();
+
+    //  console.log("rrreswwww", FindProduct);
+    let obj = {
+      id: FindProduct.id,
+      p_title: FindProduct.title,
+      p_shortTitle: FindProduct.shortTitle,
+      p_dec: FindProduct.dec,
+      p_price: FindProduct.price,
+    };
+    const orderPlaced = new Order({
+      transactionId: WallettransactionId,
+      sub_id: sub_id,
+      pay_id: sub_id,
+      pay_method: "Paypal",
+      type: "subscription",
+      email: UserDetails.email,
+      totalAmount: FindProduct.price,
+      datetime: new Date().toLocaleString(),
+      products: obj,
+      status: "success",
+      sub_status: "Active",
+    });
+    await orderPlaced.save();
+    res.json({ message: "subscriptiion successfull" });
   } catch (error) {
     res.json({ message: error });
   }
