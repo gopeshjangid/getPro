@@ -119,8 +119,8 @@
               Customize payment
             </button>
             <% if(adminData.email==="getproadmin000@gmail.com"){ %>
-              <button style="background: #0696a1;" class="mt-3 btn text-light" data-bs-toggle="modal"
-              data-bs-target="#staticBackdrop2">
+              <button style="background: #0696a1;display: none;" class="mt-3 btn text-light" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop2" id="ChatAssignButton">
               Chat Asign
             </button>
            <% } %>
@@ -765,6 +765,7 @@ $.ajax({
     }
     console.log("djhgdjhgdjdgjhg", e.target.id);
     const item = document.getElementById(e.target.id).style.backgroundColor = "#eceece"
+    document.getElementById("ChatAssignButton").style.display="block"
   },
   error: function (error) {
     console.log(error);
@@ -777,6 +778,7 @@ $.ajax({
           if (error.responseJSON.data ===
             "Internal error occured: you can't start chat because this chat is already assigned") {
               alert("you can't start chat because this chat is already assigned")
+              document.getElementById("ChatAssignButton").style.display="none"
 
           }
         }
