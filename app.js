@@ -12,9 +12,6 @@ const server = http.createServer(app);
 // };
 app.use(cors());
 
-
-
-
 const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -31,22 +28,21 @@ mongoose.connect(process.env.DATABASE, () => {
 
 app.use(express.json());
 
-
-
 const RegisterRouter = require("./router/registerRouter");
 const loginRouter = require("./router/loginRouter");
 const getAllUserRouter = require("./router/getAllUserRouter");
 const companyDetailsRouter = require("./router/companyDetailsRouter");
 const candidateDetailsRouter = require("./router/candidateDetailsRouter");
 const postjobRouter = require("./router/postjobRouter");
+const applyJobRouter = require("./router/applyJobRouter");
 
-
-app.use(RegisterRouter)
-app.use(loginRouter)
-app.use(getAllUserRouter)
-app.use(companyDetailsRouter)
-app.use(candidateDetailsRouter)
-app.use(postjobRouter)
+app.use(RegisterRouter);
+app.use(loginRouter);
+app.use(getAllUserRouter);
+app.use(companyDetailsRouter);
+app.use(candidateDetailsRouter);
+app.use(postjobRouter);
+app.use(applyJobRouter);
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);
