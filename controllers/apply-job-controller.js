@@ -5,19 +5,22 @@ const Applyjob = require("../model/applyjob");
 
 module.exports.applyJob = async (req, res) => {
   try {
+    console.log(req.body);
     const token = req.headers.authorization;
     if (token) {
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
       const UserDetails = await User.findById(verifyTokenId.userId);
       console.log(UserDetails);
       if (UserDetails.accountType === "candidate") {
-        const applyJob = new Applyjob({ email: UserDetails.email, jobId: req.body.jobId })
-        await applyJob.save()
-        res.status(200).json({ message: "job applyed" })
-      }else{
-        res.status(200).json({message:"you are not candidate"})
+        const applyJob = new Applyjob({
+          email: UserDetails.email,
+          jobId: req.body.jobId,
+        });
+        await applyJob.save();
+        res.status(200).json({ message: "job applyed" });
+      } else {
+        res.status(200).json({ message: "you are not candidate" });
       }
-
     } else {
       res.status(200).json({ message: "please send token" });
     }
@@ -28,8 +31,6 @@ module.exports.applyJob = async (req, res) => {
   }
 };
 
-
-
 module.exports.getApplyJob = async (req, res) => {
   try {
     const token = req.headers.authorization;
@@ -38,12 +39,13 @@ module.exports.getApplyJob = async (req, res) => {
       const UserDetails = await User.findById(verifyTokenId.userId);
       console.log(UserDetails);
       if (UserDetails.accountType === "candidate") {
-       const JobData= await Applyjob.find({email:UserDetails.email}).populate("jobId")
-        res.status(200).json({ message:JobData })
-      }else{
-        res.status(200).json({message:"you are not candidate"})
+        const JobData = await Applyjob.find({
+          email: UserDetails.email,
+        }).populate("jobId");
+        res.status(200).json({ message: JobData });
+      } else {
+        res.status(200).json({ message: "you are not candidate" });
       }
-
     } else {
       res.status(200).json({ message: "please send token" });
     }
