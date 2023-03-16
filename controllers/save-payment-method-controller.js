@@ -28,3 +28,17 @@ module.exports.SavePaymentMethod =async (req, res) => {
         throw new Error(error.message);
     }
 }
+
+module.exports.FetchPaymentMethod =async (req, res) => {
+    try {
+        const token = req.headers.authorization;
+        const verifyTokenId = jwt.verify(token, "zxcvbnm");
+        const UserDetails = await User.findById(verifyTokenId.userId);
+        const PaymentDetails=  await SavePaymentMethod.find({email:UserDetails.email})
+        res.status(200).json({message:PaymentDetails})
+
+    } catch (error) {
+        res.status(400);
+        throw new Error(error.message);
+    }
+}
