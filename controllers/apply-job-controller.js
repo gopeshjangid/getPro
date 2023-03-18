@@ -39,8 +39,8 @@ module.exports.applyJob = async (req, res) => {
           });
           let mailDetails = {
             from: "bablusaini90310@gmail.com",
-            to: "bablusaini90310@gmail.com",
-            subject: "Test mail",
+            to: `${applyJob.jobId.email}`,
+            subject: "Job Applied",
             html: `
 
 <!doctype html>
