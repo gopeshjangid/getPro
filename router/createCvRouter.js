@@ -6,7 +6,7 @@ CreateResumeRouter.route("/createResume").post(
 );
 CreateResumeRouter.route("/findResume").get(CreateResumeController.FindResume);
 
-CreateResumeRouter.route("/findUserResume").get(
+CreateResumeRouter.route("/findUserResume/:id").get(
   CreateResumeController.FindUserResume
 );
 module.exports = CreateResumeRouter;

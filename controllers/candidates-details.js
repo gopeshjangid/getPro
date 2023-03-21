@@ -4,12 +4,12 @@ const jwt = require("jsonwebtoken");
 module.exports.InsertCandidateDetails = async (req, res) => {
   try {
     const token = req.headers.authorization;
-    console.log(req.body);
+    console.log("reqbody", req.body);
     if (token && req.body) {
       const verifyTokenId = jwt.verify(token, "zxcvbnm");
       const UserDetails = await User.findById(verifyTokenId.userId);
-      //  User.findByIdAndUpdate(UserDetails._id,)
 
+      // console.log(UserDetails);
       const websiteUrl = req.body.websiteUrl;
       const qualification = req.body.qualification;
       const language = req.body.language;
@@ -26,8 +26,8 @@ module.exports.InsertCandidateDetails = async (req, res) => {
       const facebook = req.body.facebook;
       const linkedin = req.body.linkedin;
       const twitter = req.body.twitter;
-      if (UserDetails.accoutType === "candidate") {
-        const userData = new User.findByIdAndUpdate(UserDetails._id, {
+      if (UserDetails.accountType === "candidate") {
+        const userData = await User.findByIdAndUpdate(UserDetails._id, {
           websiteUrl: websiteUrl,
           qualification: qualification,
           language: language,

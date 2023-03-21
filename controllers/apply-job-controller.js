@@ -2,6 +2,7 @@ const User = require("../model/user");
 const jwt = require("jsonwebtoken");
 const Postjob = require("../model/postJob");
 const Applyjob = require("../model/applyjob");
+
 const nodemailer = require("nodemailer");
 module.exports.applyJob = async (req, res) => {
   try {
@@ -26,6 +27,11 @@ module.exports.applyJob = async (req, res) => {
           });
           await applyJob.save();
 
+          // FIND JOB DETAILS
+
+          const jobDetails = await Postjob.findById(req.body.jobId);
+          console.log("jobDetails", jobDetails);
+
           //  SEND EMAIL TO EMPLOYER
 
           const mailTransporter = nodemailer.createTransport({
@@ -39,7 +45,7 @@ module.exports.applyJob = async (req, res) => {
           });
           let mailDetails = {
             from: "bablusaini90310@gmail.com",
-            to: `${applyJob.jobId.email}`,
+            to: `${jobDetails.email}`,
             subject: "Job Applied",
             html: `
 
@@ -65,7 +71,7 @@ module.exports.applyJob = async (req, res) => {
 <div style="width:450px">
 <label style="background:#03979c;display:block;text-align:center;color:white;padding:80px 0px">
   <h1 style="margin:0;">
- Job Applied For ${applyJob.jobId.jobtitle}
+ Job Applied For ${jobDetails.jobtitle}
   </h1>
   <p style="margin:0;font-size:14px;">User Details</p>
 </label>
@@ -106,7 +112,7 @@ module.exports.applyJob = async (req, res) => {
           });
           let mailDetails = {
             from: "bablusaini90310@gmail.com",
-            to: "bablusaini90310@gmail.com",
+            to: `${findApplyJob[0].jobId.email}`,
             subject: "Test mail",
             html: `
 

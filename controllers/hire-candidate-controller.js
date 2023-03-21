@@ -1,5 +1,6 @@
 const User = require("../model/user");
 const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
 const Postjob = require("../model/postJob");
 const CompanyDetails = require("../model/companyDetails");
 const HireCandidate = require("../model/hireCandidate");
@@ -15,7 +16,7 @@ module.exports.HireCandidate = async (req, res) => {
       const UserDetails = await User.findById(verifyTokenId.userId);
       //  console.log(UserDetails);
 
- // FIND COMPANY
+      // FIND COMPANY
 
       const findCompany = await CompanyDetails.find({
         email: UserDetails.email,
@@ -35,22 +36,22 @@ module.exports.HireCandidate = async (req, res) => {
         });
         await insertHireCandidate.save();
 
-  //  SEND EMAIL TO CANDIDATE
+        //  SEND EMAIL TO CANDIDATE
 
-  const mailTransporter = nodemailer.createTransport({
-    host: `smtp.gmail.com`,
-    port: 465,
-    secure: true,
-    auth: {
-      user: "bablusaini90310@gmail.com",
-      pass: "zeczopkmiqbvbffc",
-    },
-  });
-  let mailDetails = {
-    from: "bablusaini90310@gmail.com",
-    to: `${candidateDetails.email}`,
-    subject: "Hired",
-    html: `
+        const mailTransporter = nodemailer.createTransport({
+          host: `smtp.gmail.com`,
+          port: 465,
+          secure: true,
+          auth: {
+            user: "bablusaini90310@gmail.com",
+            pass: "zeczopkmiqbvbffc",
+          },
+        });
+        let mailDetails = {
+          from: "bablusaini90310@gmail.com",
+          to: `${candidateDetails.email}`,
+          subject: "Hired",
+          html: `
 
 <!doctype html>
 <html lang="en">
@@ -74,7 +75,7 @@ module.exports.HireCandidate = async (req, res) => {
 <div style="width:450px">
 <label style="background:#03979c;display:block;text-align:center;color:white;padding:80px 0px">
 <h1 style="margin:0;">
-Invitation From ${findCompany.companyName}
+Invitation From ${findCompany[0].companyName}
 </h1>
 <p style="margin:0;font-size:14px;">User Details</p>
 </label>
@@ -86,24 +87,17 @@ Invitation From ${findCompany.companyName}
 </body>
 </html>
 `,
-  };
+        };
 
-  mailTransporter.sendMail(mailDetails, function (err, data) {
-    if (err) {
-      console.log(err);
-    } else {
-      res.status(200).json({
-        message: "mail have sent successfully",
-      });
-    }
-  });
-
-
-        res.status(200).json({ message: "Hire Successfull" });
+        mailTransporter.sendMail(mailDetails, function (err, data) {
+          if (err) {
+            console.log(err);
+          } else {
+            res.status(200).json({ message: "Hire Successfull" });
+          }
+        });
       } else {
-
-      //  SEND EMAIL TO CANDIDATE
-
+        //  SEND EMAIL TO CANDIDATE
 
         const mailTransporter = nodemailer.createTransport({
           host: `smtp.gmail.com`,
@@ -142,7 +136,7 @@ Invitation From ${findCompany.companyName}
       <div style="width:450px">
       <label style="background:#03979c;display:block;text-align:center;color:white;padding:80px 0px">
       <h1 style="margin:0;">
-      Invitation From ${findCompany.companyName}
+      Invitation From ${findCompany[0].companyName}
       </h1>
       <p style="margin:0;font-size:14px;">User Details</p>
       </label>
@@ -155,13 +149,13 @@ Invitation From ${findCompany.companyName}
       </html>
       `,
         };
-      
+
         mailTransporter.sendMail(mailDetails, function (err, data) {
           if (err) {
             console.log(err);
           } else {
             res.status(200).json({
-              message: "mail have sent successfully",
+              message: "Hire Successfull",
             });
           }
         });

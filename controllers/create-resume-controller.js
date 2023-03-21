@@ -54,8 +54,8 @@ module.exports.FindResume = async (req, res) => {
 
 module.exports.FindUserResume = async (req, res) => {
   try {
-    console.log("qwetyuioiuytrew", req.body);
-    const UserDetails = await User.findById(req.body.userId);
+    console.log("qwetyuioiuytrew", req.params.id);
+    const UserDetails = await User.findById(req.params.id);
     console.log("qwertyuiop", UserDetails._id);
     const findCv = await CreateCv.find({ email: UserDetails.email });
     res.status(200).json({ message: findCv });
