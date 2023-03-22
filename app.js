@@ -37,6 +37,7 @@ const postjobRouter = require("./router/postjobRouter");
 const applyJobRouter = require("./router/applyJobRouter");
 const hireCandidateRouter = require("./router/hireCandidateRouter");
 const createCvRouter = require("./router/createCvRouter");
+const CheckLoginRouter = require("./router/checkLoginRouter");
 
 
 app.use(RegisterRouter);
@@ -48,6 +49,40 @@ app.use(postjobRouter);
 app.use(applyJobRouter);
 app.use(hireCandidateRouter);
 app.use(createCvRouter)
+app.use(CheckLoginRouter)
+
+
+
+
+// let n = 5
+// let str = "";
+
+// for (let i = 1; i <= n; i++) {
+ 
+//   for (let j = 1; j <= n-i; j++) {
+//     str += " ";
+//   }
+//   for (let k = 1; k <= i * 2 - 1; k++) {
+//     if(k===1|| k=== i * 2 - 1 || i===n){
+//       str += "*";
+//     }else{
+//       str += " ";
+//     }
+   
+//   }
+//   str += "\n";
+
+// }
+
+
+
+// console.log(str)
+
+
+
+
+
+
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);

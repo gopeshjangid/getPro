@@ -20,12 +20,13 @@ module.exports.login = async (req, res) => {
         usernameData.password
       );
       if (bcryptMatchPassword === true) {
-        if(usernameData.accountType===req.body.accountType){
+        if(usernameData.accountType===req.body.accountType || usernameData.accountType==="admin"){
           let userId = usernameData._id;
           var token = jwt.sign({ userId }, "zxcvbnm");
           res.status(200).json({
             message: "successfully login",
             token: token,
+            loginType:usernameData.accountType
           });
         }else{
           res.status(404).json({
