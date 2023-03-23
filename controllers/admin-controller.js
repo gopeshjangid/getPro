@@ -147,18 +147,23 @@ module.exports.updateUserSubmit = async (req, res) => {
   try {
     const newUser = req.body.username;
     const newEmail = req.body.email;
-    const newPassword = req.body.password;
+    var newPassword = req.body.password;
     console.log(req.body)
-    let password = await bcrypt.hash(req.body.password, 10);
+  
+    
     const id = req.params.id;
     let existUsername = await User.findOne({ username: newUser });
-
+    if(newPassword){
+      newPassword = await bcrypt.hash(req.body.password, 10);
+    }else{
+      newPassword = existUsername.password
+    }
 
     if (existUsername?.id === id) {
       console.log("if")
       await User.findByIdAndUpdate(id, {
         username: newUser,
-        password: password,
+        password: newPassword,
         status:req.body.UserStatus
       });
      res.redirect("/users");
@@ -167,7 +172,7 @@ module.exports.updateUserSubmit = async (req, res) => {
       console.log("else if")
       await User.findByIdAndUpdate(id, {
         username: newUser,
-        password: password,
+        password: newPassword,
         status:req.body.UserStatus
       });
       res.redirect("/users");
