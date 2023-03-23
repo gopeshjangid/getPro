@@ -110,9 +110,9 @@
                                 class="form-control" placeholder="Enter Your Coupon Type"
                                 aria-label="Hi, Do you have a moment to talk Joe?"
                                 aria-describedby="basic-icon-default-message2" id="CouponTypeInput" name="coupontype" required>
-                            <option name="Flat" value="Flat">Flat</option>
-                            <option name="parsentage" value="parsentage">Parsentage</option>
-                            
+                            <option name="Flat"  <%= CouponData.couponType == 'Flat' ? 'selected' : "" %>>Flat</option>
+                            <option name="parsentage" <%= CouponData.couponType == 'parsentage' ? 'selected' : "" %>>Parsentage</option>
+                        
                             </select>
                             </div>
                         </div>
@@ -125,8 +125,8 @@
                                 class="form-control" placeholder="Enter Your Coupon Type"
                                 aria-label="Hi, Do you have a moment to talk Joe?"
                                 aria-describedby="basic-icon-default-message2" id="CouponStatusInput" name="couponStatus" required>
-                            <option>Active</option>
-                            <option>Deactive</option>
+                            <option <%= CouponData.status == 'Active' ? 'selected' : "" %>>Active</option>
+                            <option <%= CouponData.status == 'Deactive' ? 'selected' : "" %>>Deactive</option>
                             
                             </select>
                             </div>
@@ -207,6 +207,7 @@
               let couponType=  $('#CouponTypeInput').val();
               let couponStatus=  $('#CouponStatusInput').val();
               let couponAmount=  $('#couponAmountInput').val();
+              console.log(couponType)
                 $.ajax({
                         url: `http://localhost:5000${formAction}`,
                         method: "post",

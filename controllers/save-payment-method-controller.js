@@ -8,16 +8,15 @@ module.exports.SavePaymentMethod =async (req, res) => {
         const verifyTokenId = jwt.verify(token, "zxcvbnm");
         const UserDetails = await User.findById(verifyTokenId.userId);
         const accountHolder = req.body.accountHolder
-        const accountNumber = req.body.accountNumber
-        const ifsc = req.body.ifsc
+        const cardNumber = req.body.cardNumber
+        const mmyy = req.body.mmyy
         const cvv = req.body.cvv
         const obj = {
             email: UserDetails.email,
             accountHolder: accountHolder,
-            accountNumber: accountNumber,
-            ifsc: ifsc,
+            cardNumber: cardNumber,
+            mmyy: mmyy,
             cvv: cvv
-
         }
         const paymentDetails = new SavePaymentMethod(obj)
         paymentDetails.save()

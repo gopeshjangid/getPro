@@ -2,8 +2,8 @@ const mongoose= require('mongoose')
 const savePaymentMethod = mongoose.Schema({
     email:String,
     accountHolder:String,
-    accountNumber:Number,
-    ifsc:String,
+    cardNumber:Number,
+    mmyy:String,
     cvv:Number
  })
 

@@ -21,7 +21,8 @@ module.exports.login = async (req, res) => {
         usernameData.password
       );
       if (bcryptMatchPassword === true) {
-        if(usernameData.type=="user"){
+        if(usernameData.type==="user"){
+          if(usernameData.status==="active"){
           let userId = usernameData._id;
           var token = jwt.sign({ userId }, "zxcvbnm");
           const verifyTokenId = jwt.verify(token, "zxcvbnm");
@@ -107,6 +108,11 @@ module.exports.login = async (req, res) => {
             token: token,
           });
         }else{
+            res.status(404).json({
+              message: "your account is disabled",
+            });
+          }
+        }else{
           res.status(404).json({
             message: "you are not authorized for this action",
           });
@@ -124,6 +130,7 @@ module.exports.login = async (req, res) => {
       );
       if (bcryptMatchPassword2 === true) {
         if(emailData.type=="user"){
+          if(emailData.status==="active"){
           let userId = emailData._id;
           var token = jwt.sign({ userId }, "zxcvbnm");
           const verifyTokenId = jwt.verify(token, "zxcvbnm");
@@ -208,6 +215,11 @@ module.exports.login = async (req, res) => {
             message: "successfully login",
             token: token,
           });
+        }else{
+          res.status(404).json({
+            message: "your account is disabled",
+          });
+        }
         }else{
           res.status(404).json({
             message: "you are not authorized for this action",

@@ -105,7 +105,10 @@ module.exports.adminLoginSubmit = async (req, res) => {
     } else {
       httpMsgs.send500(req, res, "your account dose not exist");
     }
-  } catch (error) { }
+  } catch (error) {
+    
+   }
+
 };
 
 module.exports.dashboard = (req, res) => {
@@ -145,18 +148,33 @@ module.exports.updateUserSubmit = async (req, res) => {
     const newUser = req.body.username;
     const newEmail = req.body.email;
     const newPassword = req.body.password;
+    console.log(req.body)
     let password = await bcrypt.hash(req.body.password, 10);
     const id = req.params.id;
     let existUsername = await User.findOne({ username: newUser });
-    if (existUsername === null) {
+
+
+    if (existUsername?.id === id) {
+      console.log("if")
       await User.findByIdAndUpdate(id, {
         username: newUser,
         password: password,
+        status:req.body.UserStatus
+      });
+     res.redirect("/users");
+    }
+    else if (existUsername===null) {
+      console.log("else if")
+      await User.findByIdAndUpdate(id, {
+        username: newUser,
+        password: password,
+        status:req.body.UserStatus
       });
       res.redirect("/users");
     } else {
       httpMsgs.send500(req, res, "username is already exist");
     }
+
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -818,14 +836,26 @@ module.exports.updateCoupon = async (req, res) => {
 module.exports.updateCouponSubmit = async (req, res) => {
   try {
     const newcouponNamee = req.body.couponName;
-    const newcouponType = req.body.coupontype;
+    const newcouponType = req.body.couponType;
+   // console.log("kkkk",req.body)
     const newoffAmount = req.body.couponAmount;
     const couponStatus = req.body.couponStatus;
     const id = req.params.id;
     const CouponData = await Coupon.findOne({ couponName: newcouponNamee });
-    if (CouponData == null) {
+    console.log("cccc",CouponData===null)
+    if (CouponData?.id === id) {
+      console.log("if")
       await Coupon.findByIdAndUpdate(id, {
-        couponName: newcouponNamee,
+        couponType: newcouponType,
+        offAmount: newoffAmount,
+        status: couponStatus,
+      });
+      res.redirect("/coupon");
+    }
+    else if (CouponData===null) {
+      console.log("else if")
+      await Coupon.findByIdAndUpdate(id, {
+        couponName:newcouponNamee,
         couponType: newcouponType,
         offAmount: newoffAmount,
         status: couponStatus,

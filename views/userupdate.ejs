@@ -109,21 +109,7 @@
                         </div>
                        
                        
-                        <div class="row mb-3">
-                          <label class="col-sm-2 col-form-label" for="basic-default-message">Email</label>
-                          <div class="col-sm-10">
-                            <input
-                              id="emailInput"
-                              class="form-control"
-                              placeholder="Enter your email"
-                              aria-label="Hi, Do you have a moment to talk Joe?"
-                              aria-describedby="basic-icon-default-message2"
-                              name="email"
-                              value="<%=idUserData.email%>"
-                              required
-                            >
-                          </div>
-                        </div>
+                     
 						
 						<div class="row mb-3">
                           <label class="col-sm-2 col-form-label" for="basic-default-message">Password</label>
@@ -139,7 +125,22 @@
                             required
                           >
                           </div>
-                        </div>
+             </div>
+
+             <div class="row mb-3">
+              <label class="col-sm-2 col-form-label"
+                  for="basic-default-message">Status</label>
+              <div class="col-sm-10">
+                  <select
+                  class="form-control"
+                  aria-label="Hi, Do you have a moment to talk Joe?"
+                  aria-describedby="basic-icon-default-message2" id="UserStatusInput" name="UserStatus" required>
+              <option <%= idUserData.status == 'active' ? 'selected' : "" %>>active</option>
+              <option <%= idUserData.status == 'deactive' ? 'selected' : "" %>>deactive</option>
+              
+              </select>
+              </div>
+          </div>
 						
                         <div class="row justify-content-end">
                           <div class="col-sm-10">
@@ -207,13 +208,14 @@
               e.preventDefault();
               let username=  $('#usernameInput').val();
               let password=  $('#passwordInput').val();
+              let UserStatus=  $('#UserStatusInput').val();
              // let couponType=  $('#emailInput').val();
               $.ajax({
                         url: `http://localhost:5000${formAction}`,
                         method: "post",
                         contentType: "application/x-www-form-urlencoded",
                         data: {
-                            username,password
+                            username,password,UserStatus
                         },
                         success: function (res) {
                             window.location = "http://localhost:5000/users"
