@@ -32,7 +32,8 @@ module.exports.register = async (req, res) => {
                 status: "active",
                 wallet: 0,
                 IP_Address: response.data.ip_address,
-                datetime: new Date().toLocaleString(),
+                registerTime: new Date().toLocaleString(),
+                registerTime: "Not Login",
                 type: "user",
                 location:
                   response.data.city +

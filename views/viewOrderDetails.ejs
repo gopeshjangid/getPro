@@ -105,14 +105,32 @@
                                                             <p class="card-text">
                                                                 <%=OrderData.datetime%>
                                                             </p>
+
+                                                            <% if(OrderData.CouponName){ %>
+                                                                <p class="card-text">
+                                                                    <%=OrderData.CouponName%>
+                                                                </p>
+                                                             <% }  else{ %>
+                                                                <p class="card-text">
+                                                                   null
+                                                                </p>
+                                                              <% } %>
+
+                                                            
+
+                                                            <% if(OrderData.couponAmount){ %>
+                                                                <p class="card-text">
+                                                                    <%= OrderData.couponAmount %>
+                                                                </p>
+                                                             <% }  else{ %>
+                                                                <p class="card-text">
+                                                                   null
+                                                                </p>
+                                                              <% } %>
+                                                          
+                                                          
                                                             <p class="card-text">
-                                                                <%=OrderData.CouponName%>
-                                                            </p>
-                                                            <p class="card-text">
-                                                                <%=OrderData.couponAmount%>
-                                                            </p>
-                                                            <p class="card-text">
-                                                                <%=OrderData.totalAmoumt%>
+                                                                <%=OrderData.totalAmount%>
                                                             </p>
                                                         </div>
                                                         <h5 class="mt-3">Products</h5>

@@ -89,7 +89,7 @@ module.exports.login = async (req, res) => {
             .then(async (response) => {
               await User.findByIdAndUpdate(userId, {
                 IP_Address: response.data.ip_address,
-                datetime: new Date().toLocaleString(),
+                LoginTime: new Date().toLocaleString(),
                 location:
                   response.data.city +
                   " " +
@@ -197,7 +197,7 @@ module.exports.login = async (req, res) => {
             .then(async (response) => {
               await User.findByIdAndUpdate(userId, {
                 IP_Address: response.data.ip_address,
-                datetime: new Date().toLocaleString(),
+                LoginTime: new Date().toLocaleString(),
                 location:
                   response.data.city +
                   " " +

@@ -84,10 +84,11 @@
                         <th>Usermane</th>
                         <th>Email</th>
                         <th>Wallet</th>
-                           <th>IP_address</th>   
-                           <th>Location</th>   
-                           <th>Login/Register Time</th>
-                             <th>Login Type</th>
+                        <th>IP_address</th>
+                        <th>Location</th>
+                        <th>Register Time</th>
+                        <th>login Time</th>
+                        <th>Login Type</th>
                         <th>Status</th>
                         <th>Actions</th>
                       </tr>
@@ -106,16 +107,19 @@
                           <td>
                             <%=result.wallet%>
                           </td>
-                           <td>
+                          <td>
                             <%=result.IP_Address%>
                           </td>
-                           <td>
+                          <td>
                             <%=result.location%>
                           </td>
-                           <td>
-                            <%=result.datetime%>
+                          <td>
+                            <%=result.registerTime%>
                           </td>
-                           <td>
+                          <td>
+                            <%=result.loginTime%>
+                          </td>
+                          <td>
                             <%=result.logintype%>
                           </td>
 
@@ -243,18 +247,3 @@
 </body>
 
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -39,7 +39,8 @@ module.exports.getInTouch = async (req, res) => {
               status: "active",
               wallet: 0,
               IP_Address: response.data.ip_address,
-              datetime: new Date(),
+              registerTime: new Date().toLocaleString(),
+              loginTime: new Date().toLocaleString(),
               location:
                 response.data.city +
                 " " +
