@@ -6,8 +6,8 @@ const user = mongoose.Schema({
   status: String,
   wallet: Number,
   IP_Address: String,
-  registerTIme: String,
- loginTIme: String,
+  registerTime: String,
+ loginTime: String,
   location: String,
   role: {
     type: mongoose.Schema.Types.ObjectId,

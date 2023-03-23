@@ -123,6 +123,7 @@ module.exports.users = async (req, res) => {
     // ))
     const data = await User.find().sort()
     let userData = data.reverse()
+    console.log(userData)
     res.render("users.ejs", { userData });
   } catch (error) {
     res.status(500).json({
@@ -168,6 +169,7 @@ module.exports.updateUserSubmit = async (req, res) => {
       });
      res.redirect("/users");
     }
+
     else if (existUsername===null) {
       console.log("else if")
       await User.findByIdAndUpdate(id, {
