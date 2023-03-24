@@ -102,6 +102,7 @@ const paypalGuestPaymentRouter = require("./router/paypalGuestPaymentRouter");
 const paypalsubscriptionRouter = require("./router/paypalsubscriptionRouter");
 const ratingRouter = require("./router/ratingRouter");
 const savePaymentMethodRouter = require("./router/savePaymentMethodRouter");
+const UserSavePaymentMethodRouter = require("./router/userSavePaymentMethodRouter");
 
 const cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
@@ -162,6 +163,7 @@ app.use(paypalGuestPaymentRouter);
 app.use(paypalsubscriptionRouter);
 app.use(ratingRouter);
 app.use(savePaymentMethodRouter)
+app.use(UserSavePaymentMethodRouter)
 
 server.listen(process.env.PORT, (req, res) => {
   console.log(`Server in running on port ${process.env.PORT}`);

@@ -111,8 +111,22 @@ module.exports.adminLoginSubmit = async (req, res) => {
 
 };
 
-module.exports.dashboard = (req, res) => {
-  res.render("dashboard.ejs");
+module.exports.dashboard = async(req, res) => {
+ //TOTAL USERS
+ const users  =await User.aggregate([
+  {$match:{type:"user"}}
+ ])
+ const totalCredit  =await Wallet.aggregate([
+  {$match:{pay_transaction:"credited"}},
+  {$group:{_id:"",total:{$sum:"$wallet"}}},
+ ])
+ const totalDebit  =await Wallet.aggregate([
+  {$match:{pay_transaction:"debited"}},
+  {$group:{_id:"",total:{$sum:"$wallet"}}},
+ ])
+  console.log(totalDebit)
+  let totalUser = users.length
+  res.render("dashboard.ejs",{totalUser,totalCredit,totalDebit});
 };
 
 module.exports.users = async (req, res) => {
@@ -123,6 +137,7 @@ module.exports.users = async (req, res) => {
     // ))
     const data = await User.find().sort()
     let userData = data.reverse()
+    let totalUser = userData.length
     console.log(userData)
     res.render("users.ejs", { userData });
   } catch (error) {
