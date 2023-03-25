@@ -33,7 +33,7 @@ module.exports.register = async (req, res) => {
                 wallet: 0,
                 IP_Address: response.data.ip_address,
                 registerTime: new Date().toLocaleString(),
-                registerTime: "Not Login",
+                loginTime: "Not Login",
                 type: "user",
                 location:
                   response.data.city +
