@@ -57,6 +57,7 @@ const fetchChats = asyncHandler(async (req, res) => {
           path: "latestMessage.sender",
           select: "name pic email",
         });
+      //  console.log("results",results[0])
         res.status(200).send(results);
       });
   } catch (error) {

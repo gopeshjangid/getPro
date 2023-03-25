@@ -5,12 +5,14 @@ const jwt = require('jsonwebtoken')
 module.exports.viewProfile = async (req, res) => {
 
     try {
+       
         const token = req.headers.authorization
-        const verifyTokenId = jwt.verify(token, "zxcvbnm")
-        const UserDetails = await User.findById(verifyTokenId.userId)
-        res.status(200).json({
-            data: UserDetails
-        })
+            const verifyTokenId = jwt.verify(token, "zxcvbnm")
+            const UserDetails = await User.findById(verifyTokenId.userId)
+            res.status(200).json({
+                data: UserDetails
+            })
+     
     } catch (error) {
         res.status(500).json({
             error: error.message
