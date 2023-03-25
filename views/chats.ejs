@@ -102,7 +102,8 @@
           </div>
           <div>
             <textarea name="" id="textfield" class="form-control mt-4 border border-2" rows="3"></textarea>
-            <button id="sendButton" onclick="loopsendmsg()" style="background:#0696a1 " class="btn py-1 px-4 mt-3 text-light">
+            <button id="sendButton" onclick="loopsendmsg()" style="background:#0696a1 "
+              class="btn py-1 px-4 mt-3 text-light">
               Send
             </button>
             <a style="background: #0696a1" class="btn py-1 px-4 mt-3 text-light" href="/dashboard">Back</a>
@@ -118,79 +119,79 @@
               data-bs-target="#staticBackdrop1">
               Customize payment
             </button>
-         
-              <button style="background: #0696a1;display: none;" class="mt-3 btn text-light" data-bs-toggle="modal"
-                data-bs-target="#staticBackdrop2" id="ChatAssignButton">
-                Chat Asign
-              </button>
-            
+
+            <button style="background: #0696a1;display: none;" class="mt-3 btn text-light" data-bs-toggle="modal"
+              data-bs-target="#staticBackdrop2" id="ChatAssignButton">
+              Chat Asign
+            </button>
 
 
-                <!-- Modal -->
-                <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false"
-                  tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                  <div class="modal-dialog">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Enter Costomize Price</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <form action="" id="custmizeForm" method="post">
-                        <div class="modal-body">
-                          <input type="text" id="customizePrice" class="form-control" required>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
-                            Send
-                          </button>
-                        </div>
-                      </form>
-                    </div>
+
+            <!-- Modal -->
+            <div class="modal fade" id="staticBackdrop1" data-bs-backdrop="static" data-bs-keyboard="false"
+              tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel">Enter Costomize Price</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                   </div>
-                </div>
-
-
-                <!-- SECONED MODAL -->
-
-                <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false"
-                  tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-scrollable ">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="staticBackdropLabel1">Chat Assign</h1>
-
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <form action="/chatAssign" id="chatAssignForm" method="post">
-                        <div class="modal-body">
-
-
-                          <select name="chatAssign" id="subAdminId" class="form-control">
-                            <option value="" disabled selected hidden>please select sub admin</option>
-                            <% SubAdmin.forEach((result)=>{ %>
-
-                              <option value="<%=result._id%>">
-                                <%=result.username%>
-                              </option>
-
-                              <% })%>
-                          </select>
-
-
-
-
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          <button type="submit" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
-                            Send
-                          </button>
-                        </div>
-                      </form>
+                  <form action="" id="custmizeForm" method="post">
+                    <div class="modal-body">
+                      <input type="text" id="customizePrice" class="form-control" required>
                     </div>
-                  </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
+                        Send
+                      </button>
+                    </div>
+                  </form>
                 </div>
+              </div>
+            </div>
+
+
+            <!-- SECONED MODAL -->
+
+            <div class="modal fade" id="staticBackdrop2" data-bs-backdrop="static" data-bs-keyboard="false"
+              tabindex="-1" aria-labelledby="staticBackdropLabel1" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-scrollable ">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="staticBackdropLabel1">Chat Assign</h1>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <form action="/chatAssign" id="chatAssignForm" method="post">
+                    <div class="modal-body">
+
+
+                      <select name="chatAssign" id="subAdminId" class="form-control">
+                        <option value="" disabled selected hidden>please select sub admin</option>
+                        <% SubAdmin.forEach((result)=>{ %>
+
+                          <option value="<%=result._id%>">
+                            <%=result.username%>
+                          </option>
+
+                          <% })%>
+                      </select>
+
+
+
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                      <button type="submit" style="background: rgb(164, 216, 118)" class="btn py-1 px-4 mt-3">
+                        Send
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
 
           </div>
         </div>
@@ -852,6 +853,8 @@
     // })
 
 
+    //   FIND CHATS
+
     function getChatList() {
       $.ajax({
         url: `${ENDPOINT}/chat`,
@@ -870,9 +873,14 @@
           console.log(chatsList);
 
           res.forEach((response, index) => {
-            const filterArrayofChatlist = response.users.filter(
-              (user) => user.email !== "getproadmin000@gmail.com"
-            )
+            console.log("rrrrrrr", response)
+            // const filterArrayofChatlist = response.users.filter(
+            //   (user) => user.email !== "getproadmin000@gmail.com"
+            // )
+            // console.log("ffff",filterArrayofChatlist)
+
+
+            // FIND CHAT MESSAGE
 
             $.ajax({
               url: `${ENDPOINT}/message/${response._id}`,
@@ -883,27 +891,31 @@
               },
               success: function (res) {
                 console.log("sdfggcdsfgdgfsdf", res)
-                if (filterArrayofChatlist[0]) {
-                  if (res.length > 0) {
-                    let tr = document.createElement("tr");
-                    tr.classList.add("addClass")
-                    tr.setAttribute("id", response._id);
-                    let content = `
+
+                //   FIND USERDETAILS
+           
+
+                // if (filterArrayofChatlist[0]) {
+                if (res.length > 0) {
+                  let tr = document.createElement("tr");
+                  tr.classList.add("addClass")
+                  tr.setAttribute("id", response._id);
+                  let content = `
                     <td id=${response._id} class="" style="padding :10px;width:15%">
                         <h4 id=${response._id} class="mb-0"><i id=${response._id} class="bi bi-person-circle"></i></h4>
                     </td>
                     <td id=${response._id}>${response.users.filter(
-                      (user) => user.email !== "getproadmin000@gmail.com"
-                    )[0].username + " (" + response.orderId?.products.map((product) => product.p_title + " ") + ")"
-                      }
+                    (user) => user.email !== "getproadmin000@gmail.com"
+                  )[0].username + " (" + response.orderId?.products.map((product) => product.p_title + " ") + ")"
+                    }
                     </td>`;
-                    tr.innerHTML = content;
+                  tr.innerHTML = content;
 
 
-                    tr.onclick = trClicked;
-                    chatsList.appendChild(tr);
-                  }
+                  tr.onclick = trClicked;
+                  chatsList.appendChild(tr);
                 }
+                // }
 
               },
               error: function (error) {
