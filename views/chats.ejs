@@ -905,7 +905,7 @@
                         <h4 id=${response._id} class="mb-0"><i id=${response._id} class="bi bi-person-circle"></i></h4>
                     </td>
                     <td id=${response._id}>${response.users.filter(
-                    (user) => user.email !== "getproadmin000@gmail.com"
+                    (user) => user.type !== "admin"
                   )[0].username + " (" + response.orderId?.products.map((product) => product.p_title + " ") + ")"
                     }
                     </td>`;
