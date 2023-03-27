@@ -57,7 +57,7 @@ const fetchChats = asyncHandler(async (req, res) => {
           path: "latestMessage.sender",
           select: "name pic email",
         });
-      //  console.log("results",results[0])
+        console.log("results",results[0].users)
         res.status(200).send(results);
       });
   } catch (error) {
@@ -197,11 +197,12 @@ const checkChatAccess = async (req, res) =>{
   try {
     const adminToken=  req.cookies.adminToken
     const verifyTokenId= jwt.verify(adminToken,"zxcvbnm")
-    console.log("verify",verifyTokenId)
+    console.log("verify",verifyTokenId.userId)
    const chatId=req.body.theChatId
-    const ChatData=await Chat.findById(chatId)
-   console.log("chatAssignAdmin",ChatData.users[1])
-   if(verifyTokenId.userId===ChatData.users[1]){
+    const ChatData=await Chat.findById(chatId).populate("users")
+  const filterUser= await ChatData.users.filter((users)=> users.type == "admin")
+   console.log("chatAssignAdmin",filterUser)
+   if(verifyTokenId.userId===filterUser[0].id){
    res.send("right")
    }else{
     httpMsgs.send500(req, res, "you can't start chat because this chat is already assigned");

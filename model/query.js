@@ -3,7 +3,8 @@ const query = mongoose.Schema({
     fullName:String,
     email:String,
     subject:String,
-    message:String
+    message:String,
+    dateTime:String
   
 })
 

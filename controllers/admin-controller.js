@@ -106,27 +106,27 @@ module.exports.adminLoginSubmit = async (req, res) => {
       httpMsgs.send500(req, res, "your account dose not exist");
     }
   } catch (error) {
-    
-   }
+
+  }
 
 };
 
-module.exports.dashboard = async(req, res) => {
- //TOTAL USERS
- const users  =await User.aggregate([
-  {$match:{type:"user"}}
- ])
- const totalCredit  =await Wallet.aggregate([
-  {$match:{pay_transaction:"credited"}},
-  {$group:{_id:"",total:{$sum:"$wallet"}}},
- ])
- const totalDebit  =await Wallet.aggregate([
-  {$match:{pay_transaction:"debited"}},
-  {$group:{_id:"",total:{$sum:"$wallet"}}},
- ])
+module.exports.dashboard = async (req, res) => {
+  //TOTAL USERS
+  const users = await User.aggregate([
+    { $match: { type: "user" } }
+  ])
+  const totalCredit = await Wallet.aggregate([
+    { $match: { pay_transaction: "credited" } },
+    { $group: { _id: "", total: { $sum: "$wallet" } } },
+  ])
+  const totalDebit = await Wallet.aggregate([
+    { $match: { pay_transaction: "debited" } },
+    { $group: { _id: "", total: { $sum: "$wallet" } } },
+  ])
   console.log(totalDebit)
   let totalUser = users.length
-  res.render("dashboard.ejs",{totalUser,totalCredit,totalDebit});
+  res.render("dashboard.ejs", { totalUser, totalCredit, totalDebit });
 };
 
 module.exports.users = async (req, res) => {
@@ -165,13 +165,13 @@ module.exports.updateUserSubmit = async (req, res) => {
     const newEmail = req.body.email;
     var newPassword = req.body.password;
     console.log(req.body)
-  
-    
+
+
     const id = req.params.id;
     let existUsername = await User.findOne({ username: newUser });
-    if(newPassword){
+    if (newPassword) {
       newPassword = await bcrypt.hash(req.body.password, 10);
-    }else{
+    } else {
       newPassword = existUsername.password
     }
 
@@ -180,17 +180,17 @@ module.exports.updateUserSubmit = async (req, res) => {
       await User.findByIdAndUpdate(id, {
         username: newUser,
         password: newPassword,
-        status:req.body.UserStatus
+        status: req.body.UserStatus
       });
-     res.redirect("/users");
+      res.redirect("/users");
     }
 
-    else if (existUsername===null) {
+    else if (existUsername === null) {
       console.log("else if")
       await User.findByIdAndUpdate(id, {
         username: newUser,
         password: newPassword,
-        status:req.body.UserStatus
+        status: req.body.UserStatus
       });
       res.redirect("/users");
     } else {
@@ -233,6 +233,7 @@ module.exports.queryAdd = async (req, res) => {
       email: email,
       subject: subject,
       message: message,
+      dateTime:new Date().toLocaleString()
     });
     await userData.save();
     res.status(201).json({
@@ -608,6 +609,10 @@ module.exports.addblogSubmit = async (req, res) => {
     const Title = req.body.title;
     const Dec = req.body.dec;
     const Name = req.body.name;
+    const date = req.body.date
+    const formate = date.toString().split(/\D/g)
+   const formate2= [formate[2],formate[1],formate[0] ].join("/")
+   
     var img;
     var pdf;
     await req.files.img.forEach((element) => {
@@ -619,6 +624,7 @@ module.exports.addblogSubmit = async (req, res) => {
       dec: Dec,
       image: img,
       pdf: pdf,
+      date:formate2
     });
     await blogData.save();
     res.redirect("/blog");
@@ -859,12 +865,12 @@ module.exports.updateCouponSubmit = async (req, res) => {
   try {
     const newcouponNamee = req.body.couponName;
     const newcouponType = req.body.couponType;
-   // console.log("kkkk",req.body)
+    // console.log("kkkk",req.body)
     const newoffAmount = req.body.couponAmount;
     const couponStatus = req.body.couponStatus;
     const id = req.params.id;
     const CouponData = await Coupon.findOne({ couponName: newcouponNamee });
-    console.log("cccc",CouponData===null)
+    console.log("cccc", CouponData === null)
     if (CouponData?.id === id) {
       console.log("if")
       await Coupon.findByIdAndUpdate(id, {
@@ -874,10 +880,10 @@ module.exports.updateCouponSubmit = async (req, res) => {
       });
       res.redirect("/coupon");
     }
-    else if (CouponData===null) {
+    else if (CouponData === null) {
       console.log("else if")
       await Coupon.findByIdAndUpdate(id, {
-        couponName:newcouponNamee,
+        couponName: newcouponNamee,
         couponType: newcouponType,
         offAmount: newoffAmount,
         status: couponStatus,
@@ -979,25 +985,26 @@ module.exports.deleteCareer = async (req, res) => {
 
 module.exports.chats = async (req, res) => {
   try {
-    const adminToken=  req.cookies.adminToken
-    const verifyTokenId= jwt.verify(adminToken,"zxcvbnm")
-    console.log("verify",verifyTokenId)
-    const adminData=await User.findById(verifyTokenId.userId)
-    console.log("admin------",adminData)
-    const SubAdmin=await User.aggregate([
-      {$match:{type:"admin" ,username :{$nin:["getproadmin"]} }},
-      {$lookup:{
-      
+    const adminToken = req.cookies.adminToken
+    const verifyTokenId = jwt.verify(adminToken, "zxcvbnm")
+    console.log("verify", verifyTokenId)
+    const adminData = await User.findById(verifyTokenId.userId)
+    console.log("admin------", adminData)
+    const SubAdmin = await User.aggregate([
+      { $match: { type: "admin", username: { $nin: ["getproadmin"] } } },
+      {
+        $lookup: {
+
           from: "roles",
           localField: "role",
           foreignField: "_id",
           as: "roleData"
         }
-     },
-     {$match:{$and:[{"roleData.permissions":"chats"}]}}
+      },
+      { $match: { $and: [{ "roleData.permissions": "chats" }] } }
     ])
-    console.log("ChatPermissionsSUbAdmin",SubAdmin)
-    res.render("chats.ejs",{SubAdmin:SubAdmin,adminData:adminData});
+    console.log("ChatPermissionsSUbAdmin", SubAdmin)
+    res.render("chats.ejs", { SubAdmin: SubAdmin, adminData: adminData });
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -1497,7 +1504,7 @@ module.exports.reviewReadMore = async (req, res) => {
 
 module.exports.pageNotFound = async (req, res) => {
   try {
-   res.render("page-not-found")
+    res.render("page-not-found")
 
   } catch (error) {
     res.status(500).json({
@@ -1508,24 +1515,25 @@ module.exports.pageNotFound = async (req, res) => {
 
 module.exports.getChatSubAdmin = async (req, res) => {
   try {
-  //  const getChatSubAdmin=await AddCard.aggregate([
-  //    {$group:{total:}}
-  //  ])
-  //  console.log(getChatSubAdmin)
-  const SubAdmin=await User.aggregate([
-    {$match:{type:"admin" ,username :{$nin:["getproadmin"]} }},
-    {$lookup:{
-    
-        from: "roles",
-        localField: "role",
-        foreignField: "_id",
-        as: "roleData"
-      }
-   },
-   {$match:{$and:[{"roleData.permissions":"chats"}]}}
-  ])
+    //  const getChatSubAdmin=await AddCard.aggregate([
+    //    {$group:{total:}}
+    //  ])
+    //  console.log(getChatSubAdmin)
+    const SubAdmin = await User.aggregate([
+      { $match: { type: "admin", username: { $nin: ["getproadmin"] } } },
+      {
+        $lookup: {
 
- // console.log(SubAdmin)
+          from: "roles",
+          localField: "role",
+          foreignField: "_id",
+          as: "roleData"
+        }
+      },
+      { $match: { $and: [{ "roleData.permissions": "chats" }] } }
+    ])
+
+    // console.log(SubAdmin)
 
   } catch (error) {
     res.status(500).json({

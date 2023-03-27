@@ -802,6 +802,7 @@
 
 
     function clickId(id) {
+      console.log("idddd",id)
       let updateForm = document.getElementById("updateForm")
       let ChatId;
       $.ajax({
@@ -872,7 +873,7 @@
           chatsList.innerHTML = null;
           console.log(chatsList);
 
-          res.forEach((response, index) => {
+          res.forEach(async(response, index) => {
             console.log("rrrrrrr", response)
             // const filterArrayofChatlist = response.users.filter(
             //   (user) => user.email !== "getproadmin000@gmail.com"
@@ -882,14 +883,14 @@
 
             // FIND CHAT MESSAGE
 
-            $.ajax({
+           $.ajax({
               url: `${ENDPOINT}/message/${response._id}`,
               method: "get",
               contentType: "application/x-www-form-urlencoded",
               headers: {
                 authorization: token,
               },
-              success: function (res) {
+              success:async function (res) {
                 console.log("sdfggcdsfgdgfsdf", res)
 
                 //   FIND USERDETAILS
@@ -905,7 +906,7 @@
                         <h4 id=${response._id} class="mb-0"><i id=${response._id} class="bi bi-person-circle"></i></h4>
                     </td>
                     <td id=${response._id}>${response.users.filter(
-                    (user) => user.email !== "getproadmin000@gmail.com"
+                    (user) => user.type !== "admin"
                   )[0].username + " (" + response.orderId?.products.map((product) => product.p_title + " ") + ")"
                     }
                     </td>`;
@@ -913,7 +914,7 @@
 
 
                   tr.onclick = trClicked;
-                  chatsList.appendChild(tr);
+                await chatsList.appendChild(tr);
                 }
                 // }
 
