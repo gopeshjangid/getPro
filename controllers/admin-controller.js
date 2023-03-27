@@ -233,6 +233,7 @@ module.exports.queryAdd = async (req, res) => {
       email: email,
       subject: subject,
       message: message,
+      dateTime:new Date().toLocaleString()
     });
     await userData.save();
     res.status(201).json({
