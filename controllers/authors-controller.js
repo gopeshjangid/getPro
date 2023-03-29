@@ -2,8 +2,8 @@ const Authors = require('../model/authors')
 
 module.exports.getAuthor = async (req, res) => {
     try {
-        const id= req.params.id
-        const authorsData = await Authors.findById(id)
+        const slug= req.params.id
+        const authorsData = await Authors.findOne({title:slug})
         res.status(200).json({
             data: authorsData
         })
