@@ -91,11 +91,11 @@ adminRouter
 adminRouter
     .route('/addblog')
     .get(authController.checkLogin, adminController.addblog)
-    .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.addblogSubmit)
+    .post(adminController.upload.single([{ name: 'img' }, { name: 'pdf' }]), adminController.addblogSubmit)
 adminRouter
     .route('/updateblog/:id')
     .get(authController.checkLogin, adminController.updateBLog)
-    .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.updateBLogSubmit)
+    .post(adminController.upload.fields([{ name: 'file' }, { name: 'pdf' }]), adminController.updateBLogSubmit)
 adminRouter
     .route('/deleteBlog/:id')
     .get(authController.checkLogin, adminController.deleteBlog)
@@ -267,6 +267,9 @@ adminRouter
 adminRouter
     .route('/getChatSubAdmin')
     .get(adminController.getChatSubAdmin)
+adminRouter
+    .route('/deleteQuery/:id')
+    .get(adminController.QueryDelete)
 
   
 
