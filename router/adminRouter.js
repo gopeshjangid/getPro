@@ -91,7 +91,7 @@ adminRouter
 adminRouter
     .route('/addblog')
     .get(authController.checkLogin, adminController.addblog)
-    .post(adminController.upload.single([{ name: 'img' }, { name: 'pdf' }]), adminController.addblogSubmit)
+    .post(adminController.upload.fields([{ name: 'img' }, { name: 'pdf' }]), adminController.addblogSubmit)
 adminRouter
     .route('/updateblog/:id')
     .get(authController.checkLogin, adminController.updateBLog)

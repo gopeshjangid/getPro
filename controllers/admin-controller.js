@@ -230,6 +230,19 @@ module.exports.queryAdd = async (req, res) => {
   }
 };
 
+module.exports.QueryDelete = async (req, res) => {
+  const id =req.params.id
+    try {
+      await Query.findByIdAndDelete(id)
+  
+     res.redirect("/query")
+    } catch (error) {
+      res.json({
+        error: error.message,
+      });
+    }
+  };
+
 module.exports.worksample = async (req, res) => {
   try {
     const data = await Worksample.find().sort();
@@ -590,6 +603,7 @@ module.exports.addblog = async (req, res) => {
 
 module.exports.addblogSubmit = async (req, res) => {
   try {
+  
     const Title = req.body.title;
     const Dec = req.body.dec;
     const Name = req.body.name;
@@ -600,8 +614,17 @@ module.exports.addblogSubmit = async (req, res) => {
     await req.files.img.forEach((element) => {
       img = element.filename;
     });
+
+//  DATE FORMATE
+
     const formate2 = [formate[2], formate[1], formate[0]].join("/");
     const findTitle = await Blog.find({ title: Title });
+
+    // CREATE SLUG
+
+    let slug = Title.toLowerCase();
+    slug = slug.replace(/ /gi, "-");
+
     if (findTitle.length < 1) {
       const blogData = new Blog({
         title: Title,
@@ -610,12 +633,13 @@ module.exports.addblogSubmit = async (req, res) => {
         image: img,
         pdf: pdf,
         date: formate2,
-        slug: Title,
+        slug: slug,
       });
       await blogData.save();
       res.redirect("/blog");
     } else {
-      let rendom = Math.floor(1000 + Math.random() * 9000);
+    let rendom = Math.floor(1000 + Math.random() * 9000);
+    slug = slug + "-" + rendom
       const blogData = new Blog({
         title: Title,
         name: Name,
@@ -623,7 +647,7 @@ module.exports.addblogSubmit = async (req, res) => {
         image: img,
         pdf: pdf,
         date: formate2,
-        slug: Title + "-" + rendom,
+        slug: slug,
       });
       await blogData.save();
       res.redirect("/blog");
