@@ -873,7 +873,7 @@
           chatsList.innerHTML = null;
           console.log(chatsList);
 
-          res.forEach(async(response, index) => {
+          res.forEach((response, index) => {
             console.log("rrrrrrr", response)
             // const filterArrayofChatlist = response.users.filter(
             //   (user) => user.email !== "getproadmin000@gmail.com"
@@ -890,7 +890,7 @@
               headers: {
                 authorization: token,
               },
-              success:async function (res) {
+              success: function (res) {
                 console.log("sdfggcdsfgdgfsdf", res)
 
                 //   FIND USERDETAILS
@@ -914,7 +914,7 @@
 
 
                   tr.onclick = trClicked;
-                await chatsList.appendChild(tr);
+                 chatsList.appendChild(tr);
                 }
                 // }
 
