@@ -4,7 +4,8 @@ const authors = mongoose.Schema({
     dec:String,
     longDec:String,
     image:String,  
-    pdf:String
+    pdf:String,
+    slug:String
 })
 
 module.exports= mongoose.model('authors',authors)

@@ -408,14 +408,38 @@ module.exports.addAuthorsSubmit = async (req, res) => {
     await req.files.img.forEach((element) => {
       img = element.filename;
     });
+ 
+    // CREATE SLUG
+
+    let slug = title.toLowerCase();
+    slug = slug.replace(/ /gi, "-");
+
+    // FIND AUTHORS
+  const findAuther=  await Authors.find({title:title})
+  if(findAuther.length<1){
     const auther = new Authors({
       title: title,
       dec: dec,
       longDec: lognDec,
       image: img,
+      slug:slug
     });
     await auther.save();
     res.redirect("/authors");
+  }else{
+    let rendom = Math.floor(1000 + Math.random() * 9000);
+    slug = slug + "-" + rendom
+    const auther = new Authors({
+      title: title,
+      dec: dec,
+      longDec: lognDec,
+      image: img,
+      slug:slug
+    });
+    await auther.save();
+    res.redirect("/authors");
+  }
+  
   } catch (error) {
     res.status(500).json({
       error: error.message,
