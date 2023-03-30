@@ -6,6 +6,10 @@ const Order = require("../model/order");
 const SavePaymentMethod = require("../model/savePaymentMethod");
 const stripe = Stripe(process.env.SECRET);
 
+
+// STRIPE PAYMENT GETWAY
+
+
 const createCharge = async (tokenId, amount) => {
   let charge = {};
   try {
@@ -68,3 +72,9 @@ module.exports.UseSavePaymentMethod = async (req, res) => {
     });
   }
 };
+
+
+
+
+
+

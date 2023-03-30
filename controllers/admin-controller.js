@@ -784,6 +784,7 @@ module.exports.updateBLogSubmit = async (req, res) => {
         });
         res.redirect("/blog");
       }
+  
 
     } else {
 
