@@ -5,6 +5,12 @@ const User = require("../model/user");
 const Order = require("../model/order");
 const SavePaymentMethod = require("../model/savePaymentMethod");
 const stripe = Stripe(process.env.SECRET);
+const Razorpay = require("razorpay");
+const crypto = require("crypto");
+var instance = new Razorpay({
+  key_id: process.env.RAZORPAY_ID,
+  key_secret: process.env.RAZORPAY_SECRET,
+});
 
 const createCharge = async (tokenId, amount) => {
   let charge = {};
@@ -65,6 +71,27 @@ module.exports.UseSavePaymentMethod = async (req, res) => {
   } catch (error) {
     res.status(500).json({
       error: error.message,
+    });
+  }
+};
+
+module.exports.usesaveRazorpayPayment = async (req, res) => {
+  try {
+    const TotalAmount = parseInt(req.body.amount);
+
+    var options = {
+      amount: TotalAmount * 100,
+      currency: "INR",
+    };
+    instance.orders.create(options, function (err, order) {
+      res.status(200).json({
+        order,
+        amount: TotalAmount,
+      });
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error,
     });
   }
 };

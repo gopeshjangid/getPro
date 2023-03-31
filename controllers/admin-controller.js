@@ -98,7 +98,7 @@ module.exports.adminLoginSubmit = async (req, res) => {
     } else {
       httpMsgs.send500(req, res, "your account dose not exist");
     }
-  } catch (error) { }
+  } catch (error) {}
 };
 
 module.exports.dashboard = async (req, res) => {
@@ -231,11 +231,11 @@ module.exports.queryAdd = async (req, res) => {
 };
 
 module.exports.QueryDelete = async (req, res) => {
-  const id = req.params.id
+  const id = req.params.id;
   try {
-    await Query.findByIdAndDelete(id)
+    await Query.findByIdAndDelete(id);
 
-    res.redirect("/query")
+    res.redirect("/query");
   } catch (error) {
     res.json({
       error: error.message,
@@ -415,31 +415,30 @@ module.exports.addAuthorsSubmit = async (req, res) => {
     slug = slug.replace(/ /gi, "-");
 
     // FIND AUTHORS
-    const findAuther = await Authors.find({ title: title })
+    const findAuther = await Authors.find({ title: title });
     if (findAuther.length < 1) {
       const auther = new Authors({
         title: title,
         dec: dec,
         longDec: lognDec,
         image: img,
-        slug: slug
+        slug: slug,
       });
       await auther.save();
       res.redirect("/authors");
     } else {
       let rendom = Math.floor(1000 + Math.random() * 9000);
-      slug = slug + "-" + rendom
+      slug = slug + "-" + rendom;
       const auther = new Authors({
         title: title,
         dec: dec,
         longDec: lognDec,
         image: img,
-        slug: slug
+        slug: slug,
       });
       await auther.save();
       res.redirect("/authors");
     }
-
   } catch (error) {
     res.status(500).json({
       error: error.message,
@@ -479,60 +478,55 @@ module.exports.updateAuthorsSubmit = async (req, res) => {
       slug = slug.replace(/ /gi, "-");
 
       // FIND AUTHORS
-      const findAuther = await Authors.find({ title: newTitle })
+      const findAuther = await Authors.find({ title: newTitle });
       if (findAuther.length < 1) {
         await Authors.findByIdAndUpdate(id, {
           title: newTitle,
           dec: newDec,
           longDec: newlongDec,
           image: img,
-          slug: slug
+          slug: slug,
         });
         res.redirect("/authors");
       } else {
         let rendom = Math.floor(1000 + Math.random() * 9000);
-        slug = slug + "-" + rendom
+        slug = slug + "-" + rendom;
         await Authors.findByIdAndUpdate(id, {
           title: newTitle,
           dec: newDec,
           longDec: newlongDec,
           image: img,
-          slug: slug
+          slug: slug,
         });
         res.redirect("/authors");
       }
     } else {
-
-
       // CREATE SLUG
 
       let slug = newTitle.toLowerCase();
       slug = slug.replace(/ /gi, "-");
 
       // FIND AUTHORS
-      const findAuther = await Authors.find({ title: newTitle })
+      const findAuther = await Authors.find({ title: newTitle });
       if (findAuther.length < 1) {
         await Authors.findByIdAndUpdate(id, {
           title: newTitle,
           dec: newDec,
           longDec: newlongDec,
-          slug:slug
+          slug: slug,
         });
-        res.redirect("/authors");  
-      }else{
+        res.redirect("/authors");
+      } else {
         let rendom = Math.floor(1000 + Math.random() * 9000);
-        slug = slug + "-" + rendom
+        slug = slug + "-" + rendom;
         await Authors.findByIdAndUpdate(id, {
           title: newTitle,
           dec: newDec,
           longDec: newlongDec,
-          slug:slug
+          slug: slug,
         });
-        res.redirect("/authors");  
+        res.redirect("/authors");
       }
-
-
-   
     }
   } catch (error) {
     res.status(500).json({
@@ -674,7 +668,6 @@ module.exports.addblog = async (req, res) => {
 
 module.exports.addblogSubmit = async (req, res) => {
   try {
-
     const Title = req.body.title;
     const Dec = req.body.dec;
     const Name = req.body.name;
@@ -710,7 +703,7 @@ module.exports.addblogSubmit = async (req, res) => {
       res.redirect("/blog");
     } else {
       let rendom = Math.floor(1000 + Math.random() * 9000);
-      slug = slug + "-" + rendom
+      slug = slug + "-" + rendom;
       const blogData = new Blog({
         title: Title,
         name: Name,
@@ -750,7 +743,7 @@ module.exports.updateBLogSubmit = async (req, res) => {
     const id = req.params.id;
     var img;
     var pdf;
-
+    console.log(req.file);
     if (req.files.img) {
       await req.files.img.forEach((element) => {
         img = element.filename;
@@ -759,67 +752,58 @@ module.exports.updateBLogSubmit = async (req, res) => {
       const findTitle = await Blog.find({ title: NewTitle });
 
       // CREATE SLUG
-  
+
       let slug = NewTitle.toLowerCase();
       slug = slug.replace(/ /gi, "-");
-  
+
       if (findTitle.length < 1) {
         await Blog.findByIdAndUpdate(id, {
           title: NewTitle,
           name: NewName,
           dec: NewDec,
           image: img,
-          slug:slug
+          slug: slug,
         });
         res.redirect("/blog");
-      }else{
+      } else {
         let rendom = Math.floor(1000 + Math.random() * 9000);
-        slug = slug + "-" + rendom
+        slug = slug + "-" + rendom;
         await Blog.findByIdAndUpdate(id, {
           title: NewTitle,
           name: NewName,
           dec: NewDec,
           image: img,
-          slug:slug
+          slug: slug,
         });
         res.redirect("/blog");
       }
-
     } else {
-
-
       const findTitle = await Blog.find({ title: NewTitle });
 
       // CREATE SLUG
-  
+
       let slug = NewTitle.toLowerCase();
       slug = slug.replace(/ /gi, "-");
-  
+
       if (findTitle.length < 1) {
         await Blog.findByIdAndUpdate(id, {
           title: NewTitle,
           name: NewName,
           dec: NewDec,
-          slug:slug
+          slug: slug,
         });
         res.redirect("/blog");
-      }else{
+      } else {
         let rendom = Math.floor(1000 + Math.random() * 9000);
-        slug = slug + "-" + rendom
+        slug = slug + "-" + rendom;
         await Blog.findByIdAndUpdate(id, {
           title: NewTitle,
           name: NewName,
           dec: NewDec,
-          slug:slug
+          slug: slug,
         });
         res.redirect("/blog");
       }
-
-
-
-
-
-   
     }
   } catch (error) {
     res.status(500).json({
