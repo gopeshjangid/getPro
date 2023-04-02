@@ -897,7 +897,7 @@
            
 
             
-                // if (res.length > 0) {
+                if (response.latestMessage !==null) {
                   let tr = document.createElement("tr");
                   tr.classList.add("addClass")
                   tr.setAttribute("id", response._id);
@@ -915,7 +915,7 @@
 
                   tr.onclick = trClicked;
                  chatsList.appendChild(tr);
-                // }
+                }
              
 
             //   },
