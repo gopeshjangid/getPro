@@ -883,21 +883,21 @@
 
             // FIND CHAT MESSAGE
 
-           $.ajax({
-              url: `${ENDPOINT}/message/${response._id}`,
-              method: "get",
-              contentType: "application/x-www-form-urlencoded",
-              headers: {
-                authorization: token,
-              },
-              success: function (res) {
-                console.log("sdfggcdsfgdgfsdf", res)
+          //  $.ajax({
+          //     url: `${ENDPOINT}/message/${response._id}`,
+          //     method: "get",
+          //     contentType: "application/x-www-form-urlencoded",
+          //     headers: {
+          //       authorization: token,
+          //     },
+          //     success: function (res) {
+          //       console.log("sdfggcdsfgdgfsdf", res)
 
                 //   FIND USERDETAILS
            
 
-                // if (filterArrayofChatlist[0]) {
-                if (res.length > 0) {
+            
+                // if (res.length > 0) {
                   let tr = document.createElement("tr");
                   tr.classList.add("addClass")
                   tr.setAttribute("id", response._id);
@@ -915,14 +915,14 @@
 
                   tr.onclick = trClicked;
                  chatsList.appendChild(tr);
-                }
                 // }
+             
 
-              },
-              error: function (error) {
-                console.log(error);
-              },
-            });
+            //   },
+            //   error: function (error) {
+            //     console.log(error);
+            //   },
+            // });
 
           });
           const chat = res[0].chatName;
