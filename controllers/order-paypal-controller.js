@@ -113,6 +113,14 @@ module.exports.PaypalOrderSuccess = async (req, res) => {
         arr.push(obj);
       }
       console.log("arrrr", arr);
+
+      let orderNo ;
+      var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
+      if(Order_id.length<1){
+       orderNo =1
+      }else{
+       orderNo = Order_id[0].order_id +1
+      }
       const orderPlaced = new Order({
         transactionId: WallettransactionId,
         pay_id: payId,
@@ -125,6 +133,7 @@ module.exports.PaypalOrderSuccess = async (req, res) => {
         couponAmount: couponAmount,
         products: arr,
         status: "success",
+        order_id:orderNo
       });
       await orderPlaced.save();
       console.log("oooo", orderPlaced);

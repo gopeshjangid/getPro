@@ -111,6 +111,16 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           p_dec: "dec",
           p_price: 10,
         };
+
+        let orderNo ;
+        var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
+        if(Order_id.length<1){
+         orderNo =1
+        }else{
+         orderNo = Order_id[0].order_id +1
+        }
+
+
         const orderPlaced = new Order({
           transactionId: WallettransactionId,
           sub_id: session.subscription,
@@ -123,6 +133,7 @@ module.exports.verifyStripeSubscriptionPayment = async (req, res) => {
           products: obj,
           status: "success",
           sub_status: "Active",
+          order_id:orderNo
         });
         await orderPlaced.save();
 

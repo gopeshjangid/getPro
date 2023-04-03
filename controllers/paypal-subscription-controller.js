@@ -338,6 +338,18 @@ module.exports.paypalSubscriptionSuccess = async (req, res) => {
       p_dec: FindProduct.dec,
       p_price: FindProduct.price,
     };
+
+    let orderNo ;
+    var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
+    if(Order_id.length<1){
+     orderNo =1
+    }else{
+     orderNo = Order_id[0].order_id +1
+    }
+
+
+
+
     const orderPlaced = new Order({
       transactionId: WallettransactionId,
       sub_id: sub_id,
@@ -350,6 +362,7 @@ module.exports.paypalSubscriptionSuccess = async (req, res) => {
       products: obj,
       status: "success",
       sub_status: "Active",
+      order_id:orderNo
     });
     await orderPlaced.save();
     res.json({ message: "subscriptiion successfull" });

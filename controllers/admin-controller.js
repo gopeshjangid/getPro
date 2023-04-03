@@ -1154,8 +1154,7 @@ module.exports.adminWalletTransactionHistory = async (req, res) => {
 
 module.exports.adminOrderHistory = async (req, res) => {
   try {
-    const aa = await Order.find().sort({ $natural: -1 }).limit(1)
-    console.log(aa)
+   
     const data = await Order.find().sort();
     const OrderHistory = data.reverse();
     res.render("orderHistory.ejs", { OrderHistory });

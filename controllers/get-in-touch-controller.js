@@ -274,8 +274,8 @@ module.exports.getInTouch = async (req, res) => {
          await walletData.save();
 
          // CREATE ORDER
-       let orderNo ;
-        
+         
+         let orderNo ;
          var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
          if(Order_id.length<1){
           orderNo =1
