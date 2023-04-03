@@ -57,6 +57,14 @@ module.exports.useWallet = async (req, res) => {
         arr.push(obj);
       }
       console.log("arrr", arr);
+
+      let orderNo ;
+      var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
+      if(Order_id.length<1){
+       orderNo =1
+      }else{
+       orderNo = Order_id[0].order_id +1
+      }
       const orderPlaced = new Order({
         transactionId: WallettransactionId,
         pay_method: "Wallet",
@@ -68,6 +76,7 @@ module.exports.useWallet = async (req, res) => {
         couponAmount: couponAmount,
         products: arr,
         status: "success",
+        order_id:orderNo
       });
       await orderPlaced.save();
 

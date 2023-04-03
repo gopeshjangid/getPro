@@ -12,6 +12,7 @@ const orderScema = mongoose.Schema({
   contentType: String,
   expertLevel: String,
   deadline: String,
+  order_id:Number,
   products: [
 
     {

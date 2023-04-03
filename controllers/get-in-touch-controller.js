@@ -9,8 +9,7 @@ const nodemailer = require("nodemailer");
 
 module.exports.getInTouch = async (req, res) => {
   try {
-
-    let username = req.body.username;
+   let username = req.body.username;
     let email = req.body.email;
     let Originalpassword = req.body.password;
     let password = await bcrypt.hash(Originalpassword, 10);
@@ -18,7 +17,9 @@ module.exports.getInTouch = async (req, res) => {
     let expertLevel = req.body.expertLevel;
     let deadline = req.body.deadline;
 
-    //   CREATE USER
+    const UserToken = req.headers.authorization
+    if(!UserToken){
+       //   CREATE USER
     let existUsername = await User.findOne({ username: username });
     let existEmail = await User.findOne({ email: email });
     if (existUsername === null) {
@@ -251,6 +252,61 @@ module.exports.getInTouch = async (req, res) => {
       res.json({ message: "your useranem is already exist" })
     }
 
+    }else{
+
+         // CREATE WALLET HISTORY
+
+        const verifyTokenId = jwt.verify(UserToken, "zxcvbnm");
+         const UserDetails = await User.findById(verifyTokenId.userId);
+         let WallettransactionId = otpGenerator.generate(25, {
+           upperCaseAlphabets: false,
+           specialChars: false,
+         });
+
+         const walletData = new Wallet({
+           user: UserDetails.email,
+           datetime: new Date().toLocaleString(),
+           pay_type: "Pending",
+           pay_id: "Pending",
+           pay_transaction: "debited",
+           transactionId: WallettransactionId,
+         });
+         await walletData.save();
+
+         // CREATE ORDER
+       let orderNo ;
+        
+         var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
+         if(Order_id.length<1){
+          orderNo =1
+         }else{
+          orderNo = Order_id[0].order_id +1
+         }
+       
+         const orderPlaced = new Order({
+           transactionId: WallettransactionId,
+           pay_id: "Pending",
+           pay_method: "Pending",
+           type: "Customize",
+           email: UserDetails.email,
+           datetime: new Date().toLocaleString(),
+           contentType: contentType,
+           expertLevel: expertLevel,
+           deadline: deadline,
+           status: "Pending",
+           order_id:orderNo
+         });
+         await orderPlaced.save();
+
+         res.status(201).json({
+          message: "Order successfully",
+          token: token,
+        });
+
+      
+    }
+
+   
   } catch (error) {
     res.status(500).json({
       error: error.message,
