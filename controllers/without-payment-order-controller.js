@@ -49,7 +49,14 @@ module.exports.withoutPaymentOrder = async (req, res) => {
 
       arr.push(obj);
     }
-
+    let orderNo ;
+    var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
+    if(Order_id.length<1){
+     orderNo =1
+    }else{
+     orderNo = Order_id[0].order_id +1
+    }
+  
     const orderPlaced = new Order({
       transactionId: WallettransactionId,
       pay_id: "Pending",
@@ -62,6 +69,7 @@ module.exports.withoutPaymentOrder = async (req, res) => {
       couponAmount: couponAmount,
       products: arr,
       status: "Pending",
+      order_id:orderNo
     });
     await orderPlaced.save();
     // DELETE CART OF USER
