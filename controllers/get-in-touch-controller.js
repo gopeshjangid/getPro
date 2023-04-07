@@ -9,7 +9,7 @@ const nodemailer = require("nodemailer");
 
 module.exports.getInTouch = async (req, res) => {
   try {
-   let username = req.body.username;
+    let username = req.body.username;
     let email = req.body.email;
     let Originalpassword = req.body.password;
     let password = await bcrypt.hash(Originalpassword, 10);
@@ -17,98 +17,95 @@ module.exports.getInTouch = async (req, res) => {
     let expertLevel = req.body.expertLevel;
     let deadline = req.body.deadline;
 
-    const UserToken = req.headers.authorization
-    if(!UserToken){
-       //   CREATE USER
-    let existUsername = await User.findOne({ username: username });
-    let existEmail = await User.findOne({ email: email });
-    if (existUsername === null) {
-      if (existEmail === null) {
-        axios
-          .get(
-            "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
-          )
-          .then(async (response) => {
-            console.log("thissssss", response.data);
+    const UserToken = req.headers.authorization;
+    if (!UserToken) {
+      //   CREATE USER
+      let existUsername = await User.findOne({ username: username });
+      let existEmail = await User.findOne({ email: email });
+      if (existUsername === null) {
+        if (existEmail === null) {
+          axios
+            .get(
+              "https://ipgeolocation.abstractapi.com/v1/?api_key=3047534b15b94214bf312c827d8bb4d7"
+            )
+            .then(async (response) => {
+              console.log("thissssss", response.data);
 
-            //  CREATE USER
+              //  CREATE USER
 
-            const userData = new User({
-              username: username,
-              email: email,
-              password: password,
-              status: "active",
-              wallet: 0,
-              IP_Address: response.data.ip_address,
-              registerTime: new Date().toLocaleString(),
-              loginTime: new Date().toLocaleString(),
-              location:
-                response.data.city +
-                " " +
-                response.data.region +
-                " " +
-                response.data.country,
-              logintype: "login",
+              const userData = new User({
+                username: username,
+                email: email,
+                password: password,
+                status: "active",
+                wallet: 0,
+                IP_Address: response.data.ip_address,
+                registerTime: new Date().toLocaleString(),
+                loginTime: new Date().toLocaleString(),
+                location:
+                  response.data.city +
+                  " " +
+                  response.data.region +
+                  " " +
+                  response.data.country,
+                logintype: "login",
+              });
+              await userData.save();
 
-            });
-            await userData.save();
+              // CREATE WALLET HISTORY
 
-            // CREATE WALLET HISTORY
+              const userId = userData._id;
+              var token = jwt.sign({ userId }, "zxcvbnm");
+              const verifyTokenId = jwt.verify(token, "zxcvbnm");
+              const UserDetails = await User.findById(verifyTokenId.userId);
+              let WallettransactionId = otpGenerator.generate(25, {
+                upperCaseAlphabets: false,
+                specialChars: false,
+              });
 
-            const userId = userData._id;
-            var token = jwt.sign({ userId }, "zxcvbnm");
-            const verifyTokenId = jwt.verify(token, "zxcvbnm");
-            const UserDetails = await User.findById(verifyTokenId.userId);
-            let WallettransactionId = otpGenerator.generate(25, {
-              upperCaseAlphabets: false,
-              specialChars: false,
-            });
+              const walletData = new Wallet({
+                user: UserDetails.email,
+                datetime: new Date().toLocaleString(),
+                pay_type: "Pending",
+                pay_id: "Pending",
+                pay_transaction: "debited",
+                transactionId: WallettransactionId,
+              });
+              await walletData.save();
 
-            const walletData = new Wallet({
-              user: UserDetails.email,
-              datetime: new Date().toLocaleString(),
-              pay_type: "Pending",
-              pay_id: "Pending",
-              pay_transaction: "debited",
-              transactionId: WallettransactionId,
-            });
-            await walletData.save();
+              // CREATE ORDER
 
-            // CREATE ORDER
+              const orderPlaced = new Order({
+                transactionId: WallettransactionId,
+                pay_id: "Pending",
+                pay_method: "Pending",
+                type: "Customize",
+                email: UserDetails.email,
+                datetime: new Date().toLocaleString(),
 
-            const orderPlaced = new Order({
-              transactionId: WallettransactionId,
-              pay_id: "Pending",
-              pay_method: "Pending",
-              type: "Customize",
-              email: UserDetails.email,
-              datetime: new Date().toLocaleString(),
+                contentType: contentType,
+                expertLevel: expertLevel,
+                deadline: deadline,
+                status: "Pending",
+              });
+              await orderPlaced.save();
 
-              contentType: contentType,
-              expertLevel: expertLevel,
-              deadline: deadline,
-              status: "Pending",
-            });
-            await orderPlaced.save();
+              //  SEND EMAIL FOR ADMIN
 
-
-            //  SEND EMAIL FOR ADMIN
-
-
-            const mailTransporter = nodemailer.createTransport({
-              host: `smtp.gmail.com`,
-              port: 465,
-              secure: true,
-              auth: {
-                user: "bablusaini90310@gmail.com",
-                pass: "zeczopkmiqbvbffc",
-              },
-            });
-            let mailDetails = {
-              from: "bablusaini90310@gmail.com",
-              to: "bablusaini90310@gmail.com",
-              subject: "Test mail",
-              html: `
+              const mailTransporter = nodemailer.createTransport({
+                host: `smtp.gmail.com`,
+                port: 465,
+                secure: true,
+                auth: {
+                  user: "bablusaini90310@gmail.com",
+                  pass: "zeczopkmiqbvbffc",
+                },
+              });
+              let mailDetails = {
+                from: "bablusaini90310@gmail.com",
+                to: "bablusaini90310@gmail.com",
+                subject: "Test mail",
+                html: `
 
         <!doctype html>
         <html lang="en">
@@ -146,39 +143,36 @@ module.exports.getInTouch = async (req, res) => {
          </body>
         </html>
         `,
-            };
+              };
 
-            mailTransporter.sendMail(mailDetails, function (err, data) {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log(otp);
+              mailTransporter.sendMail(mailDetails, function (err, data) {
+                if (err) {
+                  console.log(err);
+                } else {
+                  console.log(otp);
 
-                res.status(200).json({
-                  message: "mail have sent successfully",
-                });
-              }
-            });
+                  res.status(200).json({
+                    message: "mail have sent successfully",
+                  });
+                }
+              });
 
+              //  EMAIL SENT TO USER
 
-
-            //  EMAIL SENT TO USER
-
-
-            const usermailTransporter = nodemailer.createTransport({
-              host: `smtp.gmail.com`,
-              port: 465,
-              secure: true,
-              auth: {
-                user: "bablusaini90310@gmail.com",
-                pass: "zeczopkmiqbvbffc",
-              },
-            });
-            let usermailDetails = {
-              from: "bablusaini90310@gmail.com",
-              to: `${email}`,
-              subject: "Test mail",
-              html: `
+              const usermailTransporter = nodemailer.createTransport({
+                host: `smtp.gmail.com`,
+                port: 465,
+                secure: true,
+                auth: {
+                  user: "bablusaini90310@gmail.com",
+                  pass: "zeczopkmiqbvbffc",
+                },
+              });
+              let usermailDetails = {
+                from: "bablusaini90310@gmail.com",
+                to: `${email}`,
+                subject: "Test mail",
+                html: `
 
         <!doctype html>
         <html lang="en">
@@ -221,92 +215,86 @@ module.exports.getInTouch = async (req, res) => {
          </body>
         </html>
         `,
-            };
+              };
 
-            usermailTransporter.sendMail(usermailDetails, function (err, data) {
-              if (err) {
-                console.log(err);
-              } else {
-                console.log(otp);
+              usermailTransporter.sendMail(
+                usermailDetails,
+                function (err, data) {
+                  if (err) {
+                    console.log(err);
+                  } else {
+                    console.log(otp);
 
-                res.status(200).json({
-                  message: "mail have sent successfully",
-                });
-              }
+                    res.status(200).json({
+                      message: "mail have sent successfully",
+                    });
+                  }
+                }
+              );
+
+              res.status(201).json({
+                message: "successfully login and order",
+                token: token,
+              });
+            })
+            .catch((error) => {
+              console.log(error);
             });
-
-            res.status(201).json({
-              message: "successfully login and order",
-              token: token,
-            });
-          }
-          )
-          .catch((error) => {
-            console.log(error);
-          });
+        } else {
+          res.json({ message: "your email is already exist" });
+        }
       } else {
-        res.json({ message: "your email is already exist" })
+        res.json({ message: "your useranem is already exist" });
+      }
+    } else {
+      // CREATE WALLET HISTORY
+
+      const verifyTokenId = jwt.verify(UserToken, "zxcvbnm");
+      const UserDetails = await User.findById(verifyTokenId.userId);
+      let WallettransactionId = otpGenerator.generate(25, {
+        upperCaseAlphabets: false,
+        specialChars: false,
+      });
+
+      const walletData = new Wallet({
+        user: UserDetails.email,
+        datetime: new Date().toLocaleString(),
+        pay_type: "Pending",
+        pay_id: "Pending",
+        pay_transaction: "debited",
+        transactionId: WallettransactionId,
+      });
+      await walletData.save();
+
+      // CREATE ORDER
+
+      let orderNo;
+      var Order_id = await Order.find().sort({ $natural: -1 }).limit(1);
+      if (Order_id.length < 1) {
+        orderNo = 1;
+      } else {
+        orderNo = Order_id[0].order_id + 1;
       }
 
-    } else {
-      res.json({ message: "your useranem is already exist" })
+      const orderPlaced = new Order({
+        transactionId: WallettransactionId,
+        pay_id: "Pending",
+        pay_method: "Pending",
+        type: "Customize",
+        email: UserDetails.email,
+        datetime: new Date().toLocaleString(),
+        contentType: contentType,
+        expertLevel: expertLevel,
+        deadline: deadline,
+        status: "Pending",
+        order_id: orderNo,
+      });
+      await orderPlaced.save();
+
+      res.status(201).json({
+        message: "Order successfully",
+      });
     }
-
-    }else{
-
-         // CREATE WALLET HISTORY
-
-        const verifyTokenId = jwt.verify(UserToken, "zxcvbnm");
-         const UserDetails = await User.findById(verifyTokenId.userId);
-         let WallettransactionId = otpGenerator.generate(25, {
-           upperCaseAlphabets: false,
-           specialChars: false,
-         });
-
-         const walletData = new Wallet({
-           user: UserDetails.email,
-           datetime: new Date().toLocaleString(),
-           pay_type: "Pending",
-           pay_id: "Pending",
-           pay_transaction: "debited",
-           transactionId: WallettransactionId,
-         });
-         await walletData.save();
-
-         // CREATE ORDER
-         
-         let orderNo ;
-         var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
-         if(Order_id.length<1){
-          orderNo =1
-         }else{
-          orderNo = Order_id[0].order_id +1
-         }
-       
-         const orderPlaced = new Order({
-           transactionId: WallettransactionId,
-           pay_id: "Pending",
-           pay_method: "Pending",
-           type: "Customize",
-           email: UserDetails.email,
-           datetime: new Date().toLocaleString(),
-           contentType: contentType,
-           expertLevel: expertLevel,
-           deadline: deadline,
-           status: "Pending",
-           order_id:orderNo
-         });
-         await orderPlaced.save();
-
-         res.status(201).json({
-          message: "Order successfully",
-          token: token,
-        });
-
-      
-    }
-
-   
   } catch (error) {
     res.status(500).json({
       error: error.message,
