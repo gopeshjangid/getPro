@@ -106,6 +106,7 @@ module.exports.login = async (req, res) => {
           res.status(200).json({
             message: "successfully login",
             token: token,
+            user:usernameData
           });
         }else{
             res.status(404).json({
@@ -214,6 +215,7 @@ module.exports.login = async (req, res) => {
           res.status(200).json({
             message: "successfully login",
             token: token,
+            user:emailData
           });
         }else{
           res.status(404).json({
