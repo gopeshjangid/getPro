@@ -28,7 +28,7 @@ module.exports.orderStripe = async (req, res) => {
         },
       ],
       mode: "payment",
-      success_url: "http://localhost:3000/ordersuccess",
+      success_url: "http://localhost:3000/ordersuccess?stripe=true",
       cancel_url: "http://localhost:3000/cancel",
     };
 
@@ -113,7 +113,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
           status: "success",
           order_id:orderNo
         });
-        await orderPlaced.save();
+       const orderData= await orderPlaced.save();
         // DELETE CART OF USER
 
         for (let i = 0; i < CartData.length; i++) {
@@ -122,6 +122,8 @@ module.exports.orderStripeSuccess = async (req, res) => {
         }
         res.status(200).json({
           data: "order Placed",
+          message:orderData
+
         });
       } else {
         res.status(200).json({

@@ -112,7 +112,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
         status: "success",
         order_id:orderNo
       });
-      await orderPlaced.save();
+     const orderData= await orderPlaced.save();
       console.log("oooo", orderPlaced);
       // DELETE CART OF USER
 
@@ -122,6 +122,7 @@ module.exports.orderRazorpaySuccess = async (req, res) => {
       }
       res.status(200).json({
         data: "order Placed",
+        message:orderData
       });
     } else {
       res.status(200).send("payment failed");

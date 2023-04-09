@@ -24,7 +24,7 @@ module.exports.orderPaypal = async (req, res) => {
         payment_method: "paypal",
       },
       redirect_urls: {
-        return_url: "http://localhost:3000/orderPaypalSuccess",
+        return_url: "http://localhost:3000/orderPaypalSuccess?paypal=true",
         cancel_url: "http://localhost:3000/orderPaypalCancel",
       },
       transactions: [
@@ -135,7 +135,7 @@ module.exports.PaypalOrderSuccess = async (req, res) => {
         status: "success",
         order_id:orderNo
       });
-      await orderPlaced.save();
+    const orderData=  await orderPlaced.save();
       console.log("oooo", orderPlaced);
       // DELETE CART OF USER
 
@@ -145,6 +145,7 @@ module.exports.PaypalOrderSuccess = async (req, res) => {
       }
       res.status(200).json({
         data: "order Placed",
+        message:orderData
       });
     } else {
       res.json({ message: "please send pay id" });

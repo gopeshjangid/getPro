@@ -71,7 +71,7 @@ module.exports.withoutPaymentOrder = async (req, res) => {
       status: "Pending",
       order_id:orderNo
     });
-    await orderPlaced.save();
+   const orderData= await orderPlaced.save();
     // DELETE CART OF USER
 
     for (let i = 0; i < CartData.length; i++) {
@@ -80,6 +80,7 @@ module.exports.withoutPaymentOrder = async (req, res) => {
     }
     res.status(200).json({
       data: "order Placed",
+      message:orderData
     });
   } catch (error) {
     res.status(500).json({
