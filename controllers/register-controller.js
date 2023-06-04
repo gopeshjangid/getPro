@@ -2,7 +2,6 @@ const User = require("../model/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const axios = require("axios");
-const nodemailer = require("nodemailer");
 const TriggerNotification = require("../configs/triggerNotification");
 const ejs = require('ejs');
 
@@ -72,6 +71,7 @@ module.exports.register = async (req, res) => {
                 </div>`;
               adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
               await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
+              
               res.status(201).json({
                 message: "successfully register",
               });

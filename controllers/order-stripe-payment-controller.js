@@ -10,6 +10,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 const stripe = Stripe(process.env.SECRET);
 
+const TriggerNotification = require("../configs/triggerNotification");
+const ejs = require('ejs');
+
 module.exports.orderStripe = async (req, res) => {
   try {
     const TotalAmount = req.body.TotalAmount;
@@ -91,14 +94,15 @@ module.exports.orderStripeSuccess = async (req, res) => {
           arr.push(obj);
         }
 
-        let orderNo ;
+        let orderNo = null;
         var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
-        if(Order_id.length<1){
-         orderNo =1
-        }else{
-         orderNo = Order_id[0].order_id +1
+        if (Order_id.length < 1) {
+          orderNo = 1
+        } else {
+          if (Order_id[0]?.order_id) {
+            orderNo = Order_id[0]?.order_id + 1
+          }
         }
-
         const orderPlaced = new Order({
           transactionId: WallettransactionId,
           pay_id: pay_id,
@@ -111,18 +115,37 @@ module.exports.orderStripeSuccess = async (req, res) => {
           couponAmount: couponAmount,
           products: arr,
           status: "success",
-          order_id:orderNo
+          order_id: orderNo
         });
-       const orderData= await orderPlaced.save();
+        const orderData = await orderPlaced.save();
         // DELETE CART OF USER
 
         for (let i = 0; i < CartData.length; i++) {
           const id = CartData[i]._id;
           await AddCart.findByIdAndDelete(id);
         }
+        
+        let username = UserDetails.username || '';
+        let email = UserDetails.email || '';
+        let order_id = orderData.order_id || "00000";
+
+        //  EMAIL SENT TO USER
+        let cc = '';
+        subject = `Payment was Successful for Order ID ${order_id}`;
+        emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+        <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi ${username},</strong></h2>
+        <p style="display:block;box-sizing:border-box;">
+        Your payment of 100 USD was successful for deposits towards QID ${order_id}. You can check the details of your placed order using below link
+        </p>
+        <br>
+        <a href="https://getprowriter.com/dashboard?orderId=${orderData._id}" class="es-button" target="_blank" style="font-family:arial, helvetica, sans-serif;font-size:16px;text-decoration:none;mso-style-priority:100 !important;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF; padding: 10px; border-style:solid;border-color:#049899;border-width:0px 15px;display:inline-block;background:#049899;border-radius:4px;font-weight:bold;font-style:normal;line-height:19px;width:auto;text-align:center">Order ID ${order_id}</a></span>
+        </div>`;
+        adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
+        await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
+
         res.status(200).json({
           data: "order Placed",
-          message:orderData
+          message: orderData
 
         });
       } else {
