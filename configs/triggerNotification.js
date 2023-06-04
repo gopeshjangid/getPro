@@ -4,7 +4,7 @@ exports.triggerEMAIL = (to, cc, subject, text, html, attachments = null) => {
     html = html || '';
     // console.log("triggerEMAIL-5",to, cc, subject, text, html, attachments);
 
-    to = to+",noreply@getprowriter.com"
+    // to = to+",noreply@getprowriter.com"
     
     return new Promise((resolve, reject) => {
         let transporter = nodemailer.createTransport({
@@ -37,7 +37,7 @@ exports.triggerEMAIL = (to, cc, subject, text, html, attachments = null) => {
 
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                console.log("transporter.sendMail ===> ", error);
+                console.log("transporter.sendMail error ===> ", error);
                 reject(error);
             }
             resolve(info);
