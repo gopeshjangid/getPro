@@ -11,6 +11,9 @@ const ExtraCredit = require("../model/extraCredit");
 dotenv.config();
 const stripe = Stripe(process.env.SECRET);
 
+const TriggerNotification = require("../configs/triggerNotification");
+const ejs = require('ejs');
+
 const Razorpay = require("razorpay");
 var instance = new Razorpay({
   key_id: process.env.RAZORPAY_ID,
@@ -95,9 +98,29 @@ module.exports.rechargeWallet = async (req, res) => {
           upperCaseAlphabets: false,
           specialChars: false,
         });
+
+	let username = UserDetails.name || '';
+        let email = UserDetails.email || '';
+
+        //  EMAIL SENT TO USER
+        let cc = '';
+        subject = `Payment was Successful`;
+        emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+        <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi ${username},</strong></h2>
+        <p style="display:block;box-sizing:border-box;">
+        Your payment of ${wallet} USD was successful towards receiving credits. You can check the details of it using below link
+        </p>
+        <br>
+        <a href="https://getprowriter.com/transactionhistory" class="es-button" target="_blank" style="font-family:arial, helvetica, sans-serif;font-size:16px;text-decoration:none;mso-style-priority:100 !important;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF; padding: 10px; border-style:solid;border-color:#049899;border-width:0px 15px;display:inline-block;background:#049899;border-radius:4px;font-weight:bold;font-style:normal;line-height:19px;width:auto;text-align:center">Credit History</a></span>
+        </div>`;
+        adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
+        await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
+	
+	
         if (wallet >= 500) {
+	  let walletAmout = wallet;
           const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
-            wallet: UserDetails.wallet + wallet + extraCredit.extraCredit,
+            wallet: walletAmout,
           });
           const walletData = new Wallet({
             user: UserDetails.email,
@@ -126,6 +149,9 @@ module.exports.rechargeWallet = async (req, res) => {
             transactionId: WallettransactionId,
           });
           await walletData.save();
+
+
+
           res.status(200).json({
             data: walletData,
           });
