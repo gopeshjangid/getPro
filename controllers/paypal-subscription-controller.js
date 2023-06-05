@@ -74,7 +74,7 @@ const createPlan = async (token, product_id, amount) => {
               sequence: 2,
               total_cycles: 3,
               pricing_scheme: {
-                fixed_price: { value: "6", currency_code: "USD" },
+                fixed_price: { value: `${amount}`, currency_code: "USD" },
               },
             },
             {
@@ -83,7 +83,7 @@ const createPlan = async (token, product_id, amount) => {
               sequence: 3,
               total_cycles: 12,
               pricing_scheme: {
-                fixed_price: { value: "10", currency_code: "USD" },
+                fixed_price: { value: `${amount}`, currency_code: "USD" },
               },
             },
           ],
@@ -362,7 +362,8 @@ module.exports.paypalSubscriptionSuccess = async (req, res) => {
       products: obj,
       status: "success",
       sub_status: "Active",
-      order_id:orderNo
+      order_id:orderNo,
+      is_order:"true"
     });
     await orderPlaced.save();
     res.json({ message: "subscriptiion successfull" });

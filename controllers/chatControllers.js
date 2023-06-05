@@ -29,7 +29,7 @@ const accessChat = asyncHandler(async (req, res) => {
           chatName: "sender",
           isGroupChat: false,
           orderId: orderId,
-          users: [req.user._id, "63ddf9c0ea629f9c47462af6"],
+          users: [req.user._id, "644e9c601d2eb2a43d1514aa"],
           latestMessage:null,
         };
         const createdChat = await Chat.create(chatData);

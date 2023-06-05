@@ -6,6 +6,7 @@ const Services = require("../model/services");
 module.exports.viewOrder = async (req, res) => {
     try {
         const token = req.headers.authorization;
+        console.log("token",token)
         const verifyTokenId = jwt.verify(token, "zxcvbnm");
         const UserDetails = await User.findById(verifyTokenId.userId)
         let OrderData = await Order.find({ email: UserDetails.email })

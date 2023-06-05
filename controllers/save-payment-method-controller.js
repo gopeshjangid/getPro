@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 module.exports.SavePaymentMethod = async (req, res) => {
   try {
-    console.log(req.body.cvv);
+    console.log(req.body);
     const token = req.headers.authorization;
     const verifyTokenId = jwt.verify(token, "zxcvbnm");
     const UserDetails = await User.findById(verifyTokenId.userId);
@@ -42,7 +42,6 @@ module.exports.FetchPaymentMethod = async (req, res) => {
     res.status(200).json({ message: PaymentDetails });
   } catch (error) {
     res.status(400);
-    throw new Error(error.message);
   }
 };
 
@@ -59,6 +58,11 @@ module.exports.DeletePaymentMethod = async (req, res) => {
 
 module.exports.EditPaymentMethod = async (req, res) => {
   try {
+    const accountHolder = req.body.accountHolder
+    const cardNumber = req.body.cardNumber
+    const cvv = req.body.cvv
+    const mm = req.body.mm
+    const yy = req.body.yy
     const id = req.params.id;
     const PaymentDetails = await SavePaymentMethod.findByIdAndUpdate(id, {
       accountHolder: accountHolder,

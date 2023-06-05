@@ -21,6 +21,7 @@ module.exports.getInTouch = async (req, res) => {
     let deadline = req.body.deadline;
 
     const UserToken = req.headers.authorization;
+    console.log("UserToken", UserToken)
     if (!UserToken) {
       //   CREATE USER
       let existUsername = await User.findOne({ username: username });
@@ -52,6 +53,7 @@ module.exports.getInTouch = async (req, res) => {
                   " " +
                   response.data.country,
                 logintype: "login",
+                type: "user"
               });
               await userData.save();
 
@@ -66,6 +68,9 @@ module.exports.getInTouch = async (req, res) => {
                 specialChars: false,
               });
 
+              console.log("tttttttttt", token)
+              console.log(verifyTokenId)
+
               const walletData = new Wallet({
                 user: UserDetails.email,
                 datetime: new Date().toLocaleString(),
@@ -78,6 +83,14 @@ module.exports.getInTouch = async (req, res) => {
 
               // CREATE ORDER
 
+              let orderNo;
+              var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
+              if (Order_id.length < 1) {
+                orderNo = 1
+              } else {
+                orderNo = Order_id[0].order_id + 1
+              }
+
               const orderPlaced = new Order({
                 transactionId: WallettransactionId,
                 pay_id: "Pending",
@@ -85,17 +98,20 @@ module.exports.getInTouch = async (req, res) => {
                 type: "Customize",
                 email: UserDetails.email,
                 datetime: new Date().toLocaleString(),
-
                 contentType: contentType,
                 expertLevel: expertLevel,
                 deadline: deadline,
                 status: "Pending",
+                order_id: orderNo,
+                is_order: "true"
               });
               await orderPlaced.save();
               let order_id = orderPlaced.order_id || "";
 
               let cc = '';
-              // SEND EMAIL TO ADMIN
+
+              //  SEND EMAIL FOR ADMIN
+
               let subject = `${email} has signed up`;
               emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
                 <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
@@ -180,6 +196,7 @@ module.exports.getInTouch = async (req, res) => {
           deadline: deadline,
           status: "Pending",
           order_id: orderNo,
+          is_order: "true"
         });
         await orderPlaced.save();
 
@@ -204,6 +221,7 @@ module.exports.getInTouch = async (req, res) => {
 
         res.status(201).json({
           message: "Order successfully",
+          token: UserToken
         });
       } else {
         res.status(500).json({
