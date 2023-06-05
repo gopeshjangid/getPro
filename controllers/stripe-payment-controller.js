@@ -99,7 +99,7 @@ module.exports.rechargeWallet = async (req, res) => {
           specialChars: false,
         });
 
-        let username = UserDetails.name || '';
+	let username = UserDetails.name || '';
         let email = UserDetails.email || '';
 
         //  EMAIL SENT TO USER
@@ -115,10 +115,10 @@ module.exports.rechargeWallet = async (req, res) => {
         </div>`;
         adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
         await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
-
-
+	
+	
         if (wallet >= 500) {
-          let walletAmout = wallet;
+	  let walletAmout = wallet;
           const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
             wallet: walletAmout,
           });
@@ -132,9 +132,6 @@ module.exports.rechargeWallet = async (req, res) => {
             transactionId: WallettransactionId,
           });
           await walletData.save();
-
-
-
           res.status(200).json({
             data: walletData,
           });
@@ -152,11 +149,13 @@ module.exports.rechargeWallet = async (req, res) => {
             transactionId: WallettransactionId,
           });
           await walletData.save();
+
+
+
           res.status(200).json({
             data: walletData,
           });
         }
-
       } else {
         res.status(200).json({ message: "payment failed" });
       }

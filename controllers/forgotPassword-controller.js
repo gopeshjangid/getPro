@@ -18,7 +18,7 @@ module.exports.forgetPassword = async (req, res) => {
                 secure: true,
                 auth: {
                     "user": "bablusaini90310@gmail.com",
-                    "pass": "zeczopkmiqbvbffc"
+                    "pass": "ugczuoedytcgkqtr"
                 }
             })
             let mailDetails = {

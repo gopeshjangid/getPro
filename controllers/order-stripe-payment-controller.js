@@ -15,6 +15,7 @@ const ejs = require('ejs');
 
 module.exports.orderStripe = async (req, res) => {
   try {
+    console.log(req.body)
     const TotalAmount = req.body.TotalAmount;
     const checkoutObject = {
       payment_method_types: ["card"],
@@ -50,7 +51,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
   try {
     if (req.body.pay_id) {
       const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
-      console.log("sessionCheck", session);
+      console.log("sessionCheck", req.body);
       if (session.status === "complete") {
         const pay_id = req.body.pay_id;
         console.log("qwertyui", req.body.pay_id);
@@ -96,14 +97,16 @@ module.exports.orderStripeSuccess = async (req, res) => {
 
         let orderNo = null;
         var Order_id = await Order.find().sort({ $natural: -1 }).limit(1)
-        if (Order_id.length < 1) {
+        
+	if (Order_id.length < 1) {
           orderNo = 1
         } else {
           if (Order_id[0]?.order_id) {
             orderNo = Order_id[0]?.order_id + 1
           }
-        }
-        const orderPlaced = new Order({
+	}
+        
+	const orderPlaced = new Order({
           transactionId: WallettransactionId,
           pay_id: pay_id,
           pay_method: "Stripe",
@@ -115,17 +118,18 @@ module.exports.orderStripeSuccess = async (req, res) => {
           couponAmount: couponAmount,
           products: arr,
           status: "success",
-          order_id: orderNo
+          order_id:orderNo,
+          is_order:"true"
         });
-        const orderData = await orderPlaced.save();
+        const orderData= await orderPlaced.save();
         // DELETE CART OF USER
 
         for (let i = 0; i < CartData.length; i++) {
           const id = CartData[i]._id;
           await AddCart.findByIdAndDelete(id);
         }
-        
-        let username = UserDetails.username || '';
+	
+	let username = UserDetails.username || '';
         let email = UserDetails.email || '';
         let order_id = orderData.order_id || "00000";
 
@@ -142,7 +146,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
         </div>`;
         adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
         await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
-
+	
         res.status(200).json({
           data: "order Placed",
           message: orderData
