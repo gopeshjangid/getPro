@@ -53,7 +53,7 @@ const sendMessage = asyncHandler(async (req, res) => {
     const getChat = await Chat.findById(req.body.chatId);
     console.log("");
     let order_id = null;
-    let getUser = null;
+    
     if (getChat && getChat.orderId) {
       let getOrder = await order.findById(getChat.orderId);
       if (getOrder && getOrder.order_id) {
@@ -61,12 +61,18 @@ const sendMessage = asyncHandler(async (req, res) => {
       }
     }
 
+    let getUser = null;
+
+    if (getChat && getChat.users && getChat.users.length > 0) {
+      getUser = await User.findById(getChat.users[0]);
+    }
+
     let cc = '';
     if (req.user.type === 'user') {
 
       // SEND EMAIL TO ADMIN
       let subject = `Reply on Order ID  ${order_id}`;
-      emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+      let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
       <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
       <p style="display:block;box-sizing:border-box;">
       You have received a reply on Order ID ${order_id}. Please revert back as soon as possible.
@@ -76,7 +82,7 @@ const sendMessage = asyncHandler(async (req, res) => {
       <a href="https://getprowriter.com:5000/chats" class="es-button" target="_blank" style="font-family:arial, helvetica, sans-serif;font-size:16px;text-decoration:none;mso-style-priority:100 !important;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF; padding: 10px; border-style:solid;border-color:#049899;border-width:0px 15px;display:inline-block;background:#049899;border-radius:4px;font-weight:bold;font-style:normal;line-height:19px;width:auto;text-align:center">Order ${order_id}</a>
       </div>`;
       let adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-      await TriggerNotification.triggerEMAIL(process.env.ADMIN_EMAIL, cc, subject, null, adminRegisterTemplate);
+      await TriggerNotification.triggerEMAIL(getUser.email, cc, subject, null, adminRegisterTemplate, true);
       res.json(message);
 
     } else if (req.user.type == 'admin') {
@@ -85,13 +91,13 @@ const sendMessage = asyncHandler(async (req, res) => {
         res.json(message);
       } else {
 
-        getUser = await User.findById(getChat.users[0]);
+        
         console.log("LB-90", getUser);
 
         if (getUser.email) {
           // SEND EMAIL TO USer
           let subject = `Reply on Order ID  ${order_id}`;
-          emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+          let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
           <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi ${getUser.username},</strong></h2>
           <p style="display:block;box-sizing:border-box;">
           You have received a reply on Order ID ${order_id}. Please revert back as soon as possible.

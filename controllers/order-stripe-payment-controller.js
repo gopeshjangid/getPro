@@ -137,15 +137,15 @@ module.exports.orderStripeSuccess = async (req, res) => {
         let cc = '';
 
         //  SEND EMAIL FOR ADMIN
-        subject = `${email} posted Order ID ${order_id} Worth ${totalAmount}`;
-        emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+        let subject = `${email} posted Order ID ${order_id} Worth ${totalAmount}`;
+        let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
                         <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
                         <p style="display:block;box-sizing:border-box;">
                         ${email} from ${UserDetails.location || ''} has posted Order ID ${order_id} worth ${totalAmount}. 
                         </p>
                         </div>`;
         adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-        await TriggerNotification.triggerEMAIL(process.env.ADMIN_EMAIL, cc, subject, null, adminRegisterTemplate);
+        await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate, true);
 
         //  EMAIL SENT TO USER
         subject = `Payment was Successful for Order ID ${order_id}`;
@@ -256,15 +256,15 @@ module.exports.PendingPaymentStripeSuccess = async (req, res) => {
         let cc = '';
 
         //  SEND EMAIL FOR ADMIN
-        subject = `${wallet} USD was paid for Order ID ${order_id}`;
-        emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+        let subject = `${wallet} USD was paid for Order ID ${order_id}`;
+        let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
                         <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
                         <p style="display:block;box-sizing:border-box;">
                         ${email} from ${UserDetails.location || ''} has made payment of ${wallet} USD for Order ID ${order_id} through Stripe.
                         </p>
                         </div>`;
         adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-        await TriggerNotification.triggerEMAIL(process.env.ADMIN_EMAIL, cc, subject, null, adminRegisterTemplate);
+        await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate, true);
         
         res.status(200).json({
           message: "payment Successfull",

@@ -113,14 +113,14 @@ module.exports.getInTouch = async (req, res) => {
               //  SEND EMAIL FOR ADMIN
 
               let subject = `${email} has signed up`;
-              emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+              let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
                 <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
                 <p style="display:block;box-sizing:border-box;">
                 A new user with ${email} from ${userData.location} has signed up on our website.
                 </p>
                 </div>`;
               let adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-              await TriggerNotification.triggerEMAIL(process.env.ADMIN_EMAIL, cc, subject, null, adminRegisterTemplate);
+              await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate, true);
 
               //  EMAIL SENT TO USER
               subject = `Welcome to Get Pro Writer`;
@@ -204,8 +204,8 @@ module.exports.getInTouch = async (req, res) => {
         let order_id = orderPlaced.order_id || "";
 
         //  EMAIL SENT TO USER
-        subject = `Thanks for placing your order at Get Pro Writer`;
-        emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+        let subject = `Thanks for placing your order at Get Pro Writer`;
+        let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
           <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi ${username},</strong></h2>
           <p style="display:block;box-sizing:border-box;">
           Thanks for placing your order with Order ID ${order_id}. An agent is currently reviewing it. You can go ahead and complete the payment for your order or discuss about it using this button
