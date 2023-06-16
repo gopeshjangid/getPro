@@ -105,8 +105,8 @@ module.exports.rechargeWallet = async (req, res) => {
         let cc = '';
 
         //  SEND EMAIL FOR ADMIN
-        subject = `Payment made for Credits`;
-        emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+        let subject = `Payment made for Credits`;
+        let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
                         <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
                         <p style="display:block;box-sizing:border-box;">
                         ${email} from ${UserDetails.location || ''} has made payment of ${wallet} USD for depositing Credits through stripe.. 

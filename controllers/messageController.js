@@ -72,7 +72,7 @@ const sendMessage = asyncHandler(async (req, res) => {
 
       // SEND EMAIL TO ADMIN
       let subject = `Reply on Order ID  ${order_id}`;
-      emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+      let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
       <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
       <p style="display:block;box-sizing:border-box;">
       You have received a reply on Order ID ${order_id}. Please revert back as soon as possible.
@@ -97,7 +97,7 @@ const sendMessage = asyncHandler(async (req, res) => {
         if (getUser.email) {
           // SEND EMAIL TO USer
           let subject = `Reply on Order ID  ${order_id}`;
-          emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+          let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
           <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi ${getUser.username},</strong></h2>
           <p style="display:block;box-sizing:border-box;">
           You have received a reply on Order ID ${order_id}. Please revert back as soon as possible.

@@ -49,7 +49,7 @@ module.exports.register = async (req, res) => {
               let cc = '';
               // SEND EMAIL TO ADMIN
               let subject = `${email} has signed up`;
-              emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+              let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
                 <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
                 <p style="display:block;box-sizing:border-box;">
                 A new user with ${email} from ${userData.location} has signed up on our website.
