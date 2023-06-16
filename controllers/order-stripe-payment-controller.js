@@ -145,7 +145,7 @@ module.exports.orderStripeSuccess = async (req, res) => {
                         </p>
                         </div>`;
         adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-        await TriggerNotification.triggerEMAIL(process.env.ADMIN_EMAIL, cc, subject, null, adminRegisterTemplate);
+        await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate, true);
 
         //  EMAIL SENT TO USER
         subject = `Payment was Successful for Order ID ${order_id}`;
@@ -264,7 +264,7 @@ module.exports.PendingPaymentStripeSuccess = async (req, res) => {
                         </p>
                         </div>`;
         adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-        await TriggerNotification.triggerEMAIL(process.env.ADMIN_EMAIL, cc, subject, null, adminRegisterTemplate);
+        await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate, true);
         
         res.status(200).json({
           message: "payment Successfull",

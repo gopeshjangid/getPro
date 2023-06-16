@@ -120,7 +120,7 @@ module.exports.getInTouch = async (req, res) => {
                 </p>
                 </div>`;
               let adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-              await TriggerNotification.triggerEMAIL(process.env.ADMIN_EMAIL, cc, subject, null, adminRegisterTemplate);
+              await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate, true);
 
               //  EMAIL SENT TO USER
               subject = `Welcome to Get Pro Writer`;
