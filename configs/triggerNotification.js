@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 
-exports.triggerEMAIL = (to, cc, subject, text, html, attachments = null) => {
+exports.triggerEMAIL = (userEmail, cc, subject, text, html, isAdmin = false, attachments = null) => {
     html = html || '';
     // console.log("triggerEMAIL-5",to, cc, subject, text, html, attachments);
 
@@ -23,7 +23,8 @@ exports.triggerEMAIL = (to, cc, subject, text, html, attachments = null) => {
 
         let mailOptions = {
             from: 'Get Pro Writer <' + process.env.MAIL_SMTP_FROM + '>',
-            to: to,
+            to: isAdmin ? process.env.MAIL_SMTP_REPLY_TO : userEmail,
+            replyTo: isAdmin ? userEmail : process.env.MAIL_SMTP_REPLY_TO,
             cc: cc,
             subject: subject,
             text: text,

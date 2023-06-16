@@ -53,12 +53,18 @@ const sendMessage = asyncHandler(async (req, res) => {
     const getChat = await Chat.findById(req.body.chatId);
     console.log("");
     let order_id = null;
-    let getUser = null;
+    
     if (getChat && getChat.orderId) {
       let getOrder = await order.findById(getChat.orderId);
       if (getOrder && getOrder.order_id) {
         order_id = getOrder.order_id;
       }
+    }
+
+    let getUser = null;
+
+    if (getChat && getChat.users && getChat.users.length > 0) {
+      getUser = await User.findById(getChat.users[0]);
     }
 
     let cc = '';
@@ -76,7 +82,7 @@ const sendMessage = asyncHandler(async (req, res) => {
       <a href="https://getprowriter.com:5000/chats" class="es-button" target="_blank" style="font-family:arial, helvetica, sans-serif;font-size:16px;text-decoration:none;mso-style-priority:100 !important;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF; padding: 10px; border-style:solid;border-color:#049899;border-width:0px 15px;display:inline-block;background:#049899;border-radius:4px;font-weight:bold;font-style:normal;line-height:19px;width:auto;text-align:center">Order ${order_id}</a>
       </div>`;
       let adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-      await TriggerNotification.triggerEMAIL(process.env.ADMIN_EMAIL, cc, subject, null, adminRegisterTemplate);
+      await TriggerNotification.triggerEMAIL(getUser.email, cc, subject, null, adminRegisterTemplate, true);
       res.json(message);
 
     } else if (req.user.type == 'admin') {
@@ -85,7 +91,7 @@ const sendMessage = asyncHandler(async (req, res) => {
         res.json(message);
       } else {
 
-        getUser = await User.findById(getChat.users[0]);
+        
         console.log("LB-90", getUser);
 
         if (getUser.email) {

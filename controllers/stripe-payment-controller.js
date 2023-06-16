@@ -113,7 +113,7 @@ module.exports.rechargeWallet = async (req, res) => {
                         </p>
                         </div>`;
         adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-        await TriggerNotification.triggerEMAIL(process.env.ADMIN_EMAIL, cc, subject, null, adminRegisterTemplate);
+        await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate, true);
 
         //  EMAIL SENT TO USER
         subject = `Payment was Successful`;
