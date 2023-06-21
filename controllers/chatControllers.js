@@ -30,7 +30,7 @@ const accessChat = asyncHandler(async (req, res) => {
           isGroupChat: false,
           orderId: orderId,
           users: [req.user._id, "644e9c601d2eb2a43d1514aa"],
-          latestMessage:null,
+          latestMessage: null,
         };
         const createdChat = await Chat.create(chatData);
         const FullChat = await Chat.findOne({ _id: createdChat._id });
@@ -58,7 +58,7 @@ const fetchChats = asyncHandler(async (req, res) => {
           path: "latestMessage.sender",
           select: "name pic email",
         });
-        console.log("results",results[0].users)
+        console.log("results", results[0].users)
         res.status(200).send(results);
       });
   } catch (error) {
@@ -175,44 +175,44 @@ const addToGroup = asyncHandler(async (req, res) => {
 });
 
 
-const chatAssign = async (req, res) =>{
+const chatAssign = async (req, res) => {
   try {
-   console.log("reqqqqq",req.body)
- 
-    const chatId= req.body.theChatId
-    const subAdminId=req.body.subAdminId
-    const ChatData=await Chat.findById(chatId)
+    console.log("reqqqqq", req.body)
+
+    const chatId = req.body.theChatId
+    const subAdminId = req.body.subAdminId
+    const ChatData = await Chat.findById(chatId)
     console.log(ChatData.users[1])
-    let newUsers=[ChatData.users[0],subAdminId]
-    const updateUsers=await Chat.findByIdAndUpdate(chatId,{users:newUsers})
+    let newUsers = [ChatData.users[0], subAdminId]
+    const updateUsers = await Chat.findByIdAndUpdate(chatId, { users: newUsers })
     res.redirect("/chats")
- } catch (error) {
-     res.status(500).json({
-         error: error.message
-     })
- }
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    })
+  }
 }
 
 
-const checkChatAccess = async (req, res) =>{
+const checkChatAccess = async (req, res) => {
   try {
-    const adminToken=  req.cookies.adminToken
-    const verifyTokenId= jwt.verify(adminToken,"zxcvbnm")
-    console.log("verify",verifyTokenId.userId)
-   const chatId=req.body.theChatId
-    const ChatData=await Chat.findById(chatId).populate("users")
-  const filterUser= await ChatData.users.filter((users)=> users.type == "admin")
-   console.log("chatAssignAdmin",filterUser)
-   if(verifyTokenId.userId===filterUser[0].id){
-   res.send("right")
-   }else{
-    httpMsgs.send500(req, res, "you can't start chat because this chat is already assigned");
-   }
- } catch (error) {
-     res.status(500).json({
-         error: error.message
-     })
- }
+    const adminToken = req.cookies.adminToken
+    const verifyTokenId = jwt.verify(adminToken, "zxcvbnm")
+    console.log("verify", verifyTokenId.userId)
+    const chatId = req.body.theChatId
+    const ChatData = await Chat.findById(chatId).populate("users")
+    const filterUser = await ChatData.users.filter((users) => users.type == "admin")
+    console.log("chatAssignAdmin", filterUser)
+    if (verifyTokenId.userId === filterUser[0].id) {
+      res.send("right")
+    } else {
+      httpMsgs.send500(req, res, "you can't start chat because this chat is already assigned");
+    }
+  } catch (error) {
+    res.status(500).json({
+      error: error.message
+    })
+  }
 }
 
 

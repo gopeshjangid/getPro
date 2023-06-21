@@ -82,30 +82,33 @@ module.exports.payment = async (req, res) => {
 module.exports.rechargeWallet = async (req, res) => {
   try {
     console.log(req.body);
+    const token = req.headers.authorization;
+    const verifyTokenId = jwt.verify(token, "zxcvbnm");
+    const UserDetails = await User.findById(verifyTokenId.userId);
     if (req.body.pay_id) {
       const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
+      const wallet = session.amount_total / 100;
+      const pay_id = req.body.pay_id;
+
       console.log("sessionCheck", session);
       if (session.status === "complete") {
         let extraCredit = await ExtraCredit.findOne();
 
-        const token = req.headers.authorization;
-        const verifyTokenId = jwt.verify(token, "zxcvbnm");
-        const UserDetails = await User.findById(verifyTokenId.userId);
-        const wallet = session.amount_total / 100;
+
+        
         console.log("eeeee", extraCredit);
-        const pay_id = req.body.pay_id;
         let WallettransactionId = otpGenerator.generate(25, {
           upperCaseAlphabets: false,
           specialChars: false,
         });
 
-	let username = UserDetails.name || '';
+        let username = UserDetails.name || '';
         let email = UserDetails.email || '';
 
         //  EMAIL SENT TO USER
         let cc = '';
-        subject = `Payment was Successful`;
-        emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+        let subject = `Payment was Successful`;
+        let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
         <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi ${username},</strong></h2>
         <p style="display:block;box-sizing:border-box;">
         Your payment of ${wallet} USD was successful towards receiving credits. You can check the details of it using below link
@@ -113,12 +116,22 @@ module.exports.rechargeWallet = async (req, res) => {
         <br>
         <a href="https://getprowriter.com/transactionhistory" class="es-button" target="_blank" style="font-family:arial, helvetica, sans-serif;font-size:16px;text-decoration:none;mso-style-priority:100 !important;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF; padding: 10px; border-style:solid;border-color:#049899;border-width:0px 15px;display:inline-block;background:#049899;border-radius:4px;font-weight:bold;font-style:normal;line-height:19px;width:auto;text-align:center">Credit History</a></span>
         </div>`;
+        let adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
+        await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
+
+        subject = `${wallet} USD was paid for Order ID ${pay_id}`;
+        emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+        <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
+        <p style="display:block;box-sizing:border-box;">
+        ${email} from ${UserDetails.location} has made payment of ${wallet} USD for Order ID ${pay_id} through stripe.
+        </p>        
+        </div>`;
         adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
         await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
-	
-	
+
+
         if (wallet >= 500) {
-	  let walletAmout = wallet;
+          let walletAmout = wallet;
           const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
             wallet: walletAmout,
           });
@@ -157,6 +170,20 @@ module.exports.rechargeWallet = async (req, res) => {
           });
         }
       } else {
+        let username = UserDetails.name || '';
+        let email = UserDetails.email || '';
+
+        //  EMAIL SENT TO USER
+        let cc = '';
+        let subject = `${wallet} USD failed for Order ID ${pay_id}`;
+        let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+        <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
+        <p style="display:block;box-sizing:border-box;">
+        ${email} from ${UserDetails.location} has failed payment of ${wallet} USD for Order ID ${pay_id}.
+        </p>        
+        </div>`;
+        let adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
+        await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate, true);
         res.status(200).json({ message: "payment failed" });
       }
     } else {
