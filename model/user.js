@@ -7,14 +7,14 @@ const user = mongoose.Schema({
   wallet: Number,
   IP_Address: String,
   registerTime: String,
- loginTime: String,
+  loginTime: String,
   location: String,
   role: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'role'
   },
   logintype: String,
-  type:String
+  type: String
 });
 
 module.exports = mongoose.model("user", user);

@@ -114,7 +114,7 @@ module.exports.getInTouch = async (req, res) => {
               //  SEND EMAIL FOR ADMIN
 
               let subject = `${email} has signed up`;
-              emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+              let emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
                 <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi Admin,</strong></h2>
                 <p style="display:block;box-sizing:border-box;">
                 A new user with ${email} from ${userData.location} has signed up on our website.
@@ -125,17 +125,17 @@ module.exports.getInTouch = async (req, res) => {
 
               //  EMAIL SENT TO USER
 
-              subject = `Welcome to Get Pro Writer`;
-              emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
-                <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi ${username},</strong></h2>
-                <p style="display:block;box-sizing:border-box;">
-                Thanks for creating an account with us. Please use ${Originalpassword} to login to our website. We have received your order with Order ID ${order_id} and an agent is currently reviewing it. You can go ahead and complete the payment for your order or discuss about it using this button
-                </p>
-                <br>
-                <a href="https://getprowriter.com/dashboard?orderId=${orderPlaced._id}" class="es-button" target="_blank" style="font-family:arial, helvetica, sans-serif;font-size:16px;text-decoration:none;mso-style-priority:100 !important;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF; padding: 10px; border-style:solid;border-color:#049899;border-width:0px 15px;display:inline-block;background:#049899;border-radius:4px;font-weight:bold;font-style:normal;line-height:19px;width:auto;text-align:center">Order ${order_id}</a></span>
-                </div>`;
-              adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
-              await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
+              // subject = `Welcome to Get Pro Writer`;
+              // emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
+              //   <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi ${username},</strong></h2>
+              //   <p style="display:block;box-sizing:border-box;">
+              //   Thanks for creating an account with us. Please use ${Originalpassword} to login to our website. We have received your order with Order ID ${order_id} and an agent is currently reviewing it. You can go ahead and complete the payment for your order or discuss about it using this button
+              //   </p>
+              //   <br>
+              //   <a href="https://getprowriter.com/dashboard?orderId=${orderPlaced._id}" class="es-button" target="_blank" style="font-family:arial, helvetica, sans-serif;font-size:16px;text-decoration:none;mso-style-priority:100 !important;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF; padding: 10px; border-style:solid;border-color:#049899;border-width:0px 15px;display:inline-block;background:#049899;border-radius:4px;font-weight:bold;font-style:normal;line-height:19px;width:auto;text-align:center">Order ${order_id}</a></span>
+              //   </div>`;
+              // adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
+              // await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
 
               res.status(201).json({
                 message: "successfully login and order",
@@ -210,13 +210,14 @@ module.exports.getInTouch = async (req, res) => {
         emailContent = `<div style="width:100%;padding:14px;margin: auto;text-align:left">
           <h2 style="margin:0;line-height:24px;mso-line-height-rule:exactly;font-family:arial, helvetica, sans-serif;font-size:20px;font-style:normal;font-weight:normal;color:#0B5394"><strong>Hi ${username},</strong></h2>
           <p style="display:block;box-sizing:border-box;">
-          Thanks for placing your order with Order ID ${order_id}. An agent is currently reviewing it. You can go ahead and complete the payment for your order or discuss about it using this button
+          Thanks for creating an account with us. Please use ${password} to login to our website. We have received your order with Order ID ${orderNo} and an agent is currently reviewing it. You can go ahead and complete the payment for your order or discuss about it using this button.
           </p>
           <br>
           <a href="https://getprowriter.com/dashboard?orderId=${orderPlaced._id}" class="es-button" target="_blank" style="font-family:arial, helvetica, sans-serif;font-size:16px;text-decoration:none;mso-style-priority:100 !important;-webkit-text-size-adjust:none;-ms-text-size-adjust:none;mso-line-height-rule:exactly;color:#FFFFFF; padding: 10px; border-style:solid;border-color:#049899;border-width:0px 15px;display:inline-block;background:#049899;border-radius:4px;font-weight:bold;font-style:normal;line-height:19px;width:auto;text-align:center">Question ${order_id}</a></span>
           </div>`;
         renderEmailTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
 
+        
         if (email && renderEmailTemplate) {
           await TriggerNotification.triggerEMAIL(email, cc, subject, null, renderEmailTemplate);
         }
