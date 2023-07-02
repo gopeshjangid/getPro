@@ -86,20 +86,20 @@ module.exports.rechargeWallet = async (req, res) => {
       const session = await stripe.checkout.sessions.retrieve(req.body.pay_id);
       console.log("sessionCheck", session);
       if (session.status === "complete") {
-        let extraCredit = await ExtraCredit.findOne();
+        // let extraCredit = await ExtraCredit.findOne() || 0;
 
         const token = req.headers.authorization;
         const verifyTokenId = jwt.verify(token, "zxcvbnm");
         const UserDetails = await User.findById(verifyTokenId.userId);
         const wallet = session.amount_total / 100;
-        console.log("eeeee", extraCredit);
+        // console.log("eeeee", extraCredit);
         const pay_id = req.body.pay_id;
         let WallettransactionId = otpGenerator.generate(25, {
           upperCaseAlphabets: false,
           specialChars: false,
         });
 
-	let username = UserDetails.name || '';
+        let username = UserDetails.name || '';
         let email = UserDetails.email || '';
 
         //  EMAIL SENT TO USER
@@ -115,23 +115,25 @@ module.exports.rechargeWallet = async (req, res) => {
         </div>`;
         adminRegisterTemplate = await ejs.renderFile(__dirname + '/../configs/email_template.html', emailContent);
         await TriggerNotification.triggerEMAIL(email, cc, subject, null, adminRegisterTemplate);
-	
-	
+
+        console.log(wallet)
         if (wallet >= 500) {
-	  let walletAmout = wallet;
+          let walletAmout = wallet;
           const updateWallet = await User.findByIdAndUpdate(UserDetails._id, {
             wallet: walletAmout,
           });
           const walletData = new Wallet({
             user: UserDetails.email,
-            wallet: wallet + extraCredit.extraCredit,
+            wallet: wallet,
             datetime: new Date().toLocaleString(),
             pay_type: "Stripe",
             pay_id: pay_id,
             pay_transaction: "credited",
             transactionId: WallettransactionId,
           });
+          console.log('ssssssssssssssssssssssssssssssssssss')
           await walletData.save();
+          console.log('equaal')
           res.status(200).json({
             data: walletData,
           });
@@ -149,7 +151,7 @@ module.exports.rechargeWallet = async (req, res) => {
             transactionId: WallettransactionId,
           });
           await walletData.save();
-
+          console.log('notequal')
 
 
           res.status(200).json({

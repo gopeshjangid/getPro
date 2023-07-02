@@ -4,6 +4,8 @@ const User = require("./model/user");
 const cors = require("cors");
 const app = express();
 const http = require("http");
+const morgan = require('morgan')
+
 const server = http.createServer(app);
 // const corsOptions = {
 //   server,
@@ -22,7 +24,7 @@ var corsOptions = {
   ],
   credentials: true,
 };
-
+app.use(morgan('dev'))
 app.use(cors(corsOptions));
 io.on("connection", (socket) => {
   console.log("Connected: ");
