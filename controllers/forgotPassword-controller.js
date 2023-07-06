@@ -17,12 +17,12 @@ module.exports.forgetPassword = async (req, res) => {
                 port: 465,
                 secure: true,
                 auth: {
-                    "user": "bablusaini90310@gmail.com",
-                    "pass": "ugczuoedytcgkqtr"
+                    "user": "noreply@getprowriter.com",
+                    "pass": "gzmjfjwipydbeqde"
                 }
             })
             let mailDetails = {
-                from: 'bablusaini90310@gmail.com',
+                from: 'noreply@getprowriter.com',
                 to: req.body.email,
                 subject: 'Test mail',
                 text: otp
