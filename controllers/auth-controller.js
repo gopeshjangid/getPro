@@ -26,7 +26,7 @@ module.exports.checkFaq = async (req, res, next) => {
         "role"
       );
 
-      if (UserDetails.email == "getproadmin000@gmail.com") {
+      if (UserDetails.email == "support@getprowriter.com") {
         next();
       } else {
         let trueVer = false;
