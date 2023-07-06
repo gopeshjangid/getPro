@@ -1531,7 +1531,7 @@ module.exports.SubAdmin = async (req, res) => {
     const adminData = await User.find({ type: "admin" }).populate("role");
     console.log(adminData);
     const filterAdmin = await adminData.filter(
-      (item, index) => item.email !== "getproadmin000@gmail.com"
+      (item, index) => item.email !== "support@getprowriter.com"
     );
     res.render("subAdmin.ejs", { filterAdmin });
   } catch (error) {
